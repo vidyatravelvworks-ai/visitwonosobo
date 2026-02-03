@@ -40,8 +40,8 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Desktop Menu - Aktif mulai dari md (768px) */}
-        <div className="hidden md:flex items-center gap-10">
+        {/* Desktop Menu - Aktif mulai dari lg (1024px) */}
+        <div className="hidden lg:flex items-center gap-10">
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -62,9 +62,9 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Hamburger - Sembunyi mulai dari md (768px) */}
+        {/* Mobile Hamburger - Sembunyi mulai dari lg (1024px) */}
         <button
-          className="md:hidden p-2"
+          className="lg:hidden p-2"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6 text-current" />}
@@ -73,7 +73,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden fixed inset-0 bg-white text-black z-[60] flex flex-col p-10">
+        <div className="lg:hidden fixed inset-0 bg-white text-black z-[60] flex flex-col p-10">
           <div className="flex justify-end mb-10">
             <X className="h-8 w-8 cursor-pointer" onClick={() => setIsOpen(false)} />
           </div>
