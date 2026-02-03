@@ -44,7 +44,7 @@ const Services = () => {
             </h2>
           </div>
           <div className="max-w-sm">
-            <p className="text-muted-foreground text-xs font-bold tracking-widest leading-relaxed">
+            <p className="text-muted-foreground text-sm font-medium tracking-wide leading-relaxed">
               From misty mountains to vibrant local markets, find your passion in every corner of Wonosobo.
             </p>
           </div>
