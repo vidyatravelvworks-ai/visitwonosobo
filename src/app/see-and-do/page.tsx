@@ -86,7 +86,7 @@ const SeeAndDoPage = () => {
                     {cat.icon}
                   </div>
                   <h3 className="text-3xl font-black uppercase mb-2 tracking-tight">{cat.title}</h3>
-                  <p className="text-white/80 mb-6 line-clamp-3 text-sm">{cat.description}</p>
+                  <p className="text-white/80 mb-6 text-sm leading-relaxed">{cat.description}</p>
                   <Button variant="link" className="text-white p-0 w-fit font-bold uppercase tracking-widest text-xs hover:text-primary" asChild>
                     <a href={`#${cat.id}`}>
                       Explore Now <ArrowRight className="ml-2 h-4 w-4" />
