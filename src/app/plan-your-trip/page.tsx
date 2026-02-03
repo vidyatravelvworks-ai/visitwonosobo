@@ -76,7 +76,7 @@ const PlanYourTripPage = () => {
       </section>
 
       {/* Services Section */}
-      <section className="py-24 md:py-32">
+      <section className="pt-12 pb-24 md:pt-16 md:pb-32">
         <div className="container mx-auto px-12 md:px-32">
           <div className="text-center mb-20 max-w-3xl mx-auto space-y-4">
             <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-primary">Paket Wisata Lokal</h2>
@@ -86,7 +86,7 @@ const PlanYourTripPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {packages.map((pkg, idx) => (
               <Card key={idx} className={`border-2 ${pkg.borderColor} ${pkg.color} rounded-none overflow-hidden hover:shadow-2xl transition-all duration-500`}>
-                <CardHeader className="space-y-6 p-10 pb-0">
+                <CardHeader className="space-y-8 p-10 pb-0">
                   <div className="space-y-6">
                     <CardTitle className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-none">
                       {pkg.title}
