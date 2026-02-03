@@ -1,17 +1,16 @@
-
 import type {Metadata} from 'next';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
-  title: 'Wonosobo Explorer - Eksplorasi Wonosobo dengan Lokal Guide Terbaik',
+  title: 'visitwonosobo - Eksplorasi Wonosobo dengan Lokal Guide Terbaik',
   description: 'Temukan keindahan alam Wonosobo, dari sunrise Sikunir hingga kuliner Mie Ongklok dengan pemandu lokal profesional.',
   openGraph: {
-    title: 'Wonosobo Explorer',
+    title: 'visitwonosobo',
     description: 'Eksplorasi Wonosobo dengan Lokal Guide Terbaik',
-    url: 'https://wonosoboexplorer.com',
-    siteName: 'Wonosobo Explorer',
+    url: 'https://visitwonosobo.com',
+    siteName: 'visitwonosobo',
     locale: 'id_ID',
     type: 'website',
   },

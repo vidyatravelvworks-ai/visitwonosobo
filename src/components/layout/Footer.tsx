@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Link from 'next/link';
 import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
@@ -10,10 +9,10 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
           <div className="col-span-1 md:col-span-1 space-y-6">
             <span className="text-2xl font-black font-headline tracking-tighter uppercase text-primary">
-              Wonosobo<span className="opacity-50">.</span>Explorer
+              visitwonosobo
             </span>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              We are a collective of local explorers dedicated to showcasing the authentic beauty and culture of Wonosobo to the world.
+              Kami adalah kolektif penjelajah lokal yang berdedikasi untuk menunjukkan keindahan dan budaya otentik Wonosobo kepada dunia.
             </p>
             <div className="flex gap-4 pt-4">
               <Instagram className="h-5 w-5 cursor-pointer hover:text-primary" />
@@ -49,13 +48,13 @@ const Footer = () => {
               <li>Jl. Raya Dieng No. 123</li>
               <li>Wonosobo, Indonesia 56351</li>
               <li className="text-primary font-bold">+62 812 3456 7890</li>
-              <li>hello@wonosoboexplorer.com</li>
+              <li>hello@visitwonosobo.com</li>
             </ul>
           </div>
         </div>
         
         <div className="pt-10 border-t flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Wonosobo Explorer. All Rights Reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Visit Wonosobo. All Rights Reserved.</p>
           <div className="flex gap-10">
             <Link href="#" className="hover:text-black">Privacy Policy</Link>
             <Link href="#" className="hover:text-black">Terms of Use</Link>

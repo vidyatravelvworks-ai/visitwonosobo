@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -28,7 +27,7 @@ const Navbar = () => {
   return (
     <nav className={cn(
       "fixed top-0 w-full z-50 transition-all duration-300 border-b",
-      scrolled ? "bg-white py-3 shadow-sm" : "bg-transparent py-5 border-transparent text-white"
+      scrolled ? "bg-white py-3 shadow-sm border-border" : "bg-transparent py-5 border-transparent text-white"
     )}>
       <div className="container mx-auto px-10 md:px-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
@@ -36,7 +35,7 @@ const Navbar = () => {
             "text-2xl font-black font-headline tracking-tighter uppercase",
             scrolled ? "text-primary" : "text-white"
           )}>
-            Wonosobo<span className="opacity-50">.</span>Explorer
+            visitwonosobo
           </span>
         </Link>
 
