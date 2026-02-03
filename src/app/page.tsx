@@ -5,8 +5,10 @@ import Services from '@/components/home/Services';
 import ArticleCard from '@/components/article/ArticleCard';
 import { articles } from '@/data/articles';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Info } from 'lucide-react';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
   const featuredStories = articles.filter(a => a.type === 'story').slice(0, 3);
@@ -83,7 +85,16 @@ export default function Home() {
       </section>
 
       {/* Final CTA */}
-      <section className="relative py-40 bg-black text-white overflow-hidden text-center">
+      <section className="relative py-48 bg-black text-white overflow-hidden text-center group">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={PlaceHolderImages.find(img => img.id === 'lake-morning')?.imageUrl || ''}
+            alt="Final CTA Background"
+            fill
+            className="object-cover opacity-40 transition-transform duration-1000 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80" />
+        </div>
         <div className="container mx-auto px-12 md:px-32 relative z-10 max-w-4xl">
           <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-10">
             Start Your <br /> Journey
@@ -91,7 +102,7 @@ export default function Home() {
           <p className="text-xl text-white/70 mb-12 max-w-2xl mx-auto">
             Ready to discover the hidden gems of Central Java? Let our local experts craft your perfect escape.
           </p>
-          <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest px-12 py-8 text-sm rounded-none" asChild>
+          <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest px-12 py-8 text-sm rounded-none shadow-[10px_10px_0px_0px_rgba(255,255,255,0.1)]" asChild>
             <a href="https://wa.me/6281234567890" target="_blank">
               Contact Us <ArrowRight className="ml-2 h-5 w-5" />
             </a>

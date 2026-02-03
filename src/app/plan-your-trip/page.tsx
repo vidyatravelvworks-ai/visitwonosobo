@@ -76,7 +76,7 @@ const PlanYourTripPage = () => {
       </section>
 
       {/* Services Section */}
-      <section className="pt-12 pb-24 md:pt-16 md:pb-32">
+      <section className="pt-4 pb-24 md:pt-6 md:pb-32">
         <div className="container mx-auto px-12 md:px-32">
           <div className="text-center mb-20 max-w-3xl mx-auto space-y-4">
             <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-primary">Paket Wisata Lokal</h2>
@@ -137,17 +137,29 @@ const PlanYourTripPage = () => {
             ))}
           </div>
 
-          <div className="mt-24 p-16 bg-gray-50 border border-dashed border-gray-300 text-center space-y-8">
-            <div className="space-y-4">
-              <h3 className="text-2xl font-black uppercase tracking-tight">Butuh Rencana Perjalanan Kustom?</h3>
-              <p className="text-muted-foreground max-w-2xl mx-auto font-medium">
-                Kami siap membantu menyusun jadwal sesuai keinginan Anda. Hubungi tim lokal kami untuk konsultasi gratis mengenai rute, durasi, dan budget perjalanan Anda.
-              </p>
+          {/* Custom Plan CTA with Background Image */}
+          <section className="mt-24 relative overflow-hidden group">
+            <div className="absolute inset-0 z-0">
+              <Image
+                src={PlaceHolderImages.find(img => img.id === 'village-gathering')?.imageUrl || ''}
+                alt="Consultation Background"
+                fill
+                className="object-cover transition-transform duration-1000 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-black/75" />
             </div>
-            <Button variant="outline" className="border-black border-2 hover:bg-black hover:text-white font-black uppercase tracking-widest rounded-none px-16 py-8 text-xs transition-all" asChild>
-              <a href="https://wa.me/6281234567890" target="_blank">Hubungi CS via WhatsApp</a>
-            </Button>
-          </div>
+            <div className="relative z-10 p-16 md:p-32 text-center space-y-10">
+              <div className="space-y-6">
+                <h3 className="text-3xl md:text-6xl font-black uppercase tracking-tight text-white">Butuh Rencana <br /> Perjalanan Kustom?</h3>
+                <p className="text-white/70 max-w-2xl mx-auto font-medium text-lg">
+                  Kami siap membantu menyusun jadwal sesuai keinginan Anda. Hubungi tim lokal kami untuk konsultasi gratis mengenai rute, durasi, dan budget perjalanan Anda.
+                </p>
+              </div>
+              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-black font-black uppercase tracking-widest rounded-none px-16 py-10 text-xs transition-all shadow-[10px_10px_0px_0px_rgba(255,255,255,0.1)]" asChild>
+                <a href="https://wa.me/6281234567890" target="_blank">Hubungi CS via WhatsApp</a>
+              </Button>
+            </div>
+          </section>
         </div>
       </section>
     </div>
