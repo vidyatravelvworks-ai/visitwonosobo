@@ -82,15 +82,15 @@ const ArticleDetailPage = async ({ params }: Props) => {
 
           {/* Excerpt */}
           <div className="mb-12">
-            <p className="text-xl md:text-2xl text-foreground/70 leading-relaxed italic border-l-4 border-primary pl-8 font-medium">
+            <p className="text-lg md:text-xl text-foreground/70 leading-relaxed italic border-l-4 border-primary pl-8 font-medium">
               {article.excerpt}
             </p>
           </div>
 
           {/* Content */}
-          <div className="prose prose-lg max-w-none text-foreground/80 leading-loose space-y-8 font-body">
+          <div className="max-w-none text-foreground/80 leading-loose space-y-8 font-body">
             {article.content.split('\n').filter(p => p.trim()).map((paragraph, idx) => (
-              <p key={idx} className="text-lg">
+              <p key={idx} className="text-sm font-medium tracking-wide">
                 {paragraph.trim()}
               </p>
             ))}
