@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { articles, Article } from '@/data/articles';
 import Link from 'next/link';
@@ -42,6 +42,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[800px] p-0 gap-0 bg-white border-none shadow-2xl rounded-none outline-none">
         <DialogHeader className="p-8 md:p-12 border-b">
+          <DialogTitle className="sr-only">Pencarian Destinasi dan Cerita Wonosobo</DialogTitle>
           <div className="flex items-center gap-6">
             <Search className="h-8 w-8 text-primary shrink-0" />
             <Input
