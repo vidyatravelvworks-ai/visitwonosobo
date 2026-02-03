@@ -31,7 +31,7 @@ const Hero = () => {
             Welcome to Wonosobo
           </h2>
           <h1 className="text-5xl md:text-9xl font-black text-white font-headline uppercase leading-none tracking-tighter animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            Passion Made <br /> <span className="text-white underline decoration-primary decoration-[12px] underline-offset-[16px]">Possible</span>
+            The Soul <br /> <span className="text-white underline decoration-primary decoration-[12px] underline-offset-[16px]">of Java</span>
           </h1>
           <p className="text-lg md:text-xl text-white/90 font-medium max-w-2xl mx-auto pt-4 animate-in fade-in slide-in-from-bottom-10 duration-1000">
             Experience the mystical Dieng Plateau and the warmth of Wonosobo culture with our expert local guides.
