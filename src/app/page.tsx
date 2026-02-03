@@ -15,7 +15,7 @@ export default function Home() {
       <Services />
       
       {/* Featured Stories Section */}
-      <section className="py-32 bg-[#F8F9FA]">
+      <section className="py-32 bg-[#F1F3F5]">
         <div className="container mx-auto px-10 md:px-20">
           <div className="text-center mb-20">
             <h3 className="text-primary font-bold uppercase tracking-widest mb-4">Insider Stories</h3>
