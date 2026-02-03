@@ -79,50 +79,57 @@ const PlanYourTripPage = () => {
       <section className="py-24 md:py-32">
         <div className="container mx-auto px-12 md:px-32">
           <div className="text-center mb-20 max-w-3xl mx-auto space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter">Paket Wisata Lokal</h2>
-            <p className="text-muted-foreground">Nikmati perjalanan tanpa hambatan dengan pemandu lokal berpengalaman. Harga sudah termasuk armada nyaman dan bahan bakar.</p>
+            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-primary">Paket Wisata Lokal</h2>
+            <p className="text-muted-foreground font-medium">Nikmati perjalanan tanpa hambatan dengan pemandu lokal berpengalaman. Harga sudah termasuk armada nyaman dan bahan bakar.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {packages.map((pkg, idx) => (
-              <Card key={idx} className={`border-2 ${pkg.borderColor} ${pkg.color} rounded-none overflow-hidden hover:shadow-xl transition-shadow duration-500`}>
-                <CardHeader className="space-y-4 p-8 pb-0">
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="text-2xl font-black uppercase tracking-tight max-w-[250px]">
+              <Card key={idx} className={`border-2 ${pkg.borderColor} ${pkg.color} rounded-none overflow-hidden hover:shadow-2xl transition-all duration-500`}>
+                <CardHeader className="space-y-6 p-10 pb-0">
+                  <div className="space-y-6">
+                    <CardTitle className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-none">
                       {pkg.title}
                     </CardTitle>
-                    <div className="text-right">
-                      <span className="block text-primary font-black text-2xl">{pkg.price}</span>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Per Armada</span>
+                    
+                    <div className="flex items-center">
+                      <div className="bg-primary px-8 py-5 text-white relative shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] border-l-8 border-black">
+                        <span className="block text-[10px] font-bold uppercase tracking-[0.2em] mb-1 text-white/80">Harga Perjalanan</span>
+                        <div className="flex items-baseline gap-3">
+                          <span className="font-black text-4xl tracking-tighter">{pkg.price}</span>
+                          <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">/ Per Armada</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-6 pt-2">
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+
+                  <div className="flex flex-wrap gap-6 pt-4">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground bg-white px-3 py-1 border shadow-sm">
                       <Clock className="h-4 w-4 text-primary" />
                       {pkg.time}
                     </div>
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground bg-white px-3 py-1 border shadow-sm">
                       <CheckCircle2 className="h-4 w-4 text-primary" />
                       {pkg.description}
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="p-8 space-y-8">
+                <CardContent className="p-10 space-y-8">
                   <div className="h-px bg-border w-full" />
-                  <div className="space-y-4">
-                    <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Destinasi Utama:</h4>
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-6">
+                    <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">Rencana Destinasi:</h4>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
                       {pkg.spots.map((spot, i) => (
-                        <li key={i} className="flex items-center gap-3 text-sm font-medium">
-                          <MapPin className="h-4 w-4 text-primary shrink-0" />
+                        <li key={i} className="flex items-center gap-3 text-sm font-bold tracking-tight uppercase group cursor-default">
+                          <div className="h-1.5 w-1.5 bg-primary group-hover:scale-150 transition-transform" />
                           {spot}
                         </li>
                       ))}
                     </ul>
                   </div>
-                  <Button className="w-full bg-black hover:bg-primary text-white font-bold uppercase tracking-widest py-8 rounded-none group transition-all" asChild>
+                  <Button className="w-full bg-black hover:bg-primary text-white font-bold uppercase tracking-widest py-10 rounded-none group transition-all text-xs" asChild>
                     <a href={`https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20pesan%20${encodeURIComponent(pkg.title)}`} target="_blank">
-                      Pesan Sekarang <MessageCircle className="ml-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+                      Ambil Paket Ini <MessageCircle className="ml-3 h-5 w-5 group-hover:rotate-12 transition-transform" />
                     </a>
                   </Button>
                 </CardContent>
@@ -130,13 +137,15 @@ const PlanYourTripPage = () => {
             ))}
           </div>
 
-          <div className="mt-24 p-12 bg-gray-50 border border-dashed border-gray-300 text-center space-y-6">
-            <h3 className="text-xl font-bold uppercase tracking-tight">Butuh Rencana Perjalanan Kustom?</h3>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Kami siap membantu menyusun jadwal sesuai keinginan Anda. Hubungi tim lokal kami untuk konsultasi gratis mengenai rute dan durasi perjalanan.
-            </p>
-            <Button variant="outline" className="border-black hover:bg-black hover:text-white font-bold uppercase tracking-widest rounded-none px-12 py-6" asChild>
-              <a href="https://wa.me/6281234567890" target="_blank">Hubungi CS</a>
+          <div className="mt-24 p-16 bg-gray-50 border border-dashed border-gray-300 text-center space-y-8">
+            <div className="space-y-4">
+              <h3 className="text-2xl font-black uppercase tracking-tight">Butuh Rencana Perjalanan Kustom?</h3>
+              <p className="text-muted-foreground max-w-2xl mx-auto font-medium">
+                Kami siap membantu menyusun jadwal sesuai keinginan Anda. Hubungi tim lokal kami untuk konsultasi gratis mengenai rute, durasi, dan budget perjalanan Anda.
+              </p>
+            </div>
+            <Button variant="outline" className="border-black border-2 hover:bg-black hover:text-white font-black uppercase tracking-widest rounded-none px-16 py-8 text-xs transition-all" asChild>
+              <a href="https://wa.me/6281234567890" target="_blank">Hubungi CS via WhatsApp</a>
             </Button>
           </div>
         </div>
