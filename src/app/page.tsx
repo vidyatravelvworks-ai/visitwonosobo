@@ -16,7 +16,7 @@ export default function Home() {
       
       {/* Featured Stories Section */}
       <section className="py-32 bg-[#F8F9FA]">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-10 md:px-20">
           <div className="text-center mb-20">
             <h3 className="text-primary font-bold uppercase tracking-widest mb-4">Insider Stories</h3>
             <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Passion Stories</h2>
@@ -38,7 +38,7 @@ export default function Home() {
 
       {/* Practical Info Section */}
       <section className="py-32 bg-white">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-10 md:px-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <div className="space-y-8">
               <h3 className="text-primary font-bold uppercase tracking-widest">Plan Your Trip</h3>
@@ -82,7 +82,7 @@ export default function Home() {
 
       {/* Final CTA */}
       <section className="relative py-40 bg-black text-white overflow-hidden text-center">
-        <div className="container mx-auto px-6 relative z-10 max-w-4xl">
+        <div className="container mx-auto px-10 md:px-20 relative z-10 max-w-4xl">
           <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-10">
             Start Your <br /> Journey
           </h2>

@@ -25,7 +25,7 @@ const Hero = () => {
         <div className="absolute inset-0 bg-black/30 bg-gradient-to-b from-black/50 via-transparent to-black/60" />
       </div>
 
-      <div className="container mx-auto px-6 relative z-10 text-center pt-32 pb-20 md:pt-48 md:pb-24">
+      <div className="container mx-auto px-10 md:px-20 relative z-10 text-center pt-48 pb-20 md:pt-60 md:pb-24">
         <div className="max-w-4xl mx-auto space-y-8">
           <h2 className="text-white text-sm md:text-base font-bold uppercase tracking-[0.4em] animate-in fade-in slide-in-from-bottom-4 duration-700">
             Welcome to Wonosobo
