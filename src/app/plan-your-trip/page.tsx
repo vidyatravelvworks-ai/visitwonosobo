@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -75,9 +74,17 @@ const PlanYourTripPage = () => {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section className="pt-4 pb-24 md:pt-6 md:pb-32">
-        <div className="container mx-auto px-12 md:px-32">
+      {/* Services Section with Background Pattern */}
+      <section className="relative pt-4 pb-24 md:pt-6 md:pb-32 overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-[0.03]">
+          <Image
+            src={PlaceHolderImages.find(img => img.id === 'tobacco-field')?.imageUrl || 'https://picsum.photos/seed/field/1920/1080'}
+            alt="Section Background"
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="container mx-auto px-12 md:px-32 relative z-10">
           <div className="text-center mb-20 max-w-3xl mx-auto space-y-4">
             <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-primary">Paket Wisata Lokal</h2>
             <p className="text-muted-foreground font-medium">Nikmati perjalanan tanpa hambatan dengan pemandu lokal berpengalaman. Harga sudah termasuk armada nyaman dan bahan bakar.</p>
@@ -137,11 +144,11 @@ const PlanYourTripPage = () => {
             ))}
           </div>
 
-          {/* Custom Plan CTA with Background Image */}
+          {/* Custom Plan CTA with Full Background Image */}
           <section className="mt-24 relative overflow-hidden group">
             <div className="absolute inset-0 z-0">
               <Image
-                src={PlaceHolderImages.find(img => img.id === 'village-gathering')?.imageUrl || ''}
+                src={PlaceHolderImages.find(img => img.id === 'village-gathering')?.imageUrl || 'https://picsum.photos/seed/village/1920/1080'}
                 alt="Consultation Background"
                 fill
                 className="object-cover transition-transform duration-1000 group-hover:scale-110"

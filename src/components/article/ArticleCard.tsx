@@ -9,7 +9,7 @@ interface ArticleCardProps {
 }
 
 const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
-  // Ensure we never pass an empty string to next/image src
+  // Pastikan src tidak pernah string kosong untuk menghindari error NextJS
   const imageSrc = article.image && article.image.trim() !== '' 
     ? article.image 
     : 'https://picsum.photos/seed/wonosobo-placeholder/600/400';

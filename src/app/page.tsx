@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Hero from '@/components/home/Hero';
 import Services from '@/components/home/Services';
@@ -18,9 +17,17 @@ export default function Home() {
       <Hero />
       <Services />
       
-      {/* Featured Stories Section */}
-      <section className="py-32 bg-[#F1F3F5]">
-        <div className="container mx-auto px-12 md:px-32">
+      {/* Featured Stories Section with Background */}
+      <section className="relative py-32 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={PlaceHolderImages.find(img => img.id === 'misty-valley')?.imageUrl || 'https://picsum.photos/seed/valley/1920/1080'}
+            alt="Stories Background"
+            fill
+            className="object-cover opacity-5"
+          />
+        </div>
+        <div className="container mx-auto px-12 md:px-32 relative z-10">
           <div className="text-center mb-20">
             <h3 className="text-primary font-bold uppercase tracking-widest mb-4">Insider Stories</h3>
             <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Town's Stories</h2>
@@ -40,9 +47,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Practical Info Section */}
-      <section className="py-32 bg-white">
-        <div className="container mx-auto px-12 md:px-32">
+      {/* Practical Info Section with Side Background */}
+      <section className="relative py-32 bg-white overflow-hidden">
+        <div className="absolute left-0 top-0 bottom-0 w-1/2 z-0 hidden lg:block opacity-[0.03]">
+          <Image
+            src={PlaceHolderImages.find(img => img.id === 'serayu-valley')?.imageUrl || 'https://picsum.photos/seed/river/1920/1080'}
+            alt="Practical Background"
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="container mx-auto px-12 md:px-32 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
             <div className="space-y-8">
               <h3 className="text-primary font-bold uppercase tracking-widest">Plan Your Trip</h3>
@@ -73,7 +88,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="relative aspect-square bg-gray-100 overflow-hidden">
+            <div className="relative aspect-square bg-gray-100 overflow-hidden shadow-2xl">
                <img 
                  src="https://images.unsplash.com/photo-1487621167305-5d248087c724?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmb2dneSUyMG1vdW50YWlufGVufDB8fHx8MTc3MDExNTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080" 
                  alt="Dieng Mist"
@@ -84,11 +99,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Final CTA */}
+      {/* Final CTA with Full Background */}
       <section className="relative py-48 bg-black text-white overflow-hidden text-center group">
         <div className="absolute inset-0 z-0">
           <Image
-            src={PlaceHolderImages.find(img => img.id === 'lake-morning')?.imageUrl || ''}
+            src={PlaceHolderImages.find(img => img.id === 'lake-morning')?.imageUrl || 'https://picsum.photos/seed/cta/1920/1080'}
             alt="Final CTA Background"
             fill
             className="object-cover opacity-40 transition-transform duration-1000 group-hover:scale-110"
