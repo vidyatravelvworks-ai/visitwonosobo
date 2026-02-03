@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Compass, Search, Home } from 'lucide-react';
+import { Menu, X, Search, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -20,8 +20,8 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: 'See & Do', href: '/#services' },
-    { name: 'Stories', href: '/artikel' },
+    { name: 'See & Do', href: '/see-and-do' },
+    { name: 'Stories', href: '/stories' },
     { name: 'Plan Your Trip', href: '/#itinerary' },
   ];
 
@@ -49,7 +49,7 @@ const Navbar = () => {
             <Link
               key={link.name}
               href={link.href}
-              className="text-xs font-bold uppercase tracking-widest hover:opacity-70 transition-opacity"
+              className="text-[10px] font-bold uppercase tracking-widest hover:opacity-70 transition-opacity"
             >
               {link.name}
             </Link>
@@ -57,7 +57,7 @@ const Navbar = () => {
           <div className="flex items-center gap-6 border-l pl-10 ml-4">
             <Search className="h-5 w-5 cursor-pointer hover:opacity-70" />
             <Button asChild size="sm" className={cn(
-              "font-bold uppercase text-[10px] tracking-widest px-6",
+              "font-bold uppercase text-[10px] tracking-widest px-6 rounded-none",
               scrolled ? "bg-primary text-white" : "bg-white text-black hover:bg-gray-200"
             )}>
               <a href="https://wa.me/6281234567890" target="_blank">Book Now</a>
@@ -92,13 +92,13 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 href={link.href}
-                className="block text-3xl font-black uppercase tracking-tighter"
+                className="block text-4xl font-black uppercase tracking-tighter"
                 onClick={() => setIsOpen(false)}
               >
                 {link.name}
               </Link>
             ))}
-            <Button asChild size="lg" className="w-full bg-primary text-white font-bold uppercase mt-10">
+            <Button asChild size="lg" className="w-full bg-primary text-white font-bold uppercase mt-10 rounded-none">
               <a href="https://wa.me/6281234567890" target="_blank">Book Now</a>
             </Button>
           </div>

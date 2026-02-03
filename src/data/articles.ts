@@ -9,57 +9,81 @@ export interface Article {
   image: string;
   date: string;
   category: string;
+  type: 'destination' | 'story';
 }
 
 export const articles: Article[] = [
+  // SEE & DO (Destinations)
   {
-    slug: 'kuliner-mie-ongklok',
-    title: 'Kuliner Mie Ongklok: Kelezatan Khas Wonosobo',
-    excerpt: 'Mie Ongklok bukan sekadar mie rebus biasa. Pelajari sejarah dan resep rahasia di balik hidangan legendaris ini.',
-    category: 'Kuliner',
-    date: '15 Mei 2024',
-    image: PlaceHolderImages.find(img => img.id === 'mie-ongklok')?.imageUrl || '',
-    content: `
-      Mie Ongklok adalah makanan khas Wonosobo yang paling dicari. Kata "Ongklok" berasal dari alat bantu untuk merebus mie yang terbuat dari anyaman bambu. 
-      Mie ini disajikan dengan kuah kental berwarna cokelat yang terbuat dari pati (kanji), ebi, dan gula jawa.
-      
-      Biasanya, Mie Ongklok dinikmati dengan sate sapi dan tempe kemul yang masih hangat. Perpaduan rasa manis, gurih, dan tekstur kuah yang unik menjadikannya teman terbaik di udara dingin Wonosobo.
-      
-      Jika Anda berkunjung ke Wonosobo, pastikan mampir ke pusat kota untuk mencicipi hidangan otentik ini di kedai-kedai yang sudah berdiri puluhan tahun.
-    `
+    slug: 'bukit-sikunir-sunrise',
+    title: 'Golden Sunrise Bukit Sikunir',
+    excerpt: 'Menikmati fenomena matahari terbit terbaik se-Asia Tenggara dari puncak Sikunir.',
+    category: 'Alam',
+    type: 'destination',
+    date: '12 Jan 2025',
+    image: PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl || '',
+    content: 'Bukit Sikunir merupakan primadona wisata alam di Wonosobo. Terletak di Desa Sembungan, desa tertinggi di Pulau Jawa. Pengunjung perlu melakukan trekking ringan selama 15-30 menit untuk mencapai puncak. Waktu terbaik adalah sebelum fajar menyingsing untuk mendapatkan pemandangan Golden Sunrise yang ikonik.'
   },
   {
-    slug: 'ritual-rambut-gimbal',
-    title: 'Mengenal Ritual Potong Rambut Gimbal Dieng',
-    excerpt: 'Sebuah tradisi mistis dan budaya yang dilakukan setahun sekali di dataran tinggi Dieng. Fenomena unik anak-anak berambut gimbal.',
+    slug: 'kompleks-candi-arjuna',
+    title: 'Kemegahan Kompleks Candi Arjuna',
+    excerpt: 'Menelusuri jejak peradaban Hindu tertua di Jawa yang berada di ketinggian 2000 mdpl.',
     category: 'Budaya',
-    date: '20 Juni 2024',
-    image: PlaceHolderImages.find(img => img.id === 'rambut-gimbal')?.imageUrl || '',
-    content: `
-      Anak-anak berambut gimbal di Dieng dipercaya sebagai titipan dari Kyai Kolodete. Rambut gimbal ini tidak boleh dipotong sembarangan, melainkan harus melalui upacara sakral yang disebut Ruwatan Rambut Gimbal.
-      
-      Keunikan dari ritual ini adalah permintaan anak tersebut harus dikabulkan sebelum rambutnya dipotong. Permintaannya bisa beragam, mulai dari hal sederhana seperti telur puyuh hingga yang unik seperti kambing putih.
-      
-      Acara ini biasanya menjadi puncak dari Dieng Culture Festival (DCF) yang menarik ribuan wisatawan setiap tahunnya.
-    `
+    type: 'destination',
+    date: '15 Jan 2025',
+    image: PlaceHolderImages.find(img => img.id === 'candi-arjuna')?.imageUrl || '',
+    content: 'Kompleks Candi Arjuna merupakan peninggalan bersejarah dari abad ke-8. Terdiri dari lima candi utama yang berdiri megah di tengah lembah Dieng. Selain nilai sejarahnya, lokasinya yang dikelilingi pegunungan membuatnya sangat fotogenik.'
+  },
+  {
+    slug: 'kuliner-mie-ongklok',
+    title: 'Kelezatan Otentik Mie Ongklok',
+    excerpt: 'Mie Ongklok bukan sekadar mie rebus biasa. Pelajari sejarah dan resep rahasia di balik hidangan legendaris ini.',
+    category: 'Kuliner',
+    type: 'destination',
+    date: '15 Mei 2024',
+    image: PlaceHolderImages.find(img => img.id === 'mie-ongklok')?.imageUrl || '',
+    content: 'Mie Ongklok disajikan dengan kuah kental gurih, sate sapi, dan tempe kemul. Nama ongklok berasal dari alat bambu yang digunakan untuk merebus mie. Ini adalah pengalaman kuliner wajib bagi siapapun yang menginjakkan kaki di Wonosobo.'
+  },
+
+  // STORIES (Insights)
+  {
+    slug: 'asal-usul-wonosobo',
+    title: 'Sejarah: Dari Lembah Menjadi Kota',
+    excerpt: 'Menelusuri sejarah terbentuknya Wonosobo dari masa kolonial hingga sekarang.',
+    category: 'Sejarah',
+    type: 'story',
+    date: '05 Feb 2025',
+    image: 'https://images.unsplash.com/photo-1590059392683-9b8893ccf971?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxoZ Heritage|ZW58MHx8fHwxNzc0MTU2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    content: 'Nama Wonosobo berasal dari bahasa Sansekerta, "Wana" yang berarti hutan dan "Saba" yang berarti tempat berkumpul. Dahulu merupakan wilayah penting bagi penyebaran agama dan perdagangan di Jawa Tengah.'
+  },
+  {
+    slug: 'keajaiban-geografis-dieng',
+    title: 'Geografis: Di Atas Awan Jawa',
+    excerpt: 'Mengapa Wonosobo memiliki karakteristik geografis yang sangat unik dibandingkan daerah lain?',
+    category: 'Geografis',
+    type: 'story',
+    date: '08 Feb 2025',
+    image: PlaceHolderImages.find(img => img.id === 'dieng-fog')?.imageUrl || '',
+    content: 'Terletak di jantung Jawa Tengah, Wonosobo didominasi oleh dataran tinggi dan pegunungan vulkanik. Fenomena vulkanik aktif di Dieng menciptakan lanskap yang dramatis dengan kawah, telaga warna-warni, dan tanah yang sangat subur.'
+  },
+  {
+    slug: 'sosial-masyarakat-pegunungan',
+    title: 'Sosial: Kehangatan di Tengah Dingin',
+    excerpt: 'Melihat lebih dekat kehidupan sosial masyarakat Wonosobo yang ramah dan menjunjung gotong royong.',
+    category: 'Sosial',
+    type: 'story',
+    date: '10 Feb 2025',
+    image: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxwZW9wbGUlMjBzbWlsaW5nfGVufDB8fHx8MTc3NDE1NjQzfDA&ixlib=rb-4.1.0&q=80&w=1080',
+    content: 'Keseharian warga Wonosobo kental dengan nilai agraris dan spiritual. Budaya "nyangkruk" atau berkumpul sambil minum kopi menjadi medium komunikasi sosial yang penting di desa-desa.'
   },
   {
     slug: 'tips-cuaca-dieng',
-    title: 'Tips Menghadapi Cuaca Ekstrem di Dieng',
-    excerpt: 'Dari fenomena bun upas (embun es) hingga persiapan pakaian. Pastikan liburan Anda tetap nyaman meski suhu di bawah nol derajat.',
+    title: 'Tips: Menghadapi Cuaca Ekstrem',
+    excerpt: 'Dari fenomena bun upas (embun es) hingga persiapan pakaian. Pastikan liburan Anda tetap nyaman.',
     category: 'Tips',
+    type: 'story',
     date: '10 Juli 2024',
-    image: PlaceHolderImages.find(img => img.id === 'dieng-fog')?.imageUrl || '',
-    content: `
-      Suhu di Dieng bisa mencapai minus derajat celsius saat musim kemarau, terutama antara bulan Juni hingga Agustus. Fenomena ini sering disebut "Bun Upas" oleh warga lokal, di mana embun membeku menjadi es.
-      
-      Persiapan yang matang sangat diperlukan:
-      1. Gunakan pakaian berlapis (layering).
-      2. Jangan lupakan jaket penahan angin (windbreaker).
-      3. Gunakan kaos kaki dan sarung tangan.
-      4. Siapkan pelembab kulit karena udara sangat kering.
-      
-      Waktu terbaik untuk melihat embun es adalah dini hari sekitar pukul 05.00 WIB sebelum matahari terbit sempurna.
-    `
+    image: 'https://images.unsplash.com/photo-1487621167305-5d248087c724?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmb2dneSUyMG1vdW50YWlufGVufDB8fHx8MTc3MDExNTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080',
+    content: 'Suhu di Dieng bisa mencapai minus derajat celsius saat musim kemarau. Persiapkan jaket tebal, sarung tangan, dan pelembab kulit agar perjalanan Anda tetap menyenangkan.'
   }
 ];

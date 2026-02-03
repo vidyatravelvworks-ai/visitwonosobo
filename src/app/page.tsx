@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Info } from 'lucide-react';
 
 export default function Home() {
+  const featuredStories = articles.filter(a => a.type === 'story').slice(0, 3);
+
   return (
     <div className="bg-white">
       <Hero />
@@ -23,14 +25,14 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {articles.slice(0, 3).map((article) => (
+            {featuredStories.map((article) => (
               <ArticleCard key={article.slug} article={article} />
             ))}
           </div>
 
           <div className="mt-20 text-center">
-            <Button size="lg" className="bg-black text-white font-bold uppercase tracking-widest text-xs px-10 py-7" asChild>
-              <Link href="/artikel">View All Stories</Link>
+            <Button size="lg" className="bg-black text-white font-bold uppercase tracking-widest text-xs px-10 py-7 rounded-none" asChild>
+              <Link href="/stories">View All Stories</Link>
             </Button>
           </div>
         </div>
@@ -45,7 +47,7 @@ export default function Home() {
               <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
                 Essential <br /> Information
               </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-sm font-bold tracking-widest text-muted-foreground leading-relaxed">
                 Everything you need to know before visiting the land above the clouds. From visa requirements to local transportation.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6">
@@ -89,7 +91,7 @@ export default function Home() {
           <p className="text-xl text-white/70 mb-12 max-w-2xl mx-auto">
             Ready to discover the hidden gems of Central Java? Let our local experts craft your perfect escape.
           </p>
-          <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest px-12 py-8 text-sm" asChild>
+          <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest px-12 py-8 text-sm rounded-none" asChild>
             <a href="https://wa.me/6281234567890" target="_blank">
               Contact Us <ArrowRight className="ml-2 h-5 w-5" />
             </a>
