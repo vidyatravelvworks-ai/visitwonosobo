@@ -31,7 +31,7 @@ const SeeAndDoPage = () => {
           )}
           <div className="absolute inset-0 bg-black/40" />
         </div>
-        <div className="container mx-auto px-10 md:px-20 relative z-10 text-center">
+        <div className="container mx-auto px-12 md:px-32 relative z-10 text-center">
           <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white mb-4">
             See & Do
           </h1>
@@ -42,7 +42,7 @@ const SeeAndDoPage = () => {
       </section>
 
       <div className="py-24 md:py-32">
-        <div className="container mx-auto px-10 md:px-20">
+        <div className="container mx-auto px-12 md:px-32">
           {categories.map((cat) => {
             const filtered = destinations.filter(d => d.category === cat);
             if (filtered.length === 0) return null;

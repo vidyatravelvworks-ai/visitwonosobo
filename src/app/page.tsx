@@ -18,7 +18,7 @@ export default function Home() {
       
       {/* Featured Stories Section */}
       <section className="py-32 bg-[#F1F3F5]">
-        <div className="container mx-auto px-10 md:px-20">
+        <div className="container mx-auto px-12 md:px-32">
           <div className="text-center mb-20">
             <h3 className="text-primary font-bold uppercase tracking-widest mb-4">Insider Stories</h3>
             <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Passion Stories</h2>
@@ -31,7 +31,7 @@ export default function Home() {
           </div>
 
           <div className="mt-20 text-center">
-            <Button size="lg" className="bg-black text-white font-bold uppercase tracking-widest text-xs px-10 py-7 rounded-none" asChild>
+            <Button size="lg" className="bg-primary text-white font-bold uppercase tracking-widest text-xs px-10 py-7 rounded-none" asChild>
               <Link href="/stories">View All Stories</Link>
             </Button>
           </div>
@@ -40,7 +40,7 @@ export default function Home() {
 
       {/* Practical Info Section */}
       <section className="py-32 bg-white">
-        <div className="container mx-auto px-10 md:px-20">
+        <div className="container mx-auto px-12 md:px-32">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
             <div className="space-y-8">
               <h3 className="text-primary font-bold uppercase tracking-widest">Plan Your Trip</h3>
@@ -84,7 +84,7 @@ export default function Home() {
 
       {/* Final CTA */}
       <section className="relative py-40 bg-black text-white overflow-hidden text-center">
-        <div className="container mx-auto px-10 md:px-20 relative z-10 max-w-4xl">
+        <div className="container mx-auto px-12 md:px-32 relative z-10 max-w-4xl">
           <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-10">
             Start Your <br /> Journey
           </h2>

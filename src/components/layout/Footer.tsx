@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Link from 'next/link';
 import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
@@ -5,7 +6,7 @@ import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 const Footer = () => {
   return (
     <footer className="bg-white border-t py-20">
-      <div className="container mx-auto px-10 md:px-20">
+      <div className="container mx-auto px-12 md:px-32">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
           <div className="col-span-1 md:col-span-1 space-y-6">
             <span className="text-2xl font-black font-headline tracking-tighter uppercase text-primary">
@@ -25,20 +26,20 @@ const Footer = () => {
           <div>
             <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Experiences</h4>
             <ul className="space-y-4 text-sm font-medium">
-              <li><Link href="#" className="hover:text-primary transition-colors">Nature & Adventure</Link></li>
-              <li><Link href="#" className="hover:text-primary transition-colors">Heritage & Culture</Link></li>
-              <li><Link href="#" className="hover:text-primary transition-colors">Dining & Nightlife</Link></li>
-              <li><Link href="#" className="hover:text-primary transition-colors">Festivals</Link></li>
+              <li><Link href="/see-and-do" className="hover:text-primary transition-colors">Nature & Adventure</Link></li>
+              <li><Link href="/see-and-do" className="hover:text-primary transition-colors">Heritage & Culture</Link></li>
+              <li><Link href="/stories" className="hover:text-primary transition-colors">Dining & Nightlife</Link></li>
+              <li><Link href="/stories" className="hover:text-primary transition-colors">Festivals</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Plan Your Trip</h4>
             <ul className="space-y-4 text-sm font-medium">
-              <li><Link href="#" className="hover:text-primary transition-colors">Travel Essentials</Link></li>
-              <li><Link href="#" className="hover:text-primary transition-colors">Getting to Wonosobo</Link></li>
-              <li><Link href="#" className="hover:text-primary transition-colors">Local Customs</Link></li>
-              <li><Link href="#" className="hover:text-primary transition-colors">Itineraries</Link></li>
+              <li><Link href="/stories" className="hover:text-primary transition-colors">Travel Essentials</Link></li>
+              <li><Link href="/" className="hover:text-primary transition-colors">Getting to Wonosobo</Link></li>
+              <li><Link href="/stories" className="hover:text-primary transition-colors">Local Customs</Link></li>
+              <li><Link href="/" className="hover:text-primary transition-colors">Itineraries</Link></li>
             </ul>
           </div>
 

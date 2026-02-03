@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogHeader } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { articles, Article } from '@/data/articles';
 import Link from 'next/link';
@@ -31,7 +31,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
     setResults(filtered);
   }, [query]);
 
-  // Reset query when closed
   useEffect(() => {
     if (!isOpen) {
       setQuery('');
@@ -40,30 +39,38 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[800px] p-0 gap-0 bg-white border-none shadow-2xl rounded-none outline-none">
-        <DialogHeader className="p-8 md:p-12 border-b">
-          <DialogTitle className="sr-only">Pencarian Destinasi dan Cerita Wonosobo</DialogTitle>
-          <div className="flex items-center gap-6">
-            <Search className="h-8 w-8 text-primary shrink-0" />
+      <DialogContent className="fixed top-24 left-auto right-12 md:right-32 translate-x-0 translate-y-0 w-[calc(100%-6rem)] max-w-[320px] md:max-w-[400px] p-0 gap-0 bg-white border-none shadow-2xl rounded-none outline-none animate-in fade-in slide-in-from-top-4 duration-300">
+        <DialogTitle className="sr-only">Pencarian Wonosobo</DialogTitle>
+        
+        <div className="flex justify-end p-4 border-b">
+          <button onClick={onClose} className="hover:text-primary transition-colors">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <DialogHeader className="p-6">
+          <div className="flex items-center gap-4">
+            <Search className="h-5 w-5 text-primary shrink-0" />
             <Input
-              placeholder="Cari destinasi atau cerita..."
-              className="text-3xl md:text-5xl font-black uppercase tracking-tighter border-none focus-visible:ring-0 p-0 h-auto placeholder:text-gray-200 bg-transparent"
+              placeholder="Cari destinasi..."
+              className="text-xl font-bold uppercase tracking-tight border-none focus-visible:ring-0 p-0 h-auto placeholder:text-gray-300 bg-transparent"
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>
         </DialogHeader>
-        <div className="p-8 md:p-12 bg-[#F8F9FA] min-h-[400px]">
+
+        <div className="px-6 pb-6 bg-[#F8F9FA] max-h-[60vh] overflow-y-auto">
           {query.trim() === '' ? (
-            <div className="space-y-8">
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Pencarian Populer</h4>
-              <div className="flex flex-wrap gap-4">
-                {['Sikunir', 'Mie Ongklok', 'Dieng', 'Candi Arjuna', 'Tips Cuaca'].map((tag) => (
+            <div className="pt-4 space-y-4">
+              <h4 className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Populer</h4>
+              <div className="flex flex-wrap gap-2">
+                {['Sikunir', 'Dieng', 'Mie Ongklok'].map((tag) => (
                   <button
                     key={tag}
                     onClick={() => setQuery(tag)}
-                    className="px-8 py-4 bg-white border border-gray-200 text-[10px] font-bold uppercase tracking-widest hover:border-primary hover:text-primary transition-all"
+                    className="px-4 py-2 bg-white border border-gray-100 text-[9px] font-bold uppercase tracking-widest hover:border-primary hover:text-primary transition-all"
                   >
                     {tag}
                   </button>
@@ -71,34 +78,30 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
           ) : (
-            <div className="space-y-10">
-              <div className="flex items-center justify-between">
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                  {results.length > 0 ? `Ditemukan ${results.length} hasil` : 'Tidak ada hasil ditemukan'}
-                </h4>
-              </div>
-              <div className="space-y-8">
-                {results.map((article) => (
+            <div className="pt-4 space-y-6">
+              {results.length > 0 ? (
+                results.map((article) => (
                   <Link
                     key={article.slug}
                     href={`/artikel/${article.slug}`}
                     onClick={onClose}
                     className="group block"
                   >
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-4">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{article.category}</span>
-                        <span className="h-px w-8 bg-gray-300"></span>
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">{article.date}</span>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[8px] font-bold uppercase text-primary">{article.category}</span>
+                        <span className="h-px w-4 bg-gray-200"></span>
+                        <span className="text-[8px] font-bold uppercase text-muted-foreground">{article.date}</span>
                       </div>
-                      <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight group-hover:text-primary transition-colors leading-none">
+                      <h3 className="text-sm font-bold uppercase tracking-tight group-hover:text-primary transition-colors leading-tight">
                         {article.title}
                       </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-1 italic">{article.excerpt}</p>
                     </div>
                   </Link>
-                ))}
-              </div>
+                ))
+              ) : (
+                <p className="text-xs text-muted-foreground italic">Tidak ada hasil ditemukan.</p>
+              )}
             </div>
           )}
         </div>
