@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -39,7 +40,7 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Desktop Menu */}
+        {/* Desktop Menu - Aktif mulai dari md (768px) */}
         <div className="hidden md:flex items-center gap-10">
           {navLinks.map((link) => (
             <Link
@@ -61,12 +62,12 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Hamburger */}
+        {/* Mobile Hamburger - Sembunyi mulai dari md (768px) */}
         <button
           className="md:hidden p-2"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6 text-current" />}
         </button>
       </div>
 

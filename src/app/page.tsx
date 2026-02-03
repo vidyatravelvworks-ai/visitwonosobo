@@ -39,7 +39,7 @@ export default function Home() {
       {/* Practical Info Section */}
       <section className="py-32 bg-white">
         <div className="container mx-auto px-10 md:px-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
             <div className="space-y-8">
               <h3 className="text-primary font-bold uppercase tracking-widest">Plan Your Trip</h3>
               <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
@@ -69,7 +69,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="relative aspect-square md:aspect-video lg:aspect-square bg-gray-100 overflow-hidden">
+            <div className="relative aspect-square bg-gray-100 overflow-hidden">
                <img 
                  src="https://images.unsplash.com/photo-1487621167305-5d248087c724?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmb2dneSUyMG1vdW50YWlufGVufDB8fHx8MTc3MDExNTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080" 
                  alt="Dieng Mist"
