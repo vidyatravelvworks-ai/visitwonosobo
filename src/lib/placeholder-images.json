@@ -33,7 +33,7 @@
     {
       "id": "kebun-teh",
       "description": "Tea Plantation",
-      "imageUrl": "https://images.unsplash.com/photo-1558285511-2821243ad072?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx0ZWAlMjBwbGFudGF0aW9ufGVufDB8fHx8MTc3NDE1NjQzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1558285511-2821243ad072?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx0ZWElMjBwbGFudGF0aW9ufGVufDB8fHx8MTc3NDE1NjQzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "tea plantation"
     },
     {
@@ -107,6 +107,24 @@
       "description": "Colonial House Architecture",
       "imageUrl": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb2xvbmlhbCUyMGhvdXNlfGVufDB8fHx8MTc3NDMxNTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "colonial house"
+    },
+    {
+      "id": "village-gathering",
+      "description": "Village Community Gathering",
+      "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjb21tdW5pdHl8ZW58MHx8fHwxNzc0NDMxNjQzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "village gathering"
+    },
+    {
+      "id": "batik-craft",
+      "description": "Traditional Batik Making",
+      "imageUrl": "https://images.unsplash.com/photo-1589365278144-c9e705f843ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiYXRpayUyMGNyYWZ0fGVufDB8fHx8MTc3NDQzMTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "batik craft"
+    },
+    {
+      "id": "traditional-dance-lengger",
+      "description": "Lengger Dance Performance",
+      "imageUrl": "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkYW5jZSUyMGZlc3RpdmFsfGVufDB8fHx8MTc3NDQzMTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "traditional dance"
     }
   ]
 }
