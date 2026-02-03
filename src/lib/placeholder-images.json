@@ -75,31 +75,31 @@
     {
       "id": "ritual",
       "description": "Traditional Ritual",
-      "imageUrl": "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxyaXR1YWx8ZW58MHx8fHwxNzc0MTU2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxyaXR1YWx8ZW58MHx8fHwxNzcwMTE1NjQzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "traditional ritual"
     },
     {
       "id": "street-food",
       "description": "Wonosobo Street Food",
-      "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmcmllZCUyMGZvb2R8ZW58MHx8fHwxNzc0MTU2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmcmllZCUyMGZvb2R8ZW58MHx8fHwxNzcwMTE1NjQzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "street food"
     },
     {
       "id": "lake-morning",
       "description": "Lake in Morning Mist",
-      "imageUrl": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxsYWtlJTIwbWlzdHxlbn8wfHx8fDE3NzQxNTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxsYWtlJTIwbWlzdHxlbn8wfHx8fDE3NzA0MzE2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "lake mist"
     },
     {
       "id": "gedung-papak",
       "description": "Heritage Building Wonosobo",
-      "imageUrl": "https://images.unsplash.com/photo-1577493321623-e180026e6802?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxvbGQlMjBidWlsZGluZ3xlbn8wfHx8fDE3NzQxNTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1577493321623-e180026e6802?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxvbGQlMjBidWlsZGluZ3xlbn8wfHx8fDE3NzA0MzE2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "old building"
     },
     {
       "id": "train-station",
       "description": "Old Train Station Wonosobo",
-      "imageUrl": "https://images.unsplash.com/photo-1532102235608-dc8fc689c9bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0cmFpbiUyMHN0YXRpb258ZW58MHx8fHwxNzc0MTU2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1532102235608-dc8fc689c9bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0cmFpbiUyMHN0YXRpb258ZW58MHx8fHwxNzc0NDMxNjQzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "train station"
     },
     {
@@ -155,6 +155,36 @@
       "description": "Tobacco Plantations",
       "imageUrl": "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
       "imageHint": "farm field"
+    },
+    {
+      "id": "homestay-room",
+      "description": "Cozy Homestay Room",
+      "imageUrl": "https://images.unsplash.com/photo-1505691938895-1758d7eaa511?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      "imageHint": "cozy room"
+    },
+    {
+      "id": "mountain-health",
+      "description": "Hiking Health Check",
+      "imageUrl": "https://images.unsplash.com/photo-1491553141410-0925e011406e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      "imageHint": "hiking health"
+    },
+    {
+      "id": "vlog-gear",
+      "description": "Vlogging Equipment",
+      "imageUrl": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      "imageHint": "camera gear"
+    },
+    {
+      "id": "dcf-lanterns",
+      "description": "Festival Lanterns",
+      "imageUrl": "https://images.unsplash.com/photo-1514525253361-b83a85f0d9c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      "imageHint": "festival crowd"
+    },
+    {
+      "id": "eco-nature",
+      "description": "Sustainable Tourism",
+      "imageUrl": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      "imageHint": "nature conservation"
     }
   ]
 }
