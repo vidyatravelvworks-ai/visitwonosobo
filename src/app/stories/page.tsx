@@ -103,7 +103,7 @@ const StoriesPage = () => {
                   src={cat.image}
                   alt={cat.title}
                   fill
-                  className="object-cover opacity-70 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-50"
+                  className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
                 />
                 <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
                   <div className="mb-4 p-2 bg-primary w-fit">
