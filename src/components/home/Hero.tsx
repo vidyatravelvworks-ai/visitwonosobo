@@ -25,7 +25,7 @@ const Hero = () => {
         <div className="absolute inset-0 bg-black/30 bg-gradient-to-b from-black/50 via-transparent to-black/60" />
       </div>
 
-      <div className="container mx-auto px-10 md:px-20 relative z-10 text-center pt-48 pb-20 md:pt-60 md:pb-24">
+      <div className="container mx-auto px-10 md:px-20 relative z-10 text-center pt-32 pb-20 md:pt-40 md:pb-24">
         <div className="max-w-4xl mx-auto space-y-8">
           <h2 className="text-white text-sm md:text-base font-bold uppercase tracking-[0.4em] animate-in fade-in slide-in-from-bottom-4 duration-700">
             Welcome to Wonosobo
@@ -33,7 +33,7 @@ const Hero = () => {
           <h1 className="text-5xl md:text-9xl font-black text-white font-headline uppercase leading-none tracking-tighter animate-in fade-in slide-in-from-bottom-8 duration-1000">
             The Soul <br /> <span className="text-white underline decoration-primary decoration-[12px] underline-offset-[16px]">of Java</span>
           </h1>
-          <p className="text-xs font-bold uppercase tracking-widest text-white/90 max-w-2xl mx-auto pt-4 animate-in fade-in slide-in-from-bottom-10 duration-1000">
+          <p className="text-sm font-medium tracking-wide text-white/90 max-w-2xl mx-auto pt-4 animate-in fade-in slide-in-from-bottom-10 duration-1000">
             Experience the mystical Dieng Plateau and the warmth of Wonosobo culture with our expert local guides.
           </p>
           <div className="pt-10 flex flex-col sm:flex-row justify-center gap-6 animate-in fade-in slide-in-from-bottom-12 duration-1000">
