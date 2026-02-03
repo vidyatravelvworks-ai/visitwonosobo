@@ -110,9 +110,6 @@ const StoriesPage = () => {
                     {cat.icon}
                   </div>
                   <h3 className="text-2xl font-black uppercase mb-2 tracking-tight">{cat.title}</h3>
-                  <p className="text-white/80 mb-6 text-xs leading-relaxed">
-                    {cat.description}
-                  </p>
                   <Button variant="link" className="text-white p-0 w-fit font-bold uppercase tracking-widest text-[10px] hover:text-primary" asChild>
                     <a href={`#${cat.id}`}>
                       Explore Stories <ArrowRight className="ml-2 h-3 w-3" />
