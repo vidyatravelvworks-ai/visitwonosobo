@@ -13,7 +13,7 @@ export interface Article {
 }
 
 export const articles: Article[] = [
-  // ZONA 1 DESTINATIONS
+  // ZONA 1 DESTINATIONS (NATURE)
   {
     slug: 'pintu-langit-sky-view',
     title: 'Pintu Langit Sky View: Jembatan Kaca Menuju Awan',
@@ -43,20 +43,6 @@ Perjalanan dimulai dari Desa Sembungan, desa tertinggi di Pulau Jawa. Pendakian 
 Selain matahari terbit, di area Bukit Sikunir terdapat Telaga Cebong yang memberikan pantulan cahaya indah di pagi hari. Pengunjung disarankan mengenakan pakaian tebal berlapis karena suhu bisa mencapai 5 derajat celcius. Keindahan Sikunir bukan sekadar tentang pemandangan, tapi tentang kedamaian saat alam memulai harinya. Fenomena alam ini menarik ribuan wisatawan mancanegara setiap tahun, menjadikan Wonosobo pusat pariwisata petualangan yang tak terlupakan.`
   },
   {
-    slug: 'kompleks-candi-arjuna',
-    title: 'Kemegahan Kompleks Candi Arjuna',
-    excerpt: 'Menelusuri jejak peradaban Hindu tertua di Jawa yang berada di ketinggian 2000 mdpl.',
-    category: 'Budaya',
-    type: 'destination',
-    date: '15 Jan 2025',
-    image: PlaceHolderImages.find(img => img.id === 'candi-arjuna')?.imageUrl || '',
-    content: `Kompleks Candi Arjuna merupakan permata sejarah yang terletak di jantung Dataran Tinggi Dieng. Sebagai salah satu peninggalan budaya tertua di Pulau Jawa, candi ini diyakini dibangun pada masa pemerintahan Dinasti Sanjaya sekitar abad ke-8 Masehi. Lokasinya yang berada di ketinggian lebih dari 2.000 meter memberikan nuansa mistis dan spiritual yang sangat kuat, dikelilingi oleh pegunungan vulkanik dan kabut tipis.
-
-Arsitektur Candi Arjuna mencerminkan pengaruh seni India utara yang disesuaikan dengan kearifan lokal Jawa Kuno. Kompleks ini terdiri dari lima bangunan utama: Candi Arjuna, Srikandi, Puntadewa, Sembadra, dan Candi Semar. Setiap bangunan memiliki karakteristik unik, mencerminkan filosofi kesederhanaan dan ketenangan jiwa. Fungsi utamanya adalah sebagai tempat pemujaan Dewa Siwa, yang membuat Dieng dikenal sebagai "Tempat Para Dewa".
-
-Setiap tahun, kompleks ini menjadi pusat Dieng Culture Festival, menampilkan ritual pemotongan rambut gimbal anak-anak Dieng. Pemandangan candi yang dibalut kain tradisional menciptakan harmoni antara sejarah masa lalu dan kehidupan modern. Berjalan di antara batu-batu candi yang dingin di pagi hari memberikan kesempatan untuk refleksi diri dan menghargai ketahanan sejarah yang mampu melampaui waktu selama lebih dari seribu tahun.`
-  },
-  {
     slug: 'kawah-sikidang-aktif',
     title: 'Kawah Sikidang: Eksotisme Perut Bumi',
     excerpt: 'Melihat aktivitas vulkanik Dieng dari dekat di kawah yang unik karena sering berpindah tempat.',
@@ -70,6 +56,124 @@ Fenomena kepulan uap belerang yang putih dan tebal menjadi ciri khas utama tempa
 
 Di Kawah Sikidang, Anda juga bisa mencoba pengalaman unik merebus telur dalam air kawah yang panas. Masyarakat setempat menyediakan telur mentah yang diikat dengan jaring kecil untuk direbus selama beberapa menit hingga matang sempurna. Kawah ini bukan hanya objek wisata, tapi juga laboratorium alam untuk mempelajari energi geotermal. Dengan latar belakang bukit-bukit hijau yang kontras dengan asap putih, Kawah Sikidang menawarkan keindahan estetika sekaligus kekuatan alam yang luar biasa.`
   },
+
+  // HERITAGE & CULTURE
+  {
+    slug: 'kompleks-candi-arjuna',
+    title: 'Kemegahan Kompleks Candi Arjuna',
+    excerpt: 'Menelusuri jejak peradaban Hindu tertua di Jawa yang berada di ketinggian 2000 mdpl.',
+    category: 'Budaya',
+    type: 'destination',
+    date: '15 Jan 2025',
+    image: PlaceHolderImages.find(img => img.id === 'candi-arjuna')?.imageUrl || '',
+    content: `Kompleks Candi Arjuna merupakan permata sejarah yang terletak di jantung Dataran Tinggi Dieng. Sebagai salah satu peninggalan budaya tertua di Pulau Jawa, candi ini diyakini dibangun pada masa pemerintahan Dinasti Sanjaya sekitar abad ke-8 Masehi. Lokasinya yang berada di ketinggian lebih dari 2.000 meter memberikan nuansa mistis dan spiritual yang sangat kuat, dikelilingi oleh pegunungan vulkanik dan kabut tipis.
+
+Arsitektur Candi Arjuna mencerminkan pengaruh seni India utara yang disesuaikan dengan kearifan lokal Jawa Kuno. Kompleks ini terdiri dari lima bangunan utama: Candi Arjuna, Srikandi, Puntadewa, Sembadra, dan Candi Semar. Setiap bangunan memiliki karakteristik unik, mencerminkan filosofi kesederhanaan dan ketenangan jiwa. Fungsi utamanya adalah sebagai tempat pemujaan Dewa Siwa, yang membuat Dieng dikenal sebagai "Tempat Para Dewa".
+
+Setiap tahun, kompleks ini menjadi pusat Dieng Culture Festival, menampilkan ritual pemotongan rambut gimbal anak-anak Dieng. Pemandangan candi yang dibalut kain tradisional menciptakan harmoni antara sejarah masa lalu dan kehidupan modern. Berjalan di antara batu-batu candi yang dingin di pagi hari memberikan kesempatan untuk refleksi diri dan menghargai ketahanan sejarah yang mampu melampaui waktu selama lebih dari seribu tahun. Struktur bangunan yang kokoh meskipun telah berusia ribuan tahun menjadi bukti kecanggihan teknologi sipil leluhur Nusantara.`
+  },
+  {
+    slug: 'candi-bima-arsitektur-unik',
+    title: 'Candi Bima: Keunikan Arsitektur India di Tanah Jawa',
+    excerpt: 'Candi dengan gaya arsitektur yang sangat berbeda dari candi lainnya di Dieng, menyerupai kuil di India.',
+    category: 'Budaya',
+    type: 'destination',
+    date: '18 Jan 2025',
+    image: PlaceHolderImages.find(img => img.id === 'temple-detail')?.imageUrl || '',
+    content: `Candi Bima menempati posisi istimewa dalam sejarah arsitektur Nusantara. Terletak menyendiri di jalur masuk kawasan Dieng dari arah selatan, candi ini memiliki gaya bangunan yang sangat kontras jika dibandingkan dengan kelompok Candi Arjuna. Arsitekturnya mengadopsi gaya Shikhara dari India Utara dan gaya Kudu dari India Selatan, menjadikannya satu-satunya contoh bangunan suci di Indonesia dengan karakteristik visual sedemikian rupa.
+
+Daya tarik utama Candi Bima terletak pada bagian atapnya yang berbentuk limas dengan hiasan relung-relung berisi relief wajah manusia yang dikenal sebagai "Kudu". Relief ini menggambarkan Dewa atau figur suci dalam posisi seolah-olah sedang mengintip dari jendela langit. Teknik pemahatan batu andesit yang begitu detail menunjukkan betapa tingginya apresiasi seni para pembangunnya di masa silam. Bangunannya yang menjulang memberikan kesan megah sekaligus misterius di tengah lanskap pegunungan yang sering tertutup kabut.
+
+Menelusuri Candi Bima adalah tentang memahami akulturasi budaya yang terjadi ribuan tahun lalu. Keberadaan candi ini membuktikan bahwa Dieng pada masa lampau merupakan pusat pertemuan intelektual dan spiritual berskala internasional. Pengunjung yang datang ke sini akan merasakan kesunyian yang khusyuk, berbeda dengan keramaian di kompleks utama. Candi Bima adalah monumen bisu tentang kejayaan peradaban Jawa Kuno yang selalu mampu menyerap inspirasi luar dan mengolahnya menjadi mahakarya lokal yang unik.`
+  },
+  {
+    slug: 'museum-kaliasa-sejarah-dieng',
+    title: 'Museum Kaliasa: Jendela Masa Lalu Dieng',
+    excerpt: 'Pusat informasi terlengkap mengenai sejarah, geologi, dan kebudayaan masyarakat Dataran Tinggi Dieng.',
+    category: 'Budaya',
+    type: 'destination',
+    date: '20 Jan 2025',
+    image: 'https://images.unsplash.com/photo-1590059392683-9b8893ccf971?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtdXNldW0lMjBhbnRpcXVpdHxlbn8wfHx8fDE3NzQxNTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080',
+    content: `Museum Kaliasa bukan sekadar gedung penyimpan benda kuno, melainkan gerbang pengetahuan utama bagi siapa pun yang ingin memahami jati diri Dieng. Nama "Kaliasa" diambil dari nama gunung tempat bersemayamnya Dewa Siwa, selaras dengan status Dieng sebagai tempat suci. Museum ini terbagi menjadi beberapa paviliun yang masing-masing mengisahkan sisi berbeda dari dataran tinggi ini, mulai dari proses terbentuknya secara geologis jutaan tahun lalu hingga kehidupan masyarakat modern saat ini.
+
+Di dalam museum, pengunjung dapat melihat berbagai koleksi artefak asli yang ditemukan di sekitar kawasan candi, seperti arca-arca indah, peralatan rumah tangga kuno, dan prasasti penting. Salah satu bagian yang paling menarik adalah dokumentasi mengenai flora dan fauna endemik Dieng, serta penjelasan mendalam tentang fenomena alam seperti kawah beracun dan embun es. Melalui layar audiovisual, pengunjung juga dapat menyaksikan rekaman ritual budaya yang langka, seperti upacara pemotongan rambut gimbal yang legendaris.
+
+Mengunjungi Museum Kaliasa sangat disarankan sebelum Anda memulai penjelajahan di situs-situs alam atau budaya. Informasi yang didapat di sini akan memberikan konteks yang jauh lebih dalam saat Anda berdiri di depan candi atau di tepi kawah. Museum ini adalah bentuk penghormatan terhadap leluhur dan sekaligus sarana edukasi untuk generasi mendatang agar tetap mencintai warisan bumi Dieng. Lokasinya yang berada di atas bukit memberikan bonus pemandangan seluruh kawasan Dieng yang sangat memukau.`
+  },
+  {
+    slug: 'gua-semar-mistisisme-dieng',
+    title: 'Gua Semar: Pusat Energi Mistis Dieng',
+    excerpt: 'Tempat perenungan spiritual yang diyakini sebagai tempat meditasi para penguasa masa lalu.',
+    category: 'Budaya',
+    type: 'destination',
+    date: '25 Jan 2025',
+    image: PlaceHolderImages.find(img => img.id === 'cave')?.imageUrl || '',
+    content: `Gua Semar memegang peranan penting dalam kosmologi spiritual masyarakat Jawa. Terletak di kawasan Bukit Semar, tak jauh dari Telaga Warna, gua alam ini telah lama dikenal sebagai tempat "laku prihatin" atau meditasi bagi mereka yang mencari kejernihan batin. Nama "Semar" merujuk pada tokoh utama dalam pewayangan Jawa yang dianggap sebagai pamong atau guru kebijaksanaan. Gua ini sering dikaitkan dengan kedatangan tokoh-tokoh besar bangsa Indonesia yang konon melakukan meditasi di sini untuk mendapatkan petunjuk atau kekuatan spiritual.
+
+Suasana di sekitar Gua Semar sangat hening, hanya terdengar suara kicauan burung gunung dan desiran angin di antara pepohonan rimbun. Pintu masuk gua yang sempit memberikan kesan misterius, mengisyaratkan bahwa untuk mencapai kedalaman batin, seseorang harus melepaskan atribut duniawi. Di dalam gua, udaranya sangat lembap dan dingin, namun bagi para pencari spiritual, tempat ini memancarkan energi ketenangan yang luar biasa. Tidak jauh dari Gua Semar, terdapat pula Gua Sumur yang memiliki sumber mata air suci yang dipercaya memiliki khasiat penyembuhan.
+
+Gua Semar bukan hanya tentang mistisisme, tetapi tentang hubungan harmonis antara manusia dan alam. Masyarakat setempat sangat menjaga kesucian tempat ini dengan berbagai aturan adat. Bagi wisatawan, berkunjung ke Gua Semar adalah kesempatan untuk merasakan sisi lain dari Dieng yang lebih tenang dan introspektif. Ini adalah tempat di mana sejarah, legenda, dan spiritualitas menyatu dalam kesunyian yang abadi, mengingatkan kita akan kecilnya manusia di hadapan kekuatan alam semesta.`
+  },
+
+  // FOOD & DINING
+  {
+    slug: 'kuliner-mie-ongklok',
+    title: 'Kelezatan Otentik Mie Ongklok',
+    excerpt: 'Mie Ongklok bukan sekadar mie rebus biasa. Pelajari sejarah dan resep rahasia di balik hidangan legendaris ini.',
+    category: 'Kuliner',
+    type: 'destination',
+    date: '15 Mei 2024',
+    image: PlaceHolderImages.find(img => img.id === 'mie-ongklok')?.imageUrl || '',
+    content: `Mie Ongklok adalah mahakarya kuliner dari Wonosobo yang telah melintasi zaman. Hidangan ini lahir dari kreativitas masyarakat lokal dalam memanfaatkan bahan-bahan yang melimpah di pegunungan, seperti singkong untuk kuah kentalnya dan kucai sebagai penyedap alaminya. Keunikan Mie Ongklok terletak pada "Loh" atau kuah cokelat kentalnya yang gurih-manis, yang terbuat dari campuran pati singkong (tapioka), gula jawa, ebi (udang kering), dan bumbu rempah rahasia. Kekentalan kuah ini bukan tanpa alasan; di daerah berudara dingin seperti Wonosobo, kuah kental mampu menyimpan panas lebih lama sehingga mie tetap nikmat disantap hingga suapan terakhir.
+
+Proses pembuatannya sangat khas menggunakan alat bambu bernama "Ongklok". Mie kuning dan sayuran kol serta kucai dimasukkan ke dalam keranjang bambu tersebut, lalu dicelup-celupkan ke dalam air mendidih berkali-kali hingga matang. Teknik ini memastikan mie memiliki tekstur yang kenyal namun lembut. Kucai yang melimpah memberikan aroma segar yang menyeimbangkan rasa kuah yang pekat. Penyajian Mie Ongklok dianggap belum sempurna tanpa kehadiran Sate Sapi bumbu kacang yang empuk dan Tempe Kemul yang renyah.
+
+Menikmati Mie Ongklok adalah sebuah pengalaman budaya. Di setiap sudut kota Wonosobo, Anda akan menemukan warung-warung Mie Ongklok mulai dari yang legendaris hingga kaki lima. Setiap suapannya menceritakan tentang kehangatan masyarakat pegunungan yang sederhana namun penuh cita rasa. Hidangan ini telah menjadi identitas yang tak terpisahkan dari Wonosobo, sebuah simfoni rasa yang tercipta dari kearifan lokal yang terus dijaga kelestariannya.`
+  },
+  {
+    slug: 'manisan-carica-para-dewa',
+    title: 'Carica: Buah Emas dari Negeri Di Atas Awan',
+    excerpt: 'Mengenal buah carica yang hanya tumbuh subur di dataran tinggi Dieng dan kisah di balik pengolahannya.',
+    category: 'Kuliner',
+    type: 'destination',
+    date: '01 Feb 2025',
+    image: PlaceHolderImages.find(img => img.id === 'carica')?.imageUrl || '',
+    content: `Carica (Vasconcellea pubescens) adalah ikon kuliner paling eksklusif dari dataran tinggi Dieng. Buah yang sering disebut sebagai "Pepaya Gunung" ini memiliki keunikan karena hanya dapat tumbuh subur pada ketinggian di atas 1.500 meter dengan suhu yang dingin. Meskipun aslinya berasal dari pegunungan Andes di Amerika Selatan, Carica telah menjadi bagian integral dari identitas Wonosobo selama puluhan tahun. Buahnya yang berwarna kuning cerah saat matang memiliki aroma yang sangat harum dan rasa yang khas—perpaduan antara mangga, pepaya, dan nanas.
+
+Pengolahan Carica menjadi manisan memerlukan ketelitian tingkat tinggi. Bagian yang paling lezat justru terletak pada lendir yang membungkus bijinya, yang kemudian diperas untuk diambil sarinya sebagai sirup alami. Daging buahnya yang kenyal dipotong-potong dan direbus dalam sirup tersebut, menghasilkan manisan yang segar dan tahan lama tanpa bahan pengawet berlebih. Selain rasanya yang nikmat, Carica kaya akan vitamin A, C, dan enzim papain yang sangat baik untuk pencernaan. Oleh karena itu, masyarakat setempat sering menyebutnya sebagai buah kesehatan.
+
+Saat ini, Carica telah menjadi industri kreatif yang menggerakkan ekonomi ribuan warga Wonosobo. Produk olahannya mulai dari manisan dalam botol, sirup, hingga keripik telah menjangkau pasar nasional. Mengunjungi pusat pengolahan Carica memberikan kesempatan bagi wisatawan untuk melihat langsung proses produksinya yang masih banyak menggunakan tenaga manusia (handmade). Membawa pulang sekotak manisan Carica bukan hanya membawa buah tangan, tetapi membawa sepotong keajaiban alam Dieng yang manis dan menyegarkan ke rumah Anda.`
+  },
+  {
+    slug: 'tempe-kemul-khas-wonosobo',
+    title: 'Tempe Kemul: Selimut Hangat di Tengah Kedinginan',
+    excerpt: 'Gorengan khas Wonosobo dengan balutan tepung kuning yang renyah dan aroma kucai yang menggoda.',
+    category: 'Kuliner',
+    type: 'destination',
+    date: '05 Feb 2025',
+    image: 'https://images.unsplash.com/photo-1626700051175-6518a4993f56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHtmcmllZCUyMGZvb2R8ZW58MHx8fHwxNzc0MTU2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    content: `Tempe Kemul adalah camilan paling merakyat dan paling dicintai di Wonosobo. Nama "Kemul" dalam bahasa Jawa berarti selimut, yang menggambarkan bagaimana irisan tempe tipis "diselimuti" dengan adonan tepung yang tebal namun renyah. Berbeda dengan tempe mendoan yang cenderung lembek, Tempe Kemul digoreng hingga garing (crispy) di bagian pinggirannya, memberikan sensasi gigitan yang sangat memuaskan. Warna kuningnya yang khas berasal dari penggunaan kunyit alami, sementara aroma segarnya didapat dari irisan daun kucai yang melimpah dalam adonannya.
+
+Kunci kelezatan Tempe Kemul terletak pada kesegaran bahannya. Tempe yang digunakan biasanya adalah tempe buatan pengrajin lokal yang dibungkus daun pisang, memberikan aroma yang lebih wangi. Adonan tepungnya merupakan campuran tepung beras dan tepung tapioka yang dibumbui dengan ketumbar, bawang putih, dan garam. Digoreng dalam minyak panas yang banyak, Tempe Kemul akan mengembang dan menciptakan pinggiran yang lebar dan renyah. Camilan ini paling nikmat disantap saat masih panas, ditemani dengan cabe rawit hijau yang pedas.
+
+Bagi masyarakat Wonosobo, Tempe Kemul adalah teman setia dalam setiap kesempatan, mulai dari sarapan, teman minum teh di sore hari, hingga pendamping wajib Mie Ongklok. Hampir di setiap sudut jalan dan pasar tradisional, Anda akan menemukan penjual Tempe Kemul dengan wajannya yang besar. Tempe Kemul bukan sekadar gorengan biasa; ia adalah simbol kehangatan dan kebersamaan masyarakat pegunungan yang selalu siap berbagi kesederhanaan yang nikmat di tengah dinginnya udara Wonosobo.`
+  },
+  {
+    slug: 'kopi-bowongso-aroma-gunung',
+    title: 'Kopi Bowongso: Cita Rasa dari Lereng Sumbing',
+    excerpt: 'Menikmati kopi arabika berkualitas tinggi yang ditanam di ketinggian ekstrem lereng Gunung Sumbing.',
+    category: 'Kuliner',
+    type: 'destination',
+    date: '10 Feb 2025',
+    image: PlaceHolderImages.find(img => img.id === 'coffee')?.imageUrl || '',
+    content: `Wonosobo kini mulai diperhitungkan dalam peta kopi spesialti Indonesia, dan Kopi Bowongso adalah salah satu ujung tombaknya. Ditanam di Desa Bowongso yang terletak di lereng Gunung Sumbing pada ketinggian sekitar 1.500 hingga 1.800 meter, kopi arabika ini memiliki karakteristik rasa yang sangat unik. Tanah vulkanik yang kaya mineral dan iklim pegunungan yang stabil memberikan profil rasa yang kompleks, seringkali muncul aroma tembakau, rempah-rempah, dan tingkat keasaman (acidity) yang bersih dan menyegarkan.
+
+Proses pengolahan kopi di Bowongso dilakukan dengan standar ketat oleh kelompok tani setempat. Mulai dari pemetikan buah merah (red cherry), proses pencucian, hingga penyangraian (roasting) dilakukan dengan hati-hati untuk menjaga kualitas aromanya. Para petani di Bowongso menerapkan sistem tumpang sari, di mana pohon kopi tumbuh di antara tanaman tembakau dan sayuran, yang secara tidak langsung memberikan pengaruh pada "body" dan aroma hasil akhirnya. Kopi ini tidak hanya tentang rasa, tetapi juga tentang perjuangan petani lokal dalam melestarikan ekosistem hutan melalui pertanian kopi yang ramah lingkungan.
+
+Menikmati secangkir Kopi Bowongso di tengah kabut pegunungan adalah pengalaman yang tak terlupakan bagi para pencinta kopi. Kedai-kedai kopi di Wonosobo kini banyak menyajikan kopi ini dengan berbagai teknik seduh manual untuk menonjolkan karakter aslinya. Dengan meminum Kopi Bowongso, Anda tidak hanya menikmati minuman berkualitas, tetapi juga mendukung keberlanjutan ekonomi petani lereng gunung. Aroma harum yang keluar dari cangkir kopi ini seolah membawa kita pada ketenangan dan kemegahan puncak Gunung Sumbing yang abadi.`
+  },
+
+  // ALAM (NATURE) - ZONA 1 & 2
   {
     slug: 'batu-ratapan-angin',
     title: 'Batu Ratapan Angin: Memandang Telaga dari Ketinggian',
@@ -112,8 +216,6 @@ Kawasan ini dikelilingi oleh hutan yang masih asri dan beberapa gua alam yang me
 
 Telaga Warna juga menjadi habitat bagi berbagai jenis burung gunung dan flora endemik. Keberadaan dua telaga dengan sifat air yang berbeda secara berdampingan merupakan keajaiban geologi yang menarik minat banyak peneliti. Bagi wisatawan, Telaga Warna adalah tempat di mana warna-warna alam bertemu dalam sebuah kolam vulkanik purba, memberikan ketenangan visual dan kedamaian batin bagi siapa saja yang mengunjunginya.`
   },
-
-  // ZONA 2 DESTINATIONS
   {
     slug: 'air-terjun-sikarim',
     title: 'Air Terjun Sikarim: Keindahan di Jalur Ekstrem',
@@ -136,7 +238,7 @@ Sikarim bukan sekadar objek wisata, melainkan bagian dari ekosistem hutan Dieng 
     type: 'destination',
     date: '07 Mar 2025',
     image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtb3VudGFpbiUyMHZpZXd8ZW58MHx8fHwxNzc0MTU2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    content: `Sebutan "Swiss Van Java" disematkan pada jalur pendakian antara Desa Mlandi menuju dataran tinggi Dieng. Nama ini tidaklah berlebihan; saat Anda berada di titik-titik tertentu di jalur ini, Anda akan disuguhi pemandangan lembah yang sangat dalam, lereng-lereng bukit yang ditanami sayuran dengan rapi, dan awan-awan yang menggantung rendah di puncak-puncak bukit. Atmosfer dan lanskapnya secara visual sangat mirip dengan kawasan pegunungan Alpen di Swiss.
+    content: `Sebutan "Swiss Van Java" disematkan pada jalur pendakian antara Desa Mlandi menuju dataran tinggi Dieng. Nama ini tidaklah berlebihan; saat Anda berada di titik-titik tertentu di jalur ini, Anda akan disuguhi pemandangan lembah yang sangat dalam, lereng-lereng bukit yang ditanami sayuran dengan rapi, and awan-awan yang menggantung rendah di puncak-puncak bukit. Atmosfer dan lanskapnya secara visual sangat mirip dengan kawasan pegunungan Alpen di Swiss.
 
 Keunikan jalur ini adalah kombinasi antara keindahan alam yang liar dengan aktivitas pertanian masyarakat lokal. Di pagi hari, Anda bisa melihat para petani yang bekerja di ladang-ladang curam yang tertutup kabut tipis. Sinar matahari yang menembus celah-celah bukit memberikan efek cahaya yang magis bagi para fotografer. Jalur ini menjadi favorit bagi para pengendara motor dan pesepeda yang mencari tantangan fisik sekaligus kepuasan visual.
 
@@ -185,21 +287,7 @@ Udara di sini sangat bersih dan segar dengan aroma khas daun teh yang tertiup an
 Di area ini juga terdapat fasilitas untuk menikmati teh hangat hasil perkebunan setempat. Menyesap teh original di tengah kebun teh yang berkabut adalah kemewahan sederhana yang bisa Anda dapatkan di Wonosobo. Kebun Teh Panama mengajarkan kita untuk kembali menghargai alam dan ritme kehidupan yang tenang. Hijau tanaman teh yang membentang sejauh mata memandang adalah obat terbaik untuk melepaskan penat dari kesibukan perkotaan.`
   },
 
-  // KULINER & STORIES
-  {
-    slug: 'kuliner-mie-ongklok',
-    title: 'Kelezatan Otentik Mie Ongklok',
-    excerpt: 'Mie Ongklok bukan sekadar mie rebus biasa. Pelajari sejarah dan resep rahasia di balik hidangan legendaris ini.',
-    category: 'Kuliner',
-    type: 'destination',
-    date: '15 Mei 2024',
-    image: PlaceHolderImages.find(img => img.id === 'mie-ongklok')?.imageUrl || '',
-    content: `Jika Anda berkunjung ke Wonosobo, ada satu hidangan yang wajib masuk dalam daftar kuliner Anda: Mie Ongklok. Hidangan ini bukan sekadar mie rebus biasa, melainkan sebuah simfoni rasa yang tercipta dari perpaduan bahan lokal yang unik dan teknik memasak tradisional yang telah diwariskan turun-temurun. Keunikan Mie Ongklok terletak pada tekstur kuahnya yang kental dan gurih, serta cara penyajiannya yang khas menggunakan alat bambu bernama "Ongklok".
-
-Nama "Ongklok" merujuk pada alat masak tradisional berbentuk keranjang kecil dari bambu yang digunakan untuk mencelupkan mie dan sayuran ke dalam air mendidih. Teknik "mengongklok" ini memastikan mie matang sempurna tanpa merusak teksturnya. Satu porsi Mie Ongklok biasanya terdiri dari mie kuning, irisan kol segar, dan daun kucai yang melimpah. Kucai memberikan aroma segar dan rasa unik yang kontras dengan kuahnya yang manis-gurih.
-
-Kuah Mie Ongklok yang kental, atau "Loh", terbuat dari pati singkong, gula jawa, ebi, dan rempah lainnya. Kekentalan ini menjaga suhu mie agar tetap hangat di cuaca Wonosobo yang dingin. Pengalaman makan belum lengkap tanpa Tempe Kemul (tempe goreng tepung kucai yang renyah) dan Sate Sapi bumbu kacang. Perpaduan tekstur renyah tempe dan lembutnya mie menciptakan harmoni rasa yang luar biasa. Kuliner ini telah ada sejak zaman kolonial dan tetap menjadi favorit karena kesederhanaannya yang sarat makna budaya.`
-  },
+  // STORIES
   {
     slug: 'asal-usul-wonosobo',
     title: 'Sejarah: Dari Lembah Menjadi Kota',

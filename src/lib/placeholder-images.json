@@ -41,6 +41,30 @@
       "description": "Waterfall in Sikarim",
       "imageUrl": "https://images.unsplash.com/photo-1433086966358-54859d0ed716?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx3YXRlcmZhbGx8ZW58MHx8fHwxNzc0MTU2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "forest waterfall"
+    },
+    {
+      "id": "carica",
+      "description": "Carica Fruit",
+      "imageUrl": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxleG90aWMlMjBmcnVpdHxlbn8wfHx8fDE3NzQxNTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "exotic fruit"
+    },
+    {
+      "id": "temple-detail",
+      "description": "Temple Stone Detail",
+      "imageUrl": "https://images.unsplash.com/photo-1596120229004-944208a546d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhbmNpZW50JTIwc3RvbmV8ZW58MHx8fHwxNzc0MTU2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ancient stone"
+    },
+    {
+      "id": "coffee",
+      "description": "Local Coffee Beans",
+      "imageUrl": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjb2ZmZWUlMjBiZWFuc3xlbn8wfHx8fDE3NzQxNTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "coffee beans"
+    },
+    {
+      "id": "cave",
+      "description": "Mystical Cave",
+      "imageUrl": "https://images.unsplash.com/photo-1502759683299-cdcc6974244f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxteXN0aWNhbCUyMGNhdmV8ZW58MHx8fHwxNzc0MTU2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mystical cave"
     }
   ]
 }
