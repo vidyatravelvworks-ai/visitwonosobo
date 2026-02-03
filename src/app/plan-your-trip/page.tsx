@@ -69,7 +69,7 @@ const PlanYourTripPage = () => {
           <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-4">
             Plan Your <span className="text-primary">Journey</span>
           </h1>
-          <p className="text-white/80 text-sm md:text-lg max-w-2xl mx-auto font-medium tracking-wide">
+          <p className="text-white/80 text-sm max-w-2xl mx-auto font-medium tracking-wide">
             Pilih paket perjalanan yang telah kami susun dengan teliti untuk pengalaman Wonosobo yang tak terlupakan.
           </p>
         </div>

@@ -35,7 +35,7 @@ const StoriesPage = () => {
           <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white mb-4">
             Stories
           </h1>
-          <p className="text-white/80 text-sm md:text-lg max-w-2xl mx-auto font-medium tracking-wide">
+          <p className="text-white/80 text-sm max-w-2xl mx-auto font-medium tracking-wide">
             Mengenal Wonosobo lebih dalam melalui narasi tentang sejarah, masyarakat, dan keajaiban geografisnya.
           </p>
         </div>

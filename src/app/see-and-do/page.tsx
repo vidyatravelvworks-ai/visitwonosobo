@@ -35,7 +35,7 @@ const SeeAndDoPage = () => {
           <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white mb-4">
             See & Do
           </h1>
-          <p className="text-white/80 text-sm md:text-lg max-w-2xl mx-auto font-medium tracking-wide">
+          <p className="text-white/80 text-sm max-w-2xl mx-auto font-medium tracking-wide">
             Eksplorasi setiap sudut Wonosobo. Dari puncak gunung yang berkabut hingga meja makan penuh cita rasa lokal.
           </p>
         </div>
