@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,12 +9,17 @@ interface ArticleCardProps {
 }
 
 const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
+  // Ensure we never pass an empty string to next/image src
+  const imageSrc = article.image && article.image.trim() !== '' 
+    ? article.image 
+    : 'https://picsum.photos/seed/wonosobo-placeholder/600/400';
+
   return (
     <Link href={`/artikel/${article.slug}`} className="group block">
       <div className="space-y-6">
         <div className="relative aspect-[3/2] overflow-hidden bg-gray-100">
           <Image
-            src={article.image}
+            src={imageSrc}
             alt={article.title}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"

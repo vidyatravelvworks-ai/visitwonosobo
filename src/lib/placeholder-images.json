@@ -101,6 +101,12 @@
       "description": "Old Train Station Wonosobo",
       "imageUrl": "https://images.unsplash.com/photo-1532102235608-dc8fc689c9bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0cmFpbiUyMHN0YXRpb258ZW58MHx8fHwxNzc0MTU2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "train station"
+    },
+    {
+      "id": "colonial-house",
+      "description": "Colonial House Architecture",
+      "imageUrl": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb2xvbmlhbCUyMGhvdXNlfGVufDB8fHx8MTc3NDMxNTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "colonial house"
     }
   ]
 }
