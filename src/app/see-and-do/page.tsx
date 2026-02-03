@@ -70,7 +70,7 @@ const SeeAndDoPage = () => {
       </section>
 
       {/* Categories Visual Grid (Matching Home Page) */}
-      <section className="py-24 md:py-32">
+      <section className="pt-1 pb-24 md:pt-2 md:pb-32">
         <div className="container mx-auto px-12 md:px-32">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
             {categoryData.map((cat) => (
