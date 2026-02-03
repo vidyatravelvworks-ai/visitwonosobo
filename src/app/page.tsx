@@ -15,38 +15,7 @@ export default function Home() {
   return (
     <div className="bg-white">
       <Hero />
-      <Services />
       
-      {/* Featured Stories Section with Background */}
-      <section className="relative py-32 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={PlaceHolderImages.find(img => img.id === 'misty-valley')?.imageUrl || 'https://picsum.photos/seed/valley/1920/1080'}
-            alt="Stories Background"
-            fill
-            className="object-cover opacity-5"
-          />
-        </div>
-        <div className="container mx-auto px-12 md:px-32 relative z-10">
-          <div className="text-center mb-20">
-            <h3 className="text-primary font-bold uppercase tracking-widest mb-4">Insider Stories</h3>
-            <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Town's Stories</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {featuredStories.map((article) => (
-              <ArticleCard key={article.slug} article={article} />
-            ))}
-          </div>
-
-          <div className="mt-20 text-center">
-            <Button size="lg" className="bg-primary text-white font-bold uppercase tracking-widest text-xs px-10 py-7 rounded-none" asChild>
-              <Link href="/stories">View All Stories</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
       {/* Practical Info Section with Side Background */}
       <section className="relative py-32 bg-white overflow-hidden">
         <div className="absolute left-0 top-0 bottom-0 w-1/2 z-0 hidden lg:block opacity-[0.03]">
@@ -95,6 +64,38 @@ export default function Home() {
                  className="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-700"
                />
             </div>
+          </div>
+        </div>
+      </section>
+
+      <Services />
+      
+      {/* Featured Stories Section with Background */}
+      <section className="relative py-32 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={PlaceHolderImages.find(img => img.id === 'misty-valley')?.imageUrl || 'https://picsum.photos/seed/valley/1920/1080'}
+            alt="Stories Background"
+            fill
+            className="object-cover opacity-5"
+          />
+        </div>
+        <div className="container mx-auto px-12 md:px-32 relative z-10">
+          <div className="text-center mb-20">
+            <h3 className="text-primary font-bold uppercase tracking-widest mb-4">Insider Stories</h3>
+            <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Town's Stories</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {featuredStories.map((article) => (
+              <ArticleCard key={article.slug} article={article} />
+            ))}
+          </div>
+
+          <div className="mt-20 text-center">
+            <Button size="lg" className="bg-primary text-white font-bold uppercase tracking-widest text-xs px-10 py-7 rounded-none" asChild>
+              <Link href="/stories">View All Stories</Link>
+            </Button>
           </div>
         </div>
       </section>
