@@ -33,7 +33,7 @@
     {
       "id": "kebun-teh",
       "description": "Tea Plantation",
-      "imageUrl": "https://images.unsplash.com/photo-1558285511-2821243ad072?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx0ZWElMjBwbGFudGF0aW9ufGVufDB8fHx8MTc3NDE1NjQzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1558285511-2821243ad072?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx0ZWAlMjBwbGFudGF0aW9ufGVufDB8fHx8MTc3NDE1NjQzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "tea plantation"
     },
     {
@@ -65,6 +65,30 @@
       "description": "Mystical Cave",
       "imageUrl": "https://images.unsplash.com/photo-1502759683299-cdcc6974244f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxteXN0aWNhbCUyMGNhdmV8ZW58MHx8fHwxNzc0MTU2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "mystical cave"
+    },
+    {
+      "id": "mountain-prau",
+      "description": "Mt Prau Peak",
+      "imageUrl": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtb3VudGFpbnxlbn8wfHx8fDE3NzQxNTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mountain peak"
+    },
+    {
+      "id": "ritual",
+      "description": "Traditional Ritual",
+      "imageUrl": "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxyaXR1YWx8ZW58MHx8fHwxNzc0MTU2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "traditional ritual"
+    },
+    {
+      "id": "street-food",
+      "description": "Wonosobo Street Food",
+      "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmcmllZCUyMGZvb2R8ZW58MHx8fHwxNzc0MTU2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "street food"
+    },
+    {
+      "id": "lake-morning",
+      "description": "Lake in Morning Mist",
+      "imageUrl": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxsYWtlJTIwbWlzdHxlbn8wfHx8fDE3NzQxNTY0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "lake mist"
     }
   ]
 }
