@@ -3,12 +3,13 @@ import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { ChevronDown } from 'lucide-react';
 
 const Hero = () => {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-sikunir');
 
   return (
-    <section className="relative h-[90vh] min-h-[600px] flex items-center overflow-hidden">
+    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         {heroImage && (
@@ -21,26 +22,34 @@ const Hero = () => {
             data-ai-hint={heroImage.imageHint}
           />
         )}
-        <div className="absolute inset-0 bg-black/40 bg-gradient-to-r from-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-black/30 bg-gradient-to-b from-black/50 via-transparent to-black/60" />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-2xl text-white space-y-8">
-          <h1 className="text-5xl md:text-7xl font-bold font-headline leading-tight animate-in slide-in-from-left duration-700">
-            Eksplorasi Wonosobo dengan <span className="text-secondary">Lokal Guide</span> Terbaik
+      <div className="container mx-auto px-6 relative z-10 text-center">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <h2 className="text-white text-sm md:text-base font-bold uppercase tracking-[0.3em] animate-in fade-in slide-in-from-bottom-4 duration-700">
+            Welcome to Wonosobo
+          </h2>
+          <h1 className="text-6xl md:text-9xl font-black text-white font-headline uppercase leading-none tracking-tighter animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            Passion Made <br /> <span className="text-white underline decoration-primary decoration-8 underline-offset-8">Possible</span>
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 font-light max-w-xl animate-in slide-in-from-left duration-1000">
-            Nikmati keindahan sunrise Sikunir dan kearifan lokal Dieng bersama tim profesional kami yang lahir dan besar di sini.
+          <p className="text-lg md:text-xl text-white/90 font-medium max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-10 duration-1000">
+            Experience the mystical Dieng Plateau and the warmth of Wonosobo culture with our expert local guides.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 animate-in slide-in-from-bottom duration-1000">
-            <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-primary font-bold text-lg px-8 py-7" asChild>
-              <a href="#services">Lihat Paket Wisata</a>
+          <div className="pt-8 flex flex-col sm:flex-row justify-center gap-6 animate-in fade-in slide-in-from-bottom-12 duration-1000">
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest text-xs px-10 py-8" asChild>
+              <a href="#services">Explore Experiences</a>
             </Button>
-            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10 text-lg px-8 py-7" asChild>
-              <a href="/artikel">Baca Tips Perjalanan</a>
+            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-black font-bold uppercase tracking-widest text-xs px-10 py-8" asChild>
+              <a href="/artikel">Travel Stories</a>
             </Button>
           </div>
         </div>
+      </div>
+
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white animate-bounce hidden md:block">
+        <ChevronDown className="h-8 w-8 opacity-50" />
       </div>
     </section>
   );
