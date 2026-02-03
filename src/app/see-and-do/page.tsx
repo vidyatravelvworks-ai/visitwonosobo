@@ -3,7 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 import { articles } from '@/data/articles';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Sunrise, Map, Car, ArrowRight } from 'lucide-react';
+import { Sunrise, Map, Utensils, ArrowRight } from 'lucide-react';
 import ArticleCard from '@/components/article/ArticleCard';
 import { Button } from '@/components/ui/button';
 
@@ -35,7 +35,7 @@ const categoryData = [
     categoryName: 'Kuliner',
     description: 'Taste the legendary Mie Ongklok and the unique Carica fruit.',
     image: PlaceHolderImages.find(img => img.id === 'mie-ongklok')?.imageUrl || '',
-    icon: <Car className="h-5 w-5" />
+    icon: <Utensils className="h-5 w-5" />
   }
 ];
 
@@ -69,7 +69,7 @@ const SeeAndDoPage = () => {
         </div>
       </section>
 
-      {/* Categories Visual Grid (Matching Home Page) */}
+      {/* Categories Visual Grid */}
       <section className="pt-1 pb-24 md:pt-2 md:pb-32">
         <div className="container mx-auto px-12 md:px-32">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-1">

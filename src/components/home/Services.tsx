@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { ArrowRight, Car, Sunrise, Map } from 'lucide-react';
+import { ArrowRight, Utensils, Sunrise, Map } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
@@ -28,7 +28,7 @@ const categories = [
     description: 'Taste the legendary Mie Ongklok and the unique Carica fruit.',
     image: PlaceHolderImages.find(img => img.id === 'mie-ongklok')?.imageUrl || '',
     link: '#',
-    icon: <Car className="h-5 w-5" />
+    icon: <Utensils className="h-5 w-5" />
   }
 ];
 
