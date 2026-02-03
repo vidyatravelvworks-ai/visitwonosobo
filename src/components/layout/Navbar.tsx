@@ -24,7 +24,7 @@ const Navbar = () => {
   const navLinks = [
     { name: 'See & Do', href: '/see-and-do' },
     { name: 'Stories', href: '/stories' },
-    { name: 'Plan Your Trip', href: '/#itinerary' },
+    { name: 'Plan Your Trip', href: '/plan-your-trip' },
   ];
 
   return (
