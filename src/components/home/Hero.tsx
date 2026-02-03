@@ -40,7 +40,7 @@ const Hero = () => {
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest text-xs px-12 py-8 rounded-none" asChild>
               <a href="#services">Explore Experiences</a>
             </Button>
-            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-black font-bold uppercase tracking-widest text-xs px-12 py-8 rounded-none" asChild>
+            <Button size="lg" variant="outline" className="text-primary border-white hover:bg-white hover:text-black font-bold uppercase tracking-widest text-xs px-12 py-8 rounded-none" asChild>
               <a href="/artikel">Travel Stories</a>
             </Button>
           </div>
