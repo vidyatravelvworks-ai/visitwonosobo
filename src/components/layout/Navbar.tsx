@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Compass, Search } from 'lucide-react';
+import { Menu, X, Compass, Search, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -40,8 +40,11 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Desktop Menu - Aktif mulai dari lg (1024px) */}
+        {/* Desktop Menu */}
         <div className="hidden lg:flex items-center gap-10">
+          <Link href="/" className="hover:opacity-70 transition-opacity">
+            <Home className="h-5 w-5" />
+          </Link>
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -62,7 +65,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Hamburger - Sembunyi mulai dari lg (1024px) */}
+        {/* Mobile Hamburger */}
         <button
           className="lg:hidden p-2"
           onClick={() => setIsOpen(!isOpen)}
@@ -78,6 +81,13 @@ const Navbar = () => {
             <X className="h-8 w-8 cursor-pointer" onClick={() => setIsOpen(false)} />
           </div>
           <div className="space-y-8">
+            <Link
+              href="/"
+              className="block hover:text-primary transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              <Home className="h-8 w-8" />
+            </Link>
             {navLinks.map((link) => (
               <Link
                 key={link.name}
