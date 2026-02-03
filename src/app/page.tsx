@@ -33,7 +33,7 @@ export default function Home() {
               <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
                 Essential <br /> Information
               </h2>
-              <p className="text-sm font-bold tracking-widest text-muted-foreground leading-relaxed">
+              <p className="text-sm font-medium tracking-wide text-muted-foreground leading-relaxed">
                 Everything you need to know before visiting the land above the clouds. From visa requirements to local transportation.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6">
@@ -74,7 +74,7 @@ export default function Home() {
       <section className="relative py-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src={PlaceHolderImages.find(img => img.id === 'misty-valley')?.imageUrl || 'https://picsum.photos/seed/valley/1920/1080'}
+            src={PlaceHolderImages.find(img => img.id='misty-valley')?.imageUrl || 'https://picsum.photos/seed/valley/1920/1080'}
             alt="Stories Background"
             fill
             className="object-cover opacity-5"
