@@ -21,7 +21,7 @@ export default function Home() {
         <div className="container mx-auto px-12 md:px-32">
           <div className="text-center mb-20">
             <h3 className="text-primary font-bold uppercase tracking-widest mb-4">Insider Stories</h3>
-            <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Passion Stories</h2>
+            <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Town's Stories</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
