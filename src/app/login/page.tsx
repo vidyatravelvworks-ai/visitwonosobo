@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -9,12 +10,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { ShieldCheck, AlertCircle } from 'lucide-react';
+import { ShieldCheck, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('admin@visitwonosobo.tour-travel.id');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const auth = useAuth();
@@ -34,9 +37,25 @@ const LoginPage = () => {
     }
   };
 
+  const bgImage = PlaceHolderImages.find(img => img.id === 'mountain-prau');
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-secondary/30 px-6">
-      <Card className="w-full max-w-md border-2 border-black/5 rounded-none shadow-2xl">
+    <div className="relative min-h-screen flex items-center justify-center px-6">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 z-0">
+        {bgImage && (
+          <Image
+            src={bgImage.imageUrl}
+            alt="Wonosobo Mountains"
+            fill
+            className="object-cover"
+            priority
+          />
+        )}
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
+      </div>
+
+      <Card className="w-full max-w-md border-2 border-white/10 rounded-none shadow-2xl bg-white/95 backdrop-blur-sm relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
         <CardHeader className="space-y-2 text-center pb-8 border-b">
           <div className="mx-auto bg-primary w-12 h-12 flex items-center justify-center mb-2">
             <ShieldCheck className="text-white h-6 w-6" />
@@ -66,19 +85,28 @@ const LoginPage = () => {
             </div>
             <div className="space-y-2">
               <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Password</Label>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="rounded-none border-2 border-black/10 focus:border-primary h-12 font-bold"
-                required
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="rounded-none border-2 border-black/10 focus:border-primary h-12 font-bold pr-10"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
           </CardContent>
           <CardFooter className="pb-8">
             <Button 
               type="submit" 
-              className="w-full bg-black hover:bg-primary text-white h-14 font-black uppercase tracking-[0.2em] rounded-none transition-all"
+              className="w-full bg-black hover:bg-primary text-white h-14 font-black uppercase tracking-[0.2em] rounded-none transition-all shadow-lg"
               disabled={isLoading}
             >
               {isLoading ? 'Authenticating...' : 'Enter Dashboard'}
