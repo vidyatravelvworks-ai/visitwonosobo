@@ -54,7 +54,13 @@ const Footer = () => {
         </div>
         
         <div className="pt-10 border-t flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Visit Wonosobo. All Rights Reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()}{' '}
+            <Link href="/login" className="hover:text-primary transition-colors">
+              visitwonosobo
+            </Link>
+            . All Rights Reserved.
+          </p>
           <div className="flex gap-10">
             <Link href="#" className="hover:text-black">Privacy Policy</Link>
             <Link href="#" className="hover:text-black">Terms of Use</Link>
