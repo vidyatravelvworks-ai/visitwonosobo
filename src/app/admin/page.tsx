@@ -8,12 +8,19 @@ import { collection, doc, deleteDoc, query, orderBy, serverTimestamp, setDoc } f
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, RefreshCw, Search, PenTool, Image as ImageIcon, Map, BookOpen } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, RefreshCw, Search, Map, BookOpen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import { getAuth, signOut } from 'firebase/auth';
 import { cn } from '@/lib/utils';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const AdminDashboard = () => {
   const { user, isUserLoading } = useUser();
@@ -24,6 +31,7 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSyncing, setIsSyncing] = useState(false);
   const [filterType, setFilterType] = useState<'all' | 'destination' | 'story'>('all');
+  const [filterCategory, setFilterCategory] = useState<string>('all');
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -97,7 +105,8 @@ const AdminDashboard = () => {
     const matchesSearch = a.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (a.category && a.category.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesType = filterType === 'all' ? true : a.type === filterType;
-    return matchesSearch && matchesType;
+    const matchesCategory = filterCategory === 'all' ? true : a.category === filterCategory;
+    return matchesSearch && matchesType && matchesCategory;
   }) || [];
 
   return (
@@ -112,7 +121,10 @@ const AdminDashboard = () => {
         <nav className="flex-grow space-y-2">
           <Button 
             variant="ghost" 
-            onClick={() => setFilterType('all')}
+            onClick={() => {
+              setFilterType('all');
+              setFilterCategory('all');
+            }}
             className={cn(
               "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
               filterType === 'all' && "bg-primary"
@@ -128,7 +140,10 @@ const AdminDashboard = () => {
 
           <Button 
             variant="ghost" 
-            onClick={() => setFilterType('destination')}
+            onClick={() => {
+              setFilterType('destination');
+              setFilterCategory('all');
+            }}
             className={cn(
               "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
               filterType === 'destination' && "bg-primary"
@@ -140,7 +155,10 @@ const AdminDashboard = () => {
 
           <Button 
             variant="ghost" 
-            onClick={() => setFilterType('story')}
+            onClick={() => {
+              setFilterType('story');
+              setFilterCategory('all');
+            }}
             className={cn(
               "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
               filterType === 'story' && "bg-primary"
@@ -183,7 +201,7 @@ const AdminDashboard = () => {
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div>
             <h1 className="text-4xl font-black uppercase tracking-tighter">
-              {filterType === 'all' ? 'All Content' : filterType === 'destination' ? 'See &amp; Do Content' : 'Stories Content'}
+              {filterType === 'all' ? 'All Content' : filterType === 'destination' ? 'See & Do Content' : 'Stories Content'}
             </h1>
             <p className="text-sm font-medium text-muted-foreground mt-2">Manage your articles and destinations in real-time.</p>
           </div>
@@ -208,16 +226,44 @@ const AdminDashboard = () => {
 
         <Card className="rounded-none border-2 border-black/5 shadow-xl">
           <CardHeader className="p-8 border-b">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <CardTitle className="text-xl font-black uppercase tracking-tight">Content Directory</CardTitle>
-              <div className="relative w-full md:w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input 
-                  placeholder="Search articles..." 
-                  className="pl-10 w-full rounded-none border-2 border-black/10 focus:border-primary h-10 font-bold text-xs outline-none"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+              <div className="flex items-center gap-4">
+                <CardTitle className="text-xl font-black uppercase tracking-tight">Content Directory</CardTitle>
+                <Badge variant="secondary" className="rounded-none border-2 border-black/10 font-black text-[10px] uppercase tracking-widest px-3 py-1">
+                  {filterType === 'all' ? 'All' : filterType === 'destination' ? 'See & Do' : 'Stories'}
+                </Badge>
+              </div>
+
+              <div className="flex flex-col md:flex-row w-full lg:w-auto gap-4">
+                {/* Category Filter */}
+                <div className="w-full md:w-56">
+                  <Select value={filterCategory} onValueChange={setFilterCategory}>
+                    <SelectTrigger className="rounded-none border-2 border-black/10 h-10 font-bold text-[10px] uppercase tracking-widest bg-white">
+                      <SelectValue placeholder="All Categories" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-none border-2">
+                      <SelectItem value="all">All Categories</SelectItem>
+                      <SelectItem value="Alam">Nature & Adventure</SelectItem>
+                      <SelectItem value="Budaya">Heritage & Culture</SelectItem>
+                      <SelectItem value="Kuliner">Food & Drink</SelectItem>
+                      <SelectItem value="Sejarah">Sejarah & Warisan</SelectItem>
+                      <SelectItem value="Sosial">Masyarakat & Budaya</SelectItem>
+                      <SelectItem value="Geografis">Bentang Alam & Geografis</SelectItem>
+                      <SelectItem value="Tips">Tips & Panduan</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Search Input */}
+                <div className="relative w-full md:w-64">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <input 
+                    placeholder="Search titles..." 
+                    className="pl-10 w-full rounded-none border-2 border-black/10 focus:border-primary h-10 font-bold text-[10px] uppercase tracking-widest outline-none bg-white"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
           </CardHeader>
@@ -248,9 +294,7 @@ const AdminDashboard = () => {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <div className="flex items-center justify-center h-full text-muted-foreground">
-                              <ImageIcon size={14} />
-                            </div>
+                            <div className="flex items-center justify-center h-full text-muted-foreground font-black text-[10px]">NO IMG</div>
                           )}
                         </div>
                       </TableCell>
