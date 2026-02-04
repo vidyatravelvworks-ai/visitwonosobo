@@ -8,7 +8,7 @@ import { collection, doc, deleteDoc, query, orderBy, serverTimestamp, setDoc } f
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, RefreshCw, Search, CheckCircle, AlertCircle } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, RefreshCw, Search, CheckCircle, PenTool } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
@@ -112,14 +112,26 @@ const AdminDashboard = () => {
           <p className="text-[8px] font-bold text-white/50 uppercase tracking-[0.3em] mt-1">visitwonosobo</p>
         </div>
         
-        <nav className="flex-grow space-y-4">
+        <nav className="flex-grow space-y-2">
           <Button variant="ghost" className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4">
             <LayoutDashboard size={18} />
             <span className="text-[10px] font-bold uppercase tracking-widest">Dashboard</span>
           </Button>
+          
+          <div className="pt-4 pb-2">
+            <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mb-2">Content Management</p>
+          </div>
+
           <Button variant="ghost" className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 bg-primary">
             <FileText size={18} />
-            <span className="text-[10px] font-bold uppercase tracking-widest">Articles</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest">All Articles</span>
+          </Button>
+
+          <Button variant="ghost" asChild className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4">
+            <Link href="/admin/editor/new">
+              <PenTool size={18} />
+              <span className="text-[10px] font-bold uppercase tracking-widest">Article Editor</span>
+            </Link>
           </Button>
         </nav>
 
@@ -170,7 +182,7 @@ const AdminDashboard = () => {
             <CheckCircle className="h-4 w-4 text-primary" />
             <AlertTitle className="font-black uppercase text-xs text-primary">Master Admin Mode Active</AlertTitle>
             <AlertDescription className="text-xs font-medium">
-              Anda memiliki hak akses penuh sebagai Master Admin untuk mengelola seluruh konten database.
+              Anda memiliki hak akses penuh sebagai Master Admin (UID: {MASTER_ADMIN_UID}) untuk mengelola seluruh konten database.
             </AlertDescription>
           </Alert>
         )}
