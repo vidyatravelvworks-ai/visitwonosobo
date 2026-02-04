@@ -15,11 +15,8 @@ import {
   Briefcase, 
   Clock, 
   ThermometerSnowflake,
-  Sunrise,
-  Map as MapIcon,
   CheckCircle2,
-  MessageCircle,
-  Banknote
+  MessageCircle
 } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
@@ -64,14 +61,14 @@ export default function Home() {
       title: "Paket Keliling Zona 1 (Sunrise)",
       price: "Rp 650.000",
       description: "Mobil, BBM, Driver as Guide (05:00 - 15:00)",
-      icon: <Sunrise className="h-6 w-6" />,
+      icon: <CarFront className="h-6 w-6" />,
       features: ["Pintu Langit", "Candi Arjuna", "Kawah Sikidang", "Batu Ratapan", "Bukit Scooter", "Telaga Warna"]
     },
     {
       title: "Paket Keliling Zona 2",
       price: "Rp 650.000",
       description: "Mobil, BBM, Driver as Guide (07:00 - 16:00)",
-      icon: <MapIcon className="h-6 w-6" />,
+      icon: <CarFront className="h-6 w-6" />,
       features: ["Bukit Sikunir", "Air Terjun Sikarim", "Swiss Van Java", "Telaga Menjer", "Kahyangan Skyline", "Kebun Teh Panama"]
     },
     {
