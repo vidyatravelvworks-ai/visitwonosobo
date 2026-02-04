@@ -8,11 +8,12 @@ import { collection, doc, deleteDoc, query, orderBy, serverTimestamp, setDoc } f
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, RefreshCw, Search, PenTool } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, RefreshCw, Search, PenTool, Image as ImageIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import { getAuth, signOut } from 'firebase/auth';
+import Image from 'next/image';
 
 const AdminDashboard = () => {
   const { user, isUserLoading } = useUser();
@@ -23,7 +24,6 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSyncing, setIsSyncing] = useState(false);
 
-  // Protect the route
   useEffect(() => {
     if (!isUserLoading && !user) {
       router.push('/login');
@@ -99,7 +99,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-secondary/20 flex">
-      {/* Sidebar */}
       <aside className="w-64 bg-black text-white flex flex-col p-8 fixed h-full">
         <div className="mb-12">
           <span className="text-xl font-black uppercase tracking-tighter text-primary">Admin Panel</span>
@@ -107,9 +106,11 @@ const AdminDashboard = () => {
         </div>
         
         <nav className="flex-grow space-y-2">
-          <Button variant="ghost" className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4">
-            <LayoutDashboard size={18} />
-            <span className="text-[10px] font-bold uppercase tracking-widest">Dashboard</span>
+          <Button variant="ghost" asChild className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4">
+            <Link href="/admin">
+              <LayoutDashboard size={18} />
+              <span className="text-[10px] font-bold uppercase tracking-widest">Dashboard</span>
+            </Link>
           </Button>
           
           <div className="pt-4 pb-2">
@@ -124,7 +125,7 @@ const AdminDashboard = () => {
           <Button variant="ghost" asChild className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4">
             <Link href="/admin/editor/new">
               <PenTool size={18} />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Article Editor</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest">New Article</span>
             </Link>
           </Button>
         </nav>
@@ -145,12 +146,11 @@ const AdminDashboard = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-grow ml-64 p-12">
         <header className="flex justify-between items-end mb-12">
           <div>
             <h1 className="text-4xl font-black uppercase tracking-tighter">Manage Content</h1>
-            <p className="text-sm font-medium text-muted-foreground mt-2">Adjust your website articles, stories, and destinations in real-time.</p>
+            <p className="text-sm font-medium text-muted-foreground mt-2">Update your articles and destinations in real-time.</p>
           </div>
           <div className="flex gap-4">
             <Button 
@@ -190,35 +190,50 @@ const AdminDashboard = () => {
             <Table>
               <TableHeader>
                 <TableRow className="bg-secondary/50 hover:bg-secondary/50">
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Title</TableHead>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Category</TableHead>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Type</TableHead>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6 text-right">Actions</TableHead>
+                  <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6 w-24">Preview</TableHead>
+                  <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Judul Artikel</TableHead>
+                  <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Kategori</TableHead>
+                  <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6 text-right">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isArticlesLoading ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="p-12 text-center text-[10px] font-bold uppercase text-muted-foreground">Fetching data from cloud...</TableCell>
+                    <TableCell colSpan={4} className="p-12 text-center text-[10px] font-bold uppercase text-muted-foreground">Fetching data...</TableCell>
                   </TableRow>
                 ) : filteredArticles.length > 0 ? (
                   filteredArticles.map((article) => (
-                    <TableRow key={article.id} className="hover:bg-secondary/10">
-                      <TableCell className="p-6 font-bold uppercase tracking-tight text-sm">
-                        {article.title}
+                    <TableRow key={article.id} className="hover:bg-secondary/10 group">
+                      <TableCell className="p-6">
+                        <div className="w-16 h-12 relative bg-gray-200 border border-black/5 overflow-hidden">
+                          {article.image ? (
+                            <img 
+                              src={article.image} 
+                              alt={article.title} 
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-full text-muted-foreground">
+                              <ImageIcon size={14} />
+                            </div>
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell className="p-6">
-                        <Badge variant="outline" className="rounded-none border-2 font-black text-[8px] uppercase tracking-widest">
+                        <div className="font-bold uppercase tracking-tight text-sm">
+                          {article.title}
+                        </div>
+                        <div className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">
+                          Slug: /{article.id}
+                        </div>
+                      </TableCell>
+                      <TableCell className="p-6">
+                        <Badge variant="outline" className="rounded-none border-2 border-black/20 font-black text-[8px] uppercase tracking-widest">
                           {article.category}
                         </Badge>
                       </TableCell>
-                      <TableCell className="p-6">
-                         <Badge className="rounded-none bg-black text-white font-black text-[8px] uppercase tracking-widest">
-                          {article.type}
-                        </Badge>
-                      </TableCell>
                       <TableCell className="p-6 text-right space-x-2">
-                        <Button variant="ghost" size="icon" className="rounded-none hover:bg-blue-50 text-blue-600" asChild>
+                        <Button variant="ghost" size="icon" className="rounded-none hover:bg-black hover:text-white" asChild title="Edit Artikel">
                           <Link href={`/admin/editor/${article.id}`}>
                             <Edit size={16} />
                           </Link>
@@ -228,6 +243,7 @@ const AdminDashboard = () => {
                           size="icon" 
                           className="rounded-none hover:bg-red-50 text-red-600"
                           onClick={() => handleDelete(article.id)}
+                          title="Hapus Artikel"
                         >
                           <Trash2 size={16} />
                         </Button>
@@ -237,7 +253,7 @@ const AdminDashboard = () => {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={4} className="p-12 text-center text-[10px] font-bold uppercase text-muted-foreground">
-                      No content found. Click "Sync Static Data" or "New Article".
+                      No content found. Click "Sync" or "New Article".
                     </TableCell>
                   </TableRow>
                 )}

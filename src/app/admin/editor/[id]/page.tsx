@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChevronLeft, Save, Globe, Image as ImageIcon, FileText, Layout, ArrowLeft } from 'lucide-react';
+import { ChevronLeft, Save, Globe, Image as ImageIcon, FileText, Layout, ArrowLeft, Link as LinkIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import Link from 'next/link';
@@ -58,7 +58,6 @@ const ArticleEditorPage = () => {
     }
   }, [article]);
 
-  // Protect the route
   useEffect(() => {
     if (!isUserLoading && !user) {
       router.push('/login');
@@ -105,7 +104,6 @@ const ArticleEditorPage = () => {
   return (
     <div className="min-h-screen bg-secondary/20 p-8 md:p-12">
       <div className="max-w-5xl mx-auto space-y-8">
-        {/* Header Navigation */}
         <div className="flex justify-between items-center">
           <Button variant="ghost" asChild className="rounded-none hover:bg-transparent pl-0 h-auto group">
             <Link href="/admin" className="flex items-center gap-2 font-black uppercase tracking-widest text-[10px]">
@@ -126,7 +124,6 @@ const ArticleEditorPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content Area */}
           <div className="lg:col-span-2 space-y-8">
             <Card className="rounded-none border-2 border-black/5 shadow-xl">
               <CardHeader className="border-b p-8 bg-white">
@@ -154,15 +151,12 @@ const ArticleEditorPage = () => {
                     placeholder="Tuliskan narasi mendalam di sini..."
                     className="rounded-none border-2 border-black/10 focus:border-primary min-h-[500px] font-medium leading-relaxed"
                   />
-                  <p className="text-[9px] text-muted-foreground italic font-bold uppercase tracking-tighter">SEO Tip: Gunakan minimal 1000 kata untuk otoritas konten yang lebih baik.</p>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Sidebar / Meta Information */}
           <div className="space-y-8">
-            {/* SEO Settings */}
             <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white">
               <CardHeader className="border-b p-6">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
@@ -182,7 +176,6 @@ const ArticleEditorPage = () => {
                       className="rounded-none border-2 border-black/10 focus:border-primary h-10 text-[11px] font-bold"
                     />
                   </div>
-                  <p className="text-[8px] font-medium text-muted-foreground">Slug akan menjadi URL permanen artikel ini.</p>
                 </div>
 
                 <div className="space-y-2">
@@ -190,22 +183,40 @@ const ArticleEditorPage = () => {
                   <Textarea 
                     value={formData.excerpt}
                     onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
-                    placeholder="Ringkasan pendek untuk hasil pencarian Google..."
+                    placeholder="Ringkasan pendek..."
                     className="rounded-none border-2 border-black/10 focus:border-primary h-24 text-[11px]"
                   />
                 </div>
               </CardContent>
             </Card>
 
-            {/* Media & Classification */}
             <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white">
               <CardHeader className="border-b p-6">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
                   <Layout className="text-primary" size={16} />
-                  Classification
+                  Media & Category
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Article Image URL (Imgur/External)</Label>
+                  <div className="relative">
+                    <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      value={formData.image}
+                      onChange={(e) => setFormData({...formData, image: e.target.value})}
+                      placeholder="https://i.imgur.com/your-image.jpg"
+                      className="pl-10 rounded-none border-2 border-black/10 focus:border-primary h-10 text-[11px] font-bold"
+                    />
+                  </div>
+                  {formData.image && (
+                    <div className="mt-4 aspect-video relative border-2 border-black/10 overflow-hidden bg-gray-100">
+                      <img src={formData.image} alt="Preview" className="object-cover w-full h-full" />
+                    </div>
+                  )}
+                  <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight mt-2">Paste URL gambar dari Imgur atau sumber lainnya di sini.</p>
+                </div>
+
                 <div className="space-y-2">
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Category</Label>
                   <Select 
@@ -241,24 +252,6 @@ const ArticleEditorPage = () => {
                       <SelectItem value="story">Story (Blog)</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Featured Image URL</Label>
-                  <div className="relative">
-                    <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                      value={formData.image}
-                      onChange={(e) => setFormData({...formData, image: e.target.value})}
-                      placeholder="https://images.unsplash.com/..."
-                      className="pl-10 rounded-none border-2 border-black/10 focus:border-primary h-10 text-[11px] font-bold"
-                    />
-                  </div>
-                  {formData.image && (
-                    <div className="mt-4 aspect-video relative border-2 border-black/10 overflow-hidden">
-                      <img src={formData.image} alt="Preview" className="object-cover w-full h-full" />
-                    </div>
-                  )}
                 </div>
               </CardContent>
             </Card>
