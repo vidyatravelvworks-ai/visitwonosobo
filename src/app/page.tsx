@@ -61,25 +61,25 @@ export default function Home() {
 
   const tourPackages = [
     {
-      title: "Paket Sunrise (Zona 1)",
+      title: "Paket Keliling Zona 1 (Sunrise)",
       price: "Rp 650.000",
-      description: "Penjemputan 03.00, Guide Lokal, Dokumentasi.",
+      description: "Mobil, BBM, Driver as Guide (05:00 - 15:00)",
       icon: <Sunrise className="h-6 w-6" />,
-      features: ["Sikunir Sunrise", "Batu Ratapan Angin", "Candi Arjuna"]
+      features: ["Pintu Langit", "Candi Arjuna", "Kawah Sikidang", "Batu Ratapan", "Bukit Scooter", "Telaga Warna"]
     },
     {
-      title: "Paket Reguler (Zona 2)",
+      title: "Paket Keliling Zona 2",
       price: "Rp 650.000",
-      description: "Eksplorasi destinasi populer Dieng seharian.",
+      description: "Mobil, BBM, Driver as Guide (07:00 - 16:00)",
       icon: <MapIcon className="h-6 w-6" />,
-      features: ["Kawah Sikidang", "Telaga Warna", "Kebun Teh Panama"]
+      features: ["Bukit Sikunir", "Air Terjun Sikarim", "Swiss Van Java", "Telaga Menjer", "Kahyangan Skyline", "Kebun Teh Panama"]
     },
     {
       title: "Rental Mobil + Guide",
       price: "Mulai Rp 500rb",
       description: "Avanza, Innova, Hiace. Driver = Guide Lokal.",
       icon: <CarFront className="h-6 w-6" />,
-      features: ["BBM Termasuk", "Driver Berpengalaman", "Waktu Fleksibel"]
+      features: ["BBM Termasuk", "Driver Berpengalaman", "Waktu Fleksibel", "Antar Jemput Hotel"]
     }
   ];
 
