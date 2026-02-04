@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { useUser, useFirestore, useDoc } from '@/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,7 @@ import Link from 'next/link';
 
 const ArticleEditorPage = () => {
   const params = useParams();
+  const searchParams = useSearchParams();
   const id = params.id as string;
   const isNew = id === 'new';
   const { user, isUserLoading } = useUser();
@@ -25,6 +26,9 @@ const ArticleEditorPage = () => {
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
 
+  // Ambil tipe default dari URL jika ada
+  const queryType = searchParams.get('type') as 'destination' | 'story' || 'destination';
+
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -32,7 +36,7 @@ const ArticleEditorPage = () => {
     content: '',
     image: '',
     category: 'Alam',
-    type: 'destination' as 'destination' | 'story',
+    type: queryType,
     date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
   });
 

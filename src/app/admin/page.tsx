@@ -109,6 +109,8 @@ const AdminDashboard = () => {
     return matchesSearch && matchesType && matchesCategory;
   }) || [];
 
+  const newArticleUrl = `/admin/editor/new${filterType !== 'all' ? `?type=${filterType}` : ''}`;
+
   return (
     <div className="min-h-screen bg-secondary/20 flex">
       {/* Sidebar */}
@@ -173,7 +175,7 @@ const AdminDashboard = () => {
           </div>
 
           <Button variant="ghost" asChild className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4">
-            <Link href="/admin/editor/new">
+            <Link href={newArticleUrl}>
               <Plus size={18} />
               <span className="text-[10px] font-bold uppercase tracking-widest">Create New Article</span>
             </Link>
@@ -216,7 +218,7 @@ const AdminDashboard = () => {
               {isSyncing ? 'Syncing...' : 'Sync Static Data'}
             </Button>
             <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
-              <Link href="/admin/editor/new">
+              <Link href={newArticleUrl}>
                 <Plus size={18} />
                 New Article
               </Link>
