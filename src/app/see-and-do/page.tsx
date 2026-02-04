@@ -38,7 +38,7 @@ const categoryData = [
   },
   {
     id: 'eat',
-    title: 'Food & Dining',
+    title: 'Food & Drink',
     categoryName: 'Kuliner',
     description: 'Taste the legendary Mie Ongklok and the unique Carica fruit.',
     image: PlaceHolderImages.find(img => img.id === 'mie-ongklok')?.imageUrl || '',
