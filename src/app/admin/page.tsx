@@ -8,12 +8,12 @@ import { collection, doc, deleteDoc, query, orderBy, serverTimestamp, setDoc } f
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, RefreshCw, Search, PenTool, Image as ImageIcon } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, RefreshCw, Search, PenTool, Image as ImageIcon, Map, BookOpen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import { getAuth, signOut } from 'firebase/auth';
-import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
 const AdminDashboard = () => {
   const { user, isUserLoading } = useUser();
@@ -23,6 +23,7 @@ const AdminDashboard = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [isSyncing, setIsSyncing] = useState(false);
+  const [filterType, setFilterType] = useState<'all' | 'destination' | 'story'>('all');
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -92,40 +93,71 @@ const AdminDashboard = () => {
     return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Authenticating Admin...</div>;
   }
 
-  const filteredArticles = articles?.filter(a => 
-    a.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (a.category && a.category.toLowerCase().includes(searchTerm.toLowerCase()))
-  ) || [];
+  const filteredArticles = articles?.filter(a => {
+    const matchesSearch = a.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (a.category && a.category.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesType = filterType === 'all' ? true : a.type === filterType;
+    return matchesSearch && matchesType;
+  }) || [];
 
   return (
     <div className="min-h-screen bg-secondary/20 flex">
-      <aside className="w-64 bg-black text-white flex flex-col p-8 fixed h-full">
+      {/* Sidebar */}
+      <aside className="w-64 bg-black text-white flex flex-col p-8 fixed h-full z-20">
         <div className="mb-12">
           <span className="text-xl font-black uppercase tracking-tighter text-primary">Admin Panel</span>
           <p className="text-[8px] font-bold text-white/50 uppercase tracking-[0.3em] mt-1">visitwonosobo</p>
         </div>
         
         <nav className="flex-grow space-y-2">
-          <Button variant="ghost" asChild className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4">
-            <Link href="/admin">
-              <LayoutDashboard size={18} />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Dashboard</span>
-            </Link>
+          <Button 
+            variant="ghost" 
+            onClick={() => setFilterType('all')}
+            className={cn(
+              "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
+              filterType === 'all' && "bg-primary"
+            )}
+          >
+            <LayoutDashboard size={18} />
+            <span className="text-[10px] font-bold uppercase tracking-widest">Dashboard</span>
           </Button>
           
-          <div className="pt-4 pb-2">
-            <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mb-2">Content Management</p>
+          <div className="pt-6 pb-2">
+            <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mb-2">Manage Content</p>
           </div>
 
-          <Button variant="ghost" className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 bg-primary">
-            <FileText size={18} />
-            <span className="text-[10px] font-bold uppercase tracking-widest">All Articles</span>
+          <Button 
+            variant="ghost" 
+            onClick={() => setFilterType('destination')}
+            className={cn(
+              "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
+              filterType === 'destination' && "bg-primary"
+            )}
+          >
+            <Map size={18} />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">See &amp; Do Articles</span>
           </Button>
+
+          <Button 
+            variant="ghost" 
+            onClick={() => setFilterType('story')}
+            className={cn(
+              "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
+              filterType === 'story' && "bg-primary"
+            )}
+          >
+            <BookOpen size={18} />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">Stories Articles</span>
+          </Button>
+
+          <div className="pt-6 pb-2">
+            <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mb-2">Actions</p>
+          </div>
 
           <Button variant="ghost" asChild className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4">
             <Link href="/admin/editor/new">
-              <PenTool size={18} />
-              <span className="text-[10px] font-bold uppercase tracking-widest">New Article</span>
+              <Plus size={18} />
+              <span className="text-[10px] font-bold uppercase tracking-widest">Create New Article</span>
             </Link>
           </Button>
         </nav>
@@ -146,11 +178,14 @@ const AdminDashboard = () => {
         </div>
       </aside>
 
+      {/* Main Content */}
       <main className="flex-grow ml-64 p-12">
-        <header className="flex justify-between items-end mb-12">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div>
-            <h1 className="text-4xl font-black uppercase tracking-tighter">Manage Content</h1>
-            <p className="text-sm font-medium text-muted-foreground mt-2">Update your articles and destinations in real-time.</p>
+            <h1 className="text-4xl font-black uppercase tracking-tighter">
+              {filterType === 'all' ? 'All Content' : filterType === 'destination' ? 'See &amp; Do Content' : 'Stories Content'}
+            </h1>
+            <p className="text-sm font-medium text-muted-foreground mt-2">Manage your articles and destinations in real-time.</p>
           </div>
           <div className="flex gap-4">
             <Button 
@@ -173,9 +208,9 @@ const AdminDashboard = () => {
 
         <Card className="rounded-none border-2 border-black/5 shadow-xl">
           <CardHeader className="p-8 border-b">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <CardTitle className="text-xl font-black uppercase tracking-tight">Content Directory</CardTitle>
-              <div className="relative w-64">
+              <div className="relative w-full md:w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <input 
                   placeholder="Search articles..." 
@@ -224,7 +259,7 @@ const AdminDashboard = () => {
                           {article.title}
                         </div>
                         <div className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">
-                          Slug: /{article.id}
+                          Type: <span className="text-primary">{article.type}</span> | Slug: /{article.id}
                         </div>
                       </TableCell>
                       <TableCell className="p-6">
@@ -253,7 +288,7 @@ const AdminDashboard = () => {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={4} className="p-12 text-center text-[10px] font-bold uppercase text-muted-foreground">
-                      No content found. Click "Sync" or "New Article".
+                      No {filterType !== 'all' ? filterType : ''} content found.
                     </TableCell>
                   </TableRow>
                 )}
