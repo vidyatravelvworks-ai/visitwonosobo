@@ -8,12 +8,12 @@ import { collection, doc, deleteDoc, setDoc, query, orderBy, serverTimestamp } f
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, Settings, Search, RefreshCw } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, Settings, Search, RefreshCw, AlertCircle, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import { getAuth, signOut } from 'firebase/auth';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const AdminDashboard = () => {
   const { user, isUserLoading } = useUser();
@@ -23,6 +23,7 @@ const AdminDashboard = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [isSyncing, setIsSyncing] = useState(false);
+  const [showPermissionHint, setShowPermissionHint] = useState(false);
 
   // Protect the route
   useEffect(() => {
@@ -33,7 +34,7 @@ const AdminDashboard = () => {
 
   const articlesQuery = useMemoFirebase(() => {
     if (!db) return null;
-    return query(collection(db, 'articles'), orderBy('date', 'desc'));
+    return query(collection(db, 'articles'), orderBy('updatedAt', 'desc'));
   }, [db]);
 
   const { data: articles, isLoading: isArticlesLoading } = useCollection(articlesQuery);
@@ -44,7 +45,7 @@ const AdminDashboard = () => {
       await deleteDoc(doc(db, 'articles', id));
       toast({ title: 'Berhasil', description: 'Artikel telah dihapus.' });
     } catch (error) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus artikel.' });
+      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus artikel. Pastikan role admin aktif.' });
     }
   };
 
@@ -79,12 +80,14 @@ const AdminDashboard = () => {
         title: 'Sinkronisasi Berhasil', 
         description: `${count} artikel telah dipindahkan ke database Firestore.` 
       });
+      setShowPermissionHint(false);
     } catch (error: any) {
       console.error(error);
+      setShowPermissionHint(true);
       toast({ 
         variant: 'destructive', 
         title: 'Sinkronisasi Gagal', 
-        description: 'Pastikan UID Anda sudah terdaftar di koleksi roles_admin di Firestore.' 
+        description: 'Akses ditolak oleh database (Permission Denied).' 
       });
     } finally {
       setIsSyncing(false);
@@ -96,7 +99,7 @@ const AdminDashboard = () => {
   }
 
   const filteredArticles = articles?.filter(a => 
-    a.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    a.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (a.category && a.category.toLowerCase().includes(searchTerm.toLowerCase()))
   ) || [];
 
@@ -157,6 +160,30 @@ const AdminDashboard = () => {
             </Button>
           </div>
         </header>
+
+        {showPermissionHint && (
+          <Alert variant="destructive" className="mb-8 rounded-none border-2 bg-red-50">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle className="font-black uppercase text-xs">Akses Database Ditolak</AlertTitle>
+            <AlertDescription className="text-xs font-medium space-y-4">
+              <p>Database menolak sinkronisasi karena UID Anda belum terdaftar sebagai Admin.</p>
+              <div className="bg-white p-4 border-2 border-red-200">
+                <p className="font-bold mb-2">Langkah Perbaikan:</p>
+                <ol className="list-decimal pl-4 space-y-1">
+                  <li>Copy UID Anda: <code className="bg-gray-100 px-2 py-1 font-black text-red-600">{user?.uid}</code></li>
+                  <li>Buka Firebase Console</li>
+                  <li>Buat koleksi <code className="font-black">roles_admin</code></li>
+                  <li>Tambah dokumen dengan <strong>ID Dokumen = UID di atas</strong></li>
+                </ol>
+              </div>
+              <Button asChild variant="link" className="p-0 h-auto text-xs font-black underline">
+                <a href="https://console.firebase.google.com/" target="_blank" className="flex items-center gap-2">
+                  Buka Firebase Console <ExternalLink size={12} />
+                </a>
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
 
         <Card className="rounded-none border-2 border-black/5 shadow-xl">
           <CardHeader className="p-8 border-b">
