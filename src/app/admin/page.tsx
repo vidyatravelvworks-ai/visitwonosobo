@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useUser, useFirestore, useCollection } from '@/firebase';
-import { collection, doc, deleteDoc, setDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, deleteDoc, query, orderBy, serverTimestamp, setDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, Settings, Search, RefreshCw, AlertCircle, ExternalLink, CheckCircle } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, RefreshCw, Search, CheckCircle, AlertCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
@@ -22,7 +23,6 @@ const AdminDashboard = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [isSyncing, setIsSyncing] = useState(false);
-  const [showPermissionHint, setShowPermissionHint] = useState(false);
 
   // Master Admin UID
   const MASTER_ADMIN_UID = "AsSq4g4LwpV7ZmUpplRoCCzP5j33";
@@ -47,7 +47,7 @@ const AdminDashboard = () => {
       await deleteDoc(doc(db, 'articles', id));
       toast({ title: 'Berhasil', description: 'Artikel telah dihapus.' });
     } catch (error) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus artikel. Akses Ditolak.' });
+      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus artikel.' });
     }
   };
 
@@ -81,14 +81,11 @@ const AdminDashboard = () => {
         title: 'Sinkronisasi Berhasil', 
         description: `${count} artikel telah dipindahkan ke database Firestore.` 
       });
-      setShowPermissionHint(false);
     } catch (error: any) {
-      console.error(error);
-      setShowPermissionHint(true);
       toast({ 
         variant: 'destructive', 
         title: 'Sinkronisasi Gagal', 
-        description: 'Akses ditolak oleh database (Permission Denied).' 
+        description: 'Pastikan Anda memiliki izin admin di database.' 
       });
     } finally {
       setIsSyncing(false);
@@ -130,9 +127,6 @@ const AdminDashboard = () => {
           <div className="bg-white/5 p-4 space-y-2">
             <p className="text-[8px] font-bold uppercase tracking-widest text-white/40">Logged in as:</p>
             <p className="text-[10px] font-black truncate">{user.email}</p>
-            {isMasterAdmin && (
-              <Badge className="bg-primary text-white text-[8px] h-4 rounded-none">MASTER ADMIN</Badge>
-            )}
           </div>
           <Button 
             variant="outline" 
@@ -162,38 +156,21 @@ const AdminDashboard = () => {
               <RefreshCw size={18} className={isSyncing ? 'animate-spin' : ''} />
               {isSyncing ? 'Syncing...' : 'Sync Static Data'}
             </Button>
-            <Button className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
-              <Plus size={18} />
-              New Article
+            <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
+              <Link href="/admin/editor/new">
+                <Plus size={18} />
+                New Article
+              </Link>
             </Button>
           </div>
         </header>
 
-        {isMasterAdmin && !showPermissionHint && (
+        {isMasterAdmin && (
            <Alert className="mb-8 rounded-none border-2 border-primary bg-primary/5">
             <CheckCircle className="h-4 w-4 text-primary" />
             <AlertTitle className="font-black uppercase text-xs text-primary">Master Admin Mode Active</AlertTitle>
             <AlertDescription className="text-xs font-medium">
-              UID Anda telah dikonfigurasi sebagai Master Admin melalui Security Rules. Anda memiliki akses penuh ke database.
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {showPermissionHint && !isMasterAdmin && (
-          <Alert variant="destructive" className="mb-8 rounded-none border-2 bg-red-50">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle className="font-black uppercase text-xs">Akses Database Ditolak</AlertTitle>
-            <AlertDescription className="text-xs font-medium space-y-4">
-              <p>Database menolak sinkronisasi karena UID Anda belum terdaftar sebagai Admin.</p>
-              <div className="bg-white p-4 border-2 border-red-200">
-                <p className="font-bold mb-2">Langkah Perbaikan:</p>
-                <ol className="list-decimal pl-4 space-y-1">
-                  <li>Copy UID Anda: <code className="bg-gray-100 px-2 py-1 font-black text-red-600">{user?.uid}</code></li>
-                  <li>Buka Firebase Console</li>
-                  <li>Buat koleksi <code className="font-black">roles_admin</code></li>
-                  <li>Tambah dokumen dengan <strong>ID Dokumen = UID di atas</strong></li>
-                </ol>
-              </div>
+              Anda memiliki hak akses penuh sebagai Master Admin untuk mengelola seluruh konten database.
             </AlertDescription>
           </Alert>
         )}
@@ -245,8 +222,10 @@ const AdminDashboard = () => {
                         </Badge>
                       </TableCell>
                       <TableCell className="p-6 text-right space-x-2">
-                        <Button variant="ghost" size="icon" className="rounded-none hover:bg-blue-50 text-blue-600">
-                          <Edit size={16} />
+                        <Button variant="ghost" size="icon" className="rounded-none hover:bg-blue-50 text-blue-600" asChild>
+                          <Link href={`/admin/editor/${article.id}`}>
+                            <Edit size={16} />
+                          </Link>
                         </Button>
                         <Button 
                           variant="ghost" 
@@ -262,7 +241,7 @@ const AdminDashboard = () => {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={4} className="p-12 text-center text-[10px] font-bold uppercase text-muted-foreground">
-                      No dynamic content found. Click "Sync Static Data" to start.
+                      No content found. Click "Sync Static Data" or "New Article".
                     </TableCell>
                   </TableRow>
                 )}
