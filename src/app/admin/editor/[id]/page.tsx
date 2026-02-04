@@ -161,7 +161,7 @@ const ArticleEditorPage = () => {
               <CardHeader className="border-b p-6">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
                   <Globe className="text-primary" size={16} />
-                  SEO & URL Settings
+                  SEO &amp; URL Settings
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -194,7 +194,7 @@ const ArticleEditorPage = () => {
               <CardHeader className="border-b p-6">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
                   <Layout className="text-primary" size={16} />
-                  Media & Category
+                  Media &amp; Category
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -227,13 +227,13 @@ const ArticleEditorPage = () => {
                       <SelectValue placeholder="Pilih Kategori" />
                     </SelectTrigger>
                     <SelectContent className="rounded-none border-2">
-                      <SelectItem value="Alam">Alam & Petualangan</SelectItem>
-                      <SelectItem value="Budaya">Budaya & Warisan</SelectItem>
-                      <SelectItem value="Kuliner">Kuliner & Minuman</SelectItem>
-                      <SelectItem value="Sejarah">Sejarah</SelectItem>
-                      <SelectItem value="Sosial">Masyarakat & Sosial</SelectItem>
-                      <SelectItem value="Geografis">Geografi & Geologi</SelectItem>
-                      <SelectItem value="Tips">Tips & Panduan</SelectItem>
+                      <SelectItem value="Alam">Nature &amp; Adventure</SelectItem>
+                      <SelectItem value="Budaya">Heritage &amp; Culture</SelectItem>
+                      <SelectItem value="Kuliner">Food &amp; Drink</SelectItem>
+                      <SelectItem value="Sejarah">Sejarah &amp; Warisan</SelectItem>
+                      <SelectItem value="Sosial">Masyarakat &amp; Budaya</SelectItem>
+                      <SelectItem value="Geografis">Bentang Alam &amp; Geografis</SelectItem>
+                      <SelectItem value="Tips">Tips &amp; Panduan</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -248,7 +248,7 @@ const ArticleEditorPage = () => {
                       <SelectValue placeholder="Pilih Tipe" />
                     </SelectTrigger>
                     <SelectContent className="rounded-none border-2">
-                      <SelectItem value="destination">Destination (See & Do)</SelectItem>
+                      <SelectItem value="destination">Destination (See &amp; Do)</SelectItem>
                       <SelectItem value="story">Story (Blog)</SelectItem>
                     </SelectContent>
                   </Select>
