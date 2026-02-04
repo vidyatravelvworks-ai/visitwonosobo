@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -8,7 +7,7 @@ import { collection, doc, deleteDoc, setDoc, query, orderBy, serverTimestamp } f
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, Settings, Search, RefreshCw, AlertCircle, ExternalLink } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, Settings, Search, RefreshCw, AlertCircle, ExternalLink, CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
@@ -24,6 +23,9 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSyncing, setIsSyncing] = useState(false);
   const [showPermissionHint, setShowPermissionHint] = useState(false);
+
+  // Master Admin UID
+  const MASTER_ADMIN_UID = "AsSq4g4LwpV7ZmUpplRoCCzP5j33";
 
   // Protect the route
   useEffect(() => {
@@ -45,7 +47,7 @@ const AdminDashboard = () => {
       await deleteDoc(doc(db, 'articles', id));
       toast({ title: 'Berhasil', description: 'Artikel telah dihapus.' });
     } catch (error) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus artikel. Pastikan role admin aktif.' });
+      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus artikel. Akses Ditolak.' });
     }
   };
 
@@ -62,7 +64,6 @@ const AdminDashboard = () => {
     if (!db) return;
     setIsSyncing(true);
     try {
-      // Import data statis secara dinamis
       const { articles: staticArticles } = await import('@/data/articles');
       
       let count = 0;
@@ -98,6 +99,8 @@ const AdminDashboard = () => {
     return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Authenticating Admin...</div>;
   }
 
+  const isMasterAdmin = user.uid === MASTER_ADMIN_UID;
+
   const filteredArticles = articles?.filter(a => 
     a.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (a.category && a.category.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -121,20 +124,25 @@ const AdminDashboard = () => {
             <FileText size={18} />
             <span className="text-[10px] font-bold uppercase tracking-widest">Articles</span>
           </Button>
-          <Button variant="ghost" className="w-full justify-start text-white hover:bg-white/10 rounded-none h-12 gap-3 px-4 opacity-50">
-            <Settings size={18} />
-            <span className="text-[10px] font-bold uppercase tracking-widest">Settings</span>
-          </Button>
         </nav>
 
-        <Button 
-          variant="outline" 
-          onClick={handleSignOut} 
-          className="mt-auto border-white/20 text-white hover:bg-primary hover:text-white rounded-none h-12 gap-3"
-        >
-          <LogOut size={18} />
-          <span className="text-[10px] font-bold uppercase tracking-widest">Sign Out</span>
-        </Button>
+        <div className="mt-auto pt-6 space-y-4">
+          <div className="bg-white/5 p-4 space-y-2">
+            <p className="text-[8px] font-bold uppercase tracking-widest text-white/40">Logged in as:</p>
+            <p className="text-[10px] font-black truncate">{user.email}</p>
+            {isMasterAdmin && (
+              <Badge className="bg-primary text-white text-[8px] h-4 rounded-none">MASTER ADMIN</Badge>
+            )}
+          </div>
+          <Button 
+            variant="outline" 
+            onClick={handleSignOut} 
+            className="w-full border-white/20 text-white hover:bg-primary hover:text-white rounded-none h-12 gap-3"
+          >
+            <LogOut size={18} />
+            <span className="text-[10px] font-bold uppercase tracking-widest">Sign Out</span>
+          </Button>
+        </div>
       </aside>
 
       {/* Main Content */}
@@ -161,7 +169,17 @@ const AdminDashboard = () => {
           </div>
         </header>
 
-        {showPermissionHint && (
+        {isMasterAdmin && !showPermissionHint && (
+           <Alert className="mb-8 rounded-none border-2 border-primary bg-primary/5">
+            <CheckCircle className="h-4 w-4 text-primary" />
+            <AlertTitle className="font-black uppercase text-xs text-primary">Master Admin Mode Active</AlertTitle>
+            <AlertDescription className="text-xs font-medium">
+              UID Anda telah dikonfigurasi sebagai Master Admin melalui Security Rules. Anda memiliki akses penuh ke database.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {showPermissionHint && !isMasterAdmin && (
           <Alert variant="destructive" className="mb-8 rounded-none border-2 bg-red-50">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle className="font-black uppercase text-xs">Akses Database Ditolak</AlertTitle>
@@ -176,11 +194,6 @@ const AdminDashboard = () => {
                   <li>Tambah dokumen dengan <strong>ID Dokumen = UID di atas</strong></li>
                 </ol>
               </div>
-              <Button asChild variant="link" className="p-0 h-auto text-xs font-black underline">
-                <a href="https://console.firebase.google.com/" target="_blank" className="flex items-center gap-2">
-                  Buka Firebase Console <ExternalLink size={12} />
-                </a>
-              </Button>
             </AlertDescription>
           </Alert>
         )}
@@ -257,13 +270,6 @@ const AdminDashboard = () => {
             </Table>
           </CardContent>
         </Card>
-
-        <div className="mt-8 p-8 bg-primary/5 border-2 border-primary/20 flex items-center justify-between">
-          <div className="space-y-1">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary">Admin Quick Tip</h4>
-            <p className="text-xs text-muted-foreground font-medium">Semua artikel yang ada di sini akan langsung menggantikan konten di halaman depan, See & Do, dan Stories setelah disinkronkan.</p>
-          </div>
-        </div>
       </main>
     </div>
   );
