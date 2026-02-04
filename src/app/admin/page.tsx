@@ -4,11 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser, useFirestore, useCollection } from '@/firebase';
-import { collection, doc, deleteDoc, query, orderBy, serverTimestamp, setDoc } from 'firebase/firestore';
+import { collection, doc, deleteDoc, query, orderBy } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, RefreshCw, Search, Map, BookOpen } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, LayoutDashboard, Search, Map, BookOpen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
@@ -29,7 +29,6 @@ const AdminDashboard = () => {
   const router = useRouter();
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
-  const [isSyncing, setIsSyncing] = useState(false);
   const [filterType, setFilterType] = useState<'all' | 'destination' | 'story'>('all');
   const [filterCategory, setFilterCategory] = useState<string>('all');
 
@@ -62,38 +61,6 @@ const AdminDashboard = () => {
       router.push('/login');
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Gagal keluar.' });
-    }
-  };
-
-  const handleSyncData = async () => {
-    if (!db) return;
-    setIsSyncing(true);
-    try {
-      const { articles: staticArticles } = await import('@/data/articles');
-      
-      let count = 0;
-      for (const article of staticArticles) {
-        const docRef = doc(db, 'articles', article.slug);
-        await setDoc(docRef, {
-          ...article,
-          id: article.slug,
-          updatedAt: serverTimestamp(),
-        }, { merge: true });
-        count++;
-      }
-      
-      toast({ 
-        title: 'Sinkronisasi Berhasil', 
-        description: `${count} artikel telah dipindahkan ke database Firestore.` 
-      });
-    } catch (error: any) {
-      toast({ 
-        variant: 'destructive', 
-        title: 'Sinkronisasi Gagal', 
-        description: 'Pastikan Anda memiliki izin admin di database.' 
-      });
-    } finally {
-      setIsSyncing(false);
     }
   };
 
@@ -208,15 +175,6 @@ const AdminDashboard = () => {
             <p className="text-sm font-medium text-muted-foreground mt-2">Manage your articles and destinations in real-time.</p>
           </div>
           <div className="flex gap-4">
-            <Button 
-              onClick={handleSyncData}
-              disabled={isSyncing}
-              variant="outline"
-              className="border-2 border-black rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]"
-            >
-              <RefreshCw size={18} className={isSyncing ? 'animate-spin' : ''} />
-              {isSyncing ? 'Syncing...' : 'Sync Static Data'}
-            </Button>
             <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
               <Link href={newArticleUrl}>
                 <Plus size={18} />
