@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * FIREBASE SECURITY RULES DOCUMENTATION
+     *
+     * Core Philosophy:
+     * This ruleset implements a robust Administrative Control model for a content-driven website.
+     * The primary goal is to allow public access to content (Articles) while strictly 
+     * restricting management capabilities to authenticated users with verified administrative 
+     * privileges.
+     *
+     * Data Structure:
+     * - /articles/{articleId}: Publicly readable content managed by admins.
+     * - /roles_admin/{userId}: A lookup collection where the presence of a UID grants admin rights.
+     *
+     * Key Security Decisions:
+     * - Public Read Access: Articles are intended for a public-facing website and are 
+     *   readable by unauthenticated users.
+     * - Existence-Based Authorization: Administrative roles are determined by checking 
+     *   for the existence of a document in the 'roles_admin' collection matching the user's UID.
+     * - Immutable Identifiers: Document IDs within the article data are enforced to match 
+     *   the Firestore path and remain immutable to ensure data integrity.
+     * - Restricted Admin List: The list of administrators is private and cannot be 
+     *   queried/listed by any user to prevent enumeration of privileged accounts.
+     */
+
+    // --- Helper Functions ---
+
+    /** @description Checks if the request is from an authenticated user. */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** @description Checks if the authenticated user has an entry in the admin roles collection. */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    /** @description Verifies a document exists and the user is an admin for destructive operations. */
+    function isExistingAdmin() {
+      return isAdmin() && resource != null;
+    }
+
+    // --- Collection Rules ---
+
+    /**
+     * @description Rules for managing blog articles. Public can read; only admins can write.
+     * @path /articles/{articleId}
+     * @allow (get, list) if true (Public access for the static site).
+     * @allow (create) if isAdmin() and data.id matches articleId.
+     * @deny (update) if the user is not an admin or attempts to change the article ID.
+     * @principle Authorizes content management based on verified administrative roles.
+     */
+    match /articles/{articleId} {
+      allow get, list: if true;
+      
+      allow create: if isAdmin() 
+        && request.resource.data.id == articleId;
+      
+      allow update: if isExistingAdmin() 
+        && request.resource.data.id == resource.data.id;
+        
+      allow delete: if isExistingAdmin();
+    }
+
+    /**
+     * @description Rules for the admin roles lookup collection.
+     * @path /roles_admin/{userId}
+     * @allow (get) if isSignedIn() and the user is checking their own status.
+     * @deny (list) to prevent discovery of admin user IDs.
+     * @deny (write) as admin roles are managed out-of-band (CLI/Admin SDK).
+     * @principle Implements a secure, non-enumerable role-based access control list.
+     */
+    match /roles_admin/{userId} {
+      allow get: if isSignedIn() && request.auth.uid == userId;
+      allow list: if false;
+      
+      // Admin role assignment is handled via Admin SDK or Firebase Console
+      allow create, update, delete: if false;
+    }
+  }
+}
