@@ -7,7 +7,7 @@ import { articles } from '@/data/articles';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Info, Activity, ShieldAlert, CarFront, Briefcase, Clock, ThermometerSnowflake } from 'lucide-react';
+import { ArrowRight, Activity, ShieldAlert, CarFront, Briefcase, Clock, ThermometerSnowflake } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
@@ -61,43 +61,41 @@ export default function Home() {
           />
         </div>
         <div className="container mx-auto px-12 md:px-32 relative z-10">
-          <div className="flex flex-col lg:flex-row gap-20">
-            {/* Heading Part */}
-            <div className="lg:w-1/3 space-y-8">
-              <div className="space-y-4">
-                <h3 className="text-primary font-bold uppercase tracking-widest text-xs">Plan Your Trip</h3>
-                <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
-                  Essential <br /> Information
-                </h2>
-              </div>
+          {/* Header Part - Full Width atop */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
+            <div className="max-w-2xl">
+              <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Plan Your Trip</h3>
+              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
+                Essential <br /> Information
+              </h2>
+            </div>
+            <div className="max-w-sm space-y-6">
               <p className="text-sm font-medium tracking-wide text-muted-foreground leading-relaxed">
                 Aspek-aspek krusial yang wajib dipersiapkan sebelum menapakkan kaki di negeri di atas awan.
               </p>
-              <div className="pt-4">
-                <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white font-bold uppercase tracking-widest text-[10px] py-6 px-8 rounded-none" asChild>
-                  <Link href="/plan-your-trip">Detail Paket Wisata</Link>
-                </Button>
-              </div>
+              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white font-bold uppercase tracking-widest text-[10px] py-6 px-8 rounded-none h-auto" asChild>
+                <Link href="/plan-your-trip">Detail Paket Wisata</Link>
+              </Button>
             </div>
+          </div>
 
-            {/* Grid Part */}
-            <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
-              {essentialPoints.map((point, idx) => (
-                <div key={idx} className="group space-y-4">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-secondary group-hover:bg-primary transition-colors duration-300">
-                      {React.cloneElement(point.icon as React.ReactElement, { 
-                        className: "h-6 w-6 text-primary group-hover:text-white transition-colors duration-300" 
-                      })}
-                    </div>
-                    <h4 className="font-bold uppercase text-xs tracking-widest">{point.title}</h4>
+          {/* Grid Part - Full Width below with 3 Columns */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-16">
+            {essentialPoints.map((point, idx) => (
+              <div key={idx} className="group space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-secondary group-hover:bg-primary transition-colors duration-300">
+                    {React.cloneElement(point.icon as React.ReactElement, { 
+                      className: "h-6 w-6 text-primary group-hover:text-white transition-colors duration-300" 
+                    })}
                   </div>
-                  <p className="text-xs font-medium text-muted-foreground leading-loose tracking-wide border-l-2 border-transparent group-hover:border-primary pl-4 transition-all">
-                    {point.content}
-                  </p>
+                  <h4 className="font-bold uppercase text-xs tracking-widest">{point.title}</h4>
                 </div>
-              ))}
-            </div>
+                <p className="text-xs font-medium text-muted-foreground leading-loose tracking-wide border-l-2 border-transparent group-hover:border-primary pl-4 transition-all">
+                  {point.content}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
