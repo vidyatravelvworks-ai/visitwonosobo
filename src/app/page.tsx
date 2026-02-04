@@ -7,7 +7,20 @@ import { articles } from '@/data/articles';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Activity, ShieldAlert, CarFront, Briefcase, Clock, ThermometerSnowflake } from 'lucide-react';
+import { 
+  ArrowRight, 
+  Activity, 
+  ShieldAlert, 
+  CarFront, 
+  Briefcase, 
+  Clock, 
+  ThermometerSnowflake,
+  Sunrise,
+  Map as MapIcon,
+  CheckCircle2,
+  MessageCircle,
+  Banknote
+} from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
@@ -46,11 +59,35 @@ export default function Home() {
     }
   ];
 
+  const tourPackages = [
+    {
+      title: "Paket Sunrise (Zona 1)",
+      price: "Rp 650.000",
+      description: "Penjemputan 03.00, Guide Lokal, Dokumentasi.",
+      icon: <Sunrise className="h-6 w-6" />,
+      features: ["Sikunir Sunrise", "Batu Ratapan Angin", "Candi Arjuna"]
+    },
+    {
+      title: "Paket Reguler (Zona 2)",
+      price: "Rp 650.000",
+      description: "Eksplorasi destinasi populer Dieng seharian.",
+      icon: <MapIcon className="h-6 w-6" />,
+      features: ["Kawah Sikidang", "Telaga Warna", "Kebun Teh Panama"]
+    },
+    {
+      title: "Rental Mobil + Guide",
+      price: "Mulai Rp 500rb",
+      description: "Avanza, Innova, Hiace. Driver = Guide Lokal.",
+      icon: <CarFront className="h-6 w-6" />,
+      features: ["BBM Termasuk", "Driver Berpengalaman", "Waktu Fleksibel"]
+    }
+  ];
+
   return (
     <div className="bg-white">
       <Hero />
       
-      {/* Essential Information Section */}
+      {/* Essential Information & Packages Section */}
       <section className="relative py-32 bg-white overflow-hidden border-b">
         <div className="absolute left-0 top-0 bottom-0 w-1/3 z-0 hidden lg:block opacity-[0.02]">
           <Image
@@ -61,7 +98,7 @@ export default function Home() {
           />
         </div>
         <div className="container mx-auto px-12 md:px-32 relative z-10">
-          {/* Header Part - Full Width atop */}
+          {/* Header Part */}
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
             <div className="max-w-2xl">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Plan Your Trip</h3>
@@ -74,13 +111,13 @@ export default function Home() {
                 Aspek-aspek krusial yang wajib dipersiapkan sebelum menapakkan kaki di negeri di atas awan.
               </p>
               <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white font-bold uppercase tracking-widest text-[10px] py-6 px-8 rounded-none h-auto" asChild>
-                <Link href="/plan-your-trip">Detail Paket Wisata</Link>
+                <Link href="/plan-your-trip">Lihat Detail Paket</Link>
               </Button>
             </div>
           </div>
 
-          {/* Grid Part - Full Width below with 3 Columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-16">
+          {/* Essential Info Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-16 mb-32">
             {essentialPoints.map((point, idx) => (
               <div key={idx} className="group space-y-4">
                 <div className="flex items-center gap-4">
@@ -97,13 +134,60 @@ export default function Home() {
               </div>
             ))}
           </div>
+
+          {/* Tour Packages Section inside the same flow */}
+          <div className="pt-24 border-t border-border">
+            <div className="mb-16">
+              <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Pilihan Terbaik</h3>
+              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Paket Wisata <br /> Keliling Wonosobo</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {tourPackages.map((pkg, idx) => (
+                <div key={idx} className="bg-white border-2 border-border p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full">
+                  <div className="flex justify-between items-start mb-8">
+                    <div className="p-4 bg-secondary text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                      {pkg.icon}
+                    </div>
+                    <div className="text-right">
+                      <span className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Mulai Dari</span>
+                      <span className="text-2xl font-black text-primary tracking-tighter">{pkg.price}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-8 flex-grow">
+                    <h4 className="text-xl font-black uppercase tracking-tight mb-3 group-hover:text-primary transition-colors">
+                      {pkg.title}
+                    </h4>
+                    <p className="text-xs text-muted-foreground font-medium leading-relaxed mb-6">
+                      {pkg.description}
+                    </p>
+                    <ul className="space-y-3">
+                      {pkg.features.map((feature, i) => (
+                        <li key={i} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-foreground">
+                          <CheckCircle2 className="h-3 w-3 text-primary" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <Button className="w-full bg-black hover:bg-primary text-white font-bold uppercase tracking-widest py-6 text-[10px] rounded-none group/btn" asChild>
+                    <a href={`https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20pesan%20${encodeURIComponent(pkg.title)}`} target="_blank">
+                      Pesan Sekarang <MessageCircle className="ml-2 h-4 w-4 group-hover/btn:rotate-12 transition-transform" />
+                    </a>
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
       <Services />
       
       {/* Featured Stories Section with Background */}
-      <section className="relative py-32 overflow-hidden">
+      <section className="relative py-32 overflow-hidden bg-secondary/30">
         <div className="absolute inset-0 z-0">
           <Image
             src={PlaceHolderImages.find(img => img.id === 'misty-valley')?.imageUrl || 'https://picsum.photos/seed/valley/1920/1080'}
