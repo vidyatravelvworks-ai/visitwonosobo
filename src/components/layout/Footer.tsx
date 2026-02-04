@@ -26,10 +26,9 @@ const Footer = () => {
           <div>
             <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Experiences</h4>
             <ul className="space-y-4 text-sm font-medium">
-              <li><Link href="/see-and-do" className="hover:text-primary transition-colors">Nature & Adventure</Link></li>
-              <li><Link href="/see-and-do" className="hover:text-primary transition-colors">Heritage & Culture</Link></li>
-              <li><Link href="/stories" className="hover:text-primary transition-colors">Dining & Nightlife</Link></li>
-              <li><Link href="/stories" className="hover:text-primary transition-colors">Festivals</Link></li>
+              <li><Link href="/see-and-do#nature" className="hover:text-primary transition-colors">Nature & Adventure</Link></li>
+              <li><Link href="/see-and-do#culture" className="hover:text-primary transition-colors">Heritage & Culture</Link></li>
+              <li><Link href="/see-and-do#eat" className="hover:text-primary transition-colors">Food & Drink</Link></li>
             </ul>
           </div>
 
