@@ -8,12 +8,11 @@ import { collection, doc, deleteDoc, query, orderBy, serverTimestamp, setDoc } f
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, RefreshCw, Search, CheckCircle, PenTool } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, LayoutDashboard, FileText, RefreshCw, Search, PenTool } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import { getAuth, signOut } from 'firebase/auth';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const AdminDashboard = () => {
   const { user, isUserLoading } = useUser();
@@ -23,9 +22,6 @@ const AdminDashboard = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [isSyncing, setIsSyncing] = useState(false);
-
-  // Master Admin UID
-  const MASTER_ADMIN_UID = "AsSq4g4LwpV7ZmUpplRoCCzP5j33";
 
   // Protect the route
   useEffect(() => {
@@ -95,8 +91,6 @@ const AdminDashboard = () => {
   if (isUserLoading || !user) {
     return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Authenticating Admin...</div>;
   }
-
-  const isMasterAdmin = user.uid === MASTER_ADMIN_UID;
 
   const filteredArticles = articles?.filter(a => 
     a.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -176,16 +170,6 @@ const AdminDashboard = () => {
             </Button>
           </div>
         </header>
-
-        {isMasterAdmin && (
-           <Alert className="mb-8 rounded-none border-2 border-primary bg-primary/5">
-            <CheckCircle className="h-4 w-4 text-primary" />
-            <AlertTitle className="font-black uppercase text-xs text-primary">Master Admin Mode Active</AlertTitle>
-            <AlertDescription className="text-xs font-medium">
-              Anda memiliki hak akses penuh sebagai Master Admin (UID: {MASTER_ADMIN_UID}) untuk mengelola seluruh konten database.
-            </AlertDescription>
-          </Alert>
-        )}
 
         <Card className="rounded-none border-2 border-black/5 shadow-xl">
           <CardHeader className="p-8 border-b">
