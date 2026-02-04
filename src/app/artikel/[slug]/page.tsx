@@ -1,38 +1,49 @@
+
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { Calendar, Tag, ChevronLeft } from 'lucide-react';
-import { articles } from '@/data/articles';
+import { useParams } from 'next/navigation';
+import { Calendar, Tag, ChevronLeft, Loader2 } from 'lucide-react';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
+import { articles as staticArticles } from '@/data/articles';
 
-interface Props {
-  params: Promise<{ slug: string }>;
-}
+const ArticleDetailPage = () => {
+  const params = useParams();
+  const slug = params.slug as string;
+  const db = useFirestore();
 
-export async function generateStaticParams() {
-  return articles.map((article) => ({
-    slug: article.slug,
-  }));
-}
+  const docRef = useMemoFirebase(() => {
+    if (!db || !slug) return null;
+    return doc(db, 'articles', slug);
+  }, [db, slug]);
 
-export async function generateMetadata({ params }: Props) {
-  const { slug } = await params;
-  const article = articles.find((a) => a.slug === slug);
-  if (!article) return {};
+  const { data: dbArticle, isLoading } = useDoc(docRef);
+  
+  // Fallback ke data statis jika sedang loading atau tidak ada di DB
+  const staticArticle = staticArticles.find((a) => a.slug === slug);
+  const article = dbArticle || staticArticle;
 
-  return {
-    title: `${article.title} - Wonosobo Explorer`,
-    description: article.excerpt,
-  };
-}
-
-const ArticleDetailPage = async ({ params }: Props) => {
-  const { slug } = await params;
-  const article = articles.find((a) => a.slug === slug);
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin text-primary h-12 w-12" />
+      </div>
+    );
+  }
 
   if (!article) {
-    notFound();
+    return (
+      <div className="h-screen flex flex-col items-center justify-center space-y-4">
+        <h1 className="text-4xl font-black uppercase">Artikel Tidak Ditemukan</h1>
+        <Button asChild variant="outline">
+          <Link href="/">Kembali ke Beranda</Link>
+        </Button>
+      </div>
+    );
   }
 
   return (
@@ -89,7 +100,7 @@ const ArticleDetailPage = async ({ params }: Props) => {
 
           {/* Content */}
           <div className="max-w-none text-foreground/80 leading-loose space-y-8 font-body">
-            {article.content.split('\n').filter(p => p.trim()).map((paragraph, idx) => (
+            {article.content.split('\n').filter((p: string) => p.trim()).map((paragraph: string, idx: number) => (
               <p key={idx} className="text-sm font-medium tracking-wide">
                 {paragraph.trim()}
               </p>

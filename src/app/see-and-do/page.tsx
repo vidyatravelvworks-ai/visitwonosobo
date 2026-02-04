@@ -1,9 +1,12 @@
 
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
-import { articles, Article } from '@/data/articles';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, where } from 'firebase/firestore';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Sunrise, Map, Utensils, ArrowRight } from 'lucide-react';
+import { Sunrise, Map, Utensils, ArrowRight, Loader2 } from 'lucide-react';
 import ArticleCard from '@/components/article/ArticleCard';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,11 +16,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-
-export const metadata = {
-  title: 'See & Do - visitwonosobo',
-  description: 'Temukan destinasi wisata alam, budaya, dan kuliner terbaik di Wonosobo.',
-};
+import { articles as staticArticles } from '@/data/articles';
 
 const categoryData = [
   {
@@ -47,11 +46,23 @@ const categoryData = [
 ];
 
 const SeeAndDoPage = () => {
-  const destinations = articles.filter(a => a.type === 'destination');
+  const db = useFirestore();
+  
+  const q = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'articles'), where('type', '==', 'destination'));
+  }, [db]);
+
+  const { data: dbDestinations, isLoading } = useCollection(q);
+  
+  // Fallback ke data statis jika Firestore kosong/loading
+  const destinations = (dbDestinations && dbDestinations.length > 0) 
+    ? dbDestinations 
+    : staticArticles.filter(a => a.type === 'destination');
+
   const heroImage = PlaceHolderImages.find(img => img.id === 'candi-arjuna');
 
-  // Helper to chunk articles into pairs for 2-row layout
-  const chunkIntoPairs = (arr: Article[]) => {
+  const chunkIntoPairs = (arr: any[]) => {
     const pairs = [];
     for (let i = 0; i < arr.length; i += 2) {
       pairs.push(arr.slice(i, i + 2));
@@ -117,6 +128,12 @@ const SeeAndDoPage = () => {
         </div>
       </section>
 
+      {isLoading && (
+        <div className="flex justify-center p-12">
+          <Loader2 className="animate-spin text-primary h-8 w-8" />
+        </div>
+      )}
+
       {/* Article Listings by Category with 2-Row Carousel */}
       <div className="pb-32">
         <div className="container mx-auto px-12 md:px-32 space-y-32">
@@ -135,9 +152,6 @@ const SeeAndDoPage = () => {
                     </div>
                     <h2 className="text-3xl font-black uppercase tracking-tight">{cat.title}</h2>
                   </div>
-                  <div className="hidden md:flex gap-4">
-                    {/* Navigation buttons will be handled by Carousel internal logic if we use absolute positioning */}
-                  </div>
                 </div>
 
                 <Carousel
@@ -151,8 +165,8 @@ const SeeAndDoPage = () => {
                     {pairs.map((pair, idx) => (
                       <CarouselItem key={idx} className="pl-12 basis-full md:basis-1/2 lg:basis-1/3">
                         <div className="flex flex-col gap-12">
-                          {pair.map((article) => (
-                            <div key={article.slug} className="min-h-fit">
+                          {pair.map((article: any) => (
+                            <div key={article.slug || article.id} className="min-h-fit">
                               <ArticleCard article={article} />
                             </div>
                           ))}

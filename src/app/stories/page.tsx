@@ -1,9 +1,12 @@
 
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
-import { articles, Article } from '@/data/articles';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, where } from 'firebase/firestore';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { History, Users, Globe, Info, ArrowRight } from 'lucide-react';
+import { History, Users, Globe, Info, ArrowRight, Loader2 } from 'lucide-react';
 import ArticleCard from '@/components/article/ArticleCard';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,11 +16,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-
-export const metadata = {
-  title: 'Stories - visitwonosobo',
-  description: 'Mengenal Wonosobo lebih dalam melalui narasi tentang sejarah, masyarakat, dan keajaiban geografisnya.',
-};
+import { articles as staticArticles } from '@/data/articles';
 
 const categoryData = [
   {
@@ -55,11 +54,23 @@ const categoryData = [
 ];
 
 const StoriesPage = () => {
-  const stories = articles.filter(a => a.type === 'story');
+  const db = useFirestore();
+  
+  const q = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'articles'), where('type', '==', 'story'));
+  }, [db]);
+
+  const { data: dbStories, isLoading } = useCollection(q);
+  
+  // Fallback ke data statis
+  const stories = (dbStories && dbStories.length > 0) 
+    ? dbStories 
+    : staticArticles.filter(a => a.type === 'story');
+
   const heroImage = PlaceHolderImages.find(img => img.id === 'mountain-prau');
 
-  // Helper to chunk articles into pairs for 2-row layout
-  const chunkIntoPairs = (arr: Article[]) => {
+  const chunkIntoPairs = (arr: any[]) => {
     const pairs = [];
     for (let i = 0; i < arr.length; i += 2) {
       pairs.push(arr.slice(i, i + 2));
@@ -122,6 +133,12 @@ const StoriesPage = () => {
         </div>
       </section>
 
+      {isLoading && (
+        <div className="flex justify-center p-12">
+          <Loader2 className="animate-spin text-primary h-8 w-8" />
+        </div>
+      )}
+
       {/* Article Listings by Category with 2-Row Carousel */}
       <div className="pb-32">
         <div className="container mx-auto px-12 md:px-32 space-y-32">
@@ -153,8 +170,8 @@ const StoriesPage = () => {
                     {pairs.map((pair, idx) => (
                       <CarouselItem key={idx} className="pl-12 basis-full md:basis-1/2 lg:basis-1/3">
                         <div className="flex flex-col gap-12">
-                          {pair.map((article) => (
-                            <div key={article.slug} className="min-h-fit">
+                          {pair.map((article: any) => (
+                            <div key={article.slug || article.id} className="min-h-fit">
                               <ArticleCard article={article} />
                             </div>
                           ))}
