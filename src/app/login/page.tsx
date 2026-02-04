@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { ShieldCheck, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { ShieldCheck, AlertCircle, Eye, EyeOff, ExternalLink } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
@@ -32,7 +32,12 @@ const LoginPage = () => {
       await signInWithEmailAndPassword(auth, email, password);
       router.push('/admin');
     } catch (err: any) {
-      setError('Kredensial tidak valid. Silakan hubungi pengembang jika masalah berlanjut.');
+      console.error(err.code);
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+        setError('Akun tidak ditemukan atau password salah. Pastikan Anda sudah membuat User ini di Firebase Console dan mendaftarkan UID-nya di koleksi roles_admin.');
+      } else {
+        setError('Terjadi kesalahan akses. Silakan periksa koneksi atau kredensial Anda.');
+      }
       setIsLoading(false);
     }
   };
@@ -66,11 +71,18 @@ const LoginPage = () => {
         <form onSubmit={handleLogin}>
           <CardContent className="space-y-6 pt-8">
             {error && (
-              <Alert variant="destructive" className="rounded-none border-2">
+              <Alert variant="destructive" className="rounded-none border-2 bg-red-50 text-red-900">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription className="text-xs font-bold uppercase tracking-wide">
+                <AlertDescription className="text-[10px] font-bold uppercase tracking-wide leading-relaxed">
                   {error}
                 </AlertDescription>
+                <a 
+                  href="https://console.firebase.google.com/" 
+                  target="_blank" 
+                  className="mt-2 flex items-center gap-1 text-[8px] underline font-black"
+                >
+                  Buka Firebase Console <ExternalLink size={8} />
+                </a>
               </Alert>
             )}
             <div className="space-y-2">
