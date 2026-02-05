@@ -19,45 +19,46 @@ import ArticleCard from '@/components/article/ArticleCard';
 export default function Home() {
   const db = useFirestore();
 
-  // Queries
+  // Queries - Mengambil data terbaru dari Firestore jika tersedia
   const packagesQ = useMemoFirebase(() => db ? query(collection(db, 'trip_packages'), orderBy('title', 'asc'), limit(3)) : null, [db]);
-  const storiesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story'), orderBy('date', 'desc'), limit(3)) : null, [db]);
+  const storiesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story'), limit(3)) : null, [db]);
 
   const { data: dbPackages, isLoading: isPkgsLoading } = useCollection(packagesQ);
   const { data: dbStories, isLoading: isStoriesLoading } = useCollection(storiesQ);
 
+  // Fallback ke data statis jika Firestore masih kosong atau loading
   const tourPackages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticTripPackages.slice(0, 3);
   const latestStories = (dbStories && dbStories.length > 0) ? dbStories : staticArticles.filter(a => a.type === 'story').slice(0, 3);
 
   const essentialPoints = [
     { 
       title: "Fisik & Aklimatisasi", 
-      icon: <Activity />, 
+      icon: <Activity className="h-6 w-6" />, 
       content: "Dieng berada di ketinggian >2.000 mdpl. Udara tipis dapat memicu Altitude Sickness. Istirahat cukup dan hindari aktivitas berat di jam pertama." 
     },
     { 
       title: "Etika & Budaya", 
-      icon: <ShieldAlert />, 
+      icon: <ShieldAlert className="h-6 w-6" />, 
       content: "Gunakan masker di kawah untuk hindari gas belerang. Hormati situs candi dan jangan menyentuh kepala anak rambut gimbal yang sakral." 
     },
     { 
       title: "Persiapan Kendaraan", 
-      icon: <CarFront />, 
+      icon: <CarFront className="h-6 w-6" />, 
       content: "Jalur Dieng memiliki tanjakan ekstrem 15%. Pastikan rem dan kopling prima. Driver lokal kami ahli dalam teknik engine brake di medan ini." 
     },
     { 
       title: "Perlengkapan Khusus", 
-      icon: <Footprints />, 
+      icon: <Footprints className="h-6 w-6" />, 
       content: "Bawa obat anti-mabuk jalanan berkelok, sepatu anti-slip untuk trekking Sikunir yang licin, dan uang tunai untuk transaksi di pelosok." 
     },
     { 
       title: "Manajemen Waktu", 
-      icon: <Clock />, 
+      icon: <Clock className="h-6 w-6" />, 
       content: "Weekend sering macet total. Berangkatlah lebih awal (misal 02.30 pagi untuk Sikunir) guna menghindari kerumunan dan kemacetan." 
     },
     { 
       title: "Cuaca & Suhu Ekstrem", 
-      icon: <ThermometerSnowflake />, 
+      icon: <ThermometerSnowflake className="h-6 w-6" />, 
       content: "Suhu bisa -5°C (Embun Upas) pada Juli-Sept. Waspadai kabut tebal mendadak; keahlian driver lokal sangat krusial di kondisi ini." 
     }
   ];

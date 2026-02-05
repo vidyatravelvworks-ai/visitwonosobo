@@ -3,9 +3,8 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * FIREBASE SECURITY RULES
-     * Memastikan akses publik untuk membaca konten website (Artikel, Paket, Galeri, Konfigurasi).
-     * Akses penulisan (create, update, delete) dibatasi hanya untuk Administrator.
+     * FIREBASE SECURITY RULES - VisitWonosobo
+     * Mengatur akses publik untuk konten website.
      */
 
     function isSignedIn() {
@@ -13,6 +12,7 @@ service cloud.firestore {
     }
 
     function isAdmin() {
+      // Izinkan akses admin berdasarkan UID spesifik atau koleksi roles_admin
       return isSignedIn() && (
         request.auth.uid == "AsSq4g4LwpV7ZmUpplRoCCzP5j33" ||
         exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid))
@@ -20,14 +20,14 @@ service cloud.firestore {
     }
 
     // --- Aturan Koleksi Artikel ---
+    // Izinkan siapa saja membaca artikel (untuk blog dan destinasi)
     match /articles/{articleId} {
       allow read: if true;
-      allow create: if isAdmin();
-      allow update: if isAdmin();
-      allow delete: if isAdmin();
+      allow write: if isAdmin();
     }
 
     // --- Aturan Koleksi Paket Trip ---
+    // Izinkan siapa saja melihat paket wisata
     match /trip_packages/{packageId} {
       allow read: if true;
       allow write: if isAdmin();
@@ -52,6 +52,6 @@ service cloud.firestore {
       allow write: if false;
     }
     
-    // Pemicu redeploy aturan untuk memastikan akses publik aktif
+    // Trigger redeploy: Menjamin akses publik untuk list/get articles dan trip_packages
   }
 }
