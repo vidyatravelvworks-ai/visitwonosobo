@@ -140,7 +140,7 @@ const AdminDashboard = () => {
             }}
             className={cn(
               "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
-              currentView === 'articles' && filterType === 'all' && "bg-primary"
+              pathname === '/admin' && currentView === 'articles' && filterType === 'all' && "bg-primary"
             )}
           >
             <LayoutDashboard size={18} />
@@ -309,7 +309,7 @@ const AdminDashboard = () => {
                 <>
                   <TableHeader>
                     <TableRow className="bg-secondary/50">
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4 w-24">Preview</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-2 w-16">Preview</TableHead>
                       <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4">Judul Artikel</TableHead>
                       <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4">Kategori</TableHead>
                       <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4 text-right">Action</TableHead>
@@ -320,19 +320,19 @@ const AdminDashboard = () => {
                       <TableRow><TableCell colSpan={4} className="p-8 text-center text-xs font-bold uppercase text-muted-foreground animate-pulse">Loading Articles...</TableCell></TableRow>
                     ) : filteredArticles.map(a => (
                       <TableRow key={a.id} className="hover:bg-secondary/10">
-                        <TableCell className="py-2 px-4">
+                        <TableCell className="p-1">
                           <div className="w-12 h-8 bg-gray-200 border overflow-hidden">
                             {a.image && <img src={a.image} alt="" className="w-full h-full object-cover" />}
                           </div>
                         </TableCell>
-                        <TableCell className="py-2 px-4">
+                        <TableCell className="py-1 px-4">
                           <div className="font-bold uppercase text-[12px]">{a.title}</div>
                           <div className="text-[8px] font-bold text-muted-foreground uppercase">Type: {a.type} | Slug: /{a.id}</div>
                         </TableCell>
-                        <TableCell className="py-2 px-4">
+                        <TableCell className="py-1 px-4">
                           <Badge variant="outline" className="rounded-none border-2 font-black text-[7px] uppercase tracking-widest px-1 py-0">{a.category}</Badge>
                         </TableCell>
-                        <TableCell className="py-2 px-4 text-right space-x-1">
+                        <TableCell className="py-1 px-4 text-right space-x-1">
                           <Button variant="ghost" size="icon" className="h-7 w-7" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={14}/></Link></Button>
                           <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => handleDeleteArticle(a.id)}><Trash2 size={14}/></Button>
                         </TableCell>
@@ -355,19 +355,19 @@ const AdminDashboard = () => {
                       <TableRow><TableCell colSpan={4} className="p-8 text-center text-xs font-bold uppercase text-muted-foreground animate-pulse">Loading Packages...</TableCell></TableRow>
                     ) : filteredPackages.map(p => (
                       <TableRow key={p.id} className="hover:bg-secondary/10">
-                        <TableCell className="py-2 px-4">
+                        <TableCell className="py-1 px-4">
                           <div className="font-bold uppercase text-[12px]">{p.title}</div>
                           <div className="text-[8px] font-bold text-muted-foreground uppercase">{p.description}</div>
                         </TableCell>
-                        <TableCell className="py-2 px-4">
+                        <TableCell className="py-1 px-4">
                           <Badge className="bg-primary text-white font-black text-[9px] uppercase rounded-none px-2 py-0">{p.price}</Badge>
                         </TableCell>
-                        <TableCell className="py-2 px-4">
+                        <TableCell className="py-1 px-4">
                           <div className="flex items-center gap-2 text-[10px] font-bold">
                             <Clock size={12} className="text-primary" /> {p.time}
                           </div>
                         </TableCell>
-                        <TableCell className="py-2 px-4 text-right space-x-1">
+                        <TableCell className="py-1 px-4 text-right space-x-1">
                           <Button variant="ghost" size="icon" className="h-7 w-7" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={14}/></Link></Button>
                           <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => handleDeletePackage(p.id)}><Trash2 size={14}/></Button>
                         </TableCell>
