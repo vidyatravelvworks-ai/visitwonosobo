@@ -10,7 +10,6 @@ import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -27,7 +26,6 @@ const AdminDashboard = () => {
   const { toast } = useToast();
   const [currentView, setCurrentView] = useState<DashboardView>('see-and-do');
   const [isSavingConfig, setIsSavingConfig] = useState(false);
-  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [galleryForm, setGalleryForm] = useState({ url: '', caption: '', order: 0 });
   const [tableSearch, setTableSearch] = useState('');
 
@@ -93,12 +91,14 @@ const AdminDashboard = () => {
   };
 
   const handleAddGallery = async () => {
-    if (!db || !galleryForm.url) return;
+    if (!db || !galleryForm.url) {
+      toast({ variant: 'destructive', title: 'Missing URL', description: 'Please provide an image URL.' });
+      return;
+    }
     try {
       const id = `img-${Date.now()}`;
       await setDoc(doc(db, 'gallery', id), { ...galleryForm, id, createdAt: serverTimestamp() });
       toast({ title: 'Success', description: 'Gallery image added.' });
-      setIsGalleryOpen(false);
       setGalleryForm({ url: '', caption: '', order: (allGallery?.length || 0) + 1 });
     } catch (err) {
       toast({ variant: 'destructive', title: 'Error' });
@@ -167,11 +167,7 @@ const AdminDashboard = () => {
       <main className="flex-grow ml-64 p-12">
         <header className="flex justify-between items-end mb-12">
           <h1 className="text-4xl font-black uppercase tracking-tighter">{currentView.replace('-', ' ')}</h1>
-          {currentView === 'gallery' ? (
-            <Button onClick={() => setIsGalleryOpen(true)} className="bg-primary text-white rounded-none h-14 px-8 font-black uppercase text-[10px] tracking-widest">
-              <Plus size={18} className="mr-2" /> New Image
-            </Button>
-          ) : currentView !== 'settings' && (
+          {(currentView !== 'settings' && currentView !== 'gallery') && (
             <Button asChild className="bg-primary text-white rounded-none h-14 px-8 font-black uppercase text-[10px] tracking-widest">
               <Link href={currentView === 'packages' ? '/admin/plan-your-trip/editor/new' : `/admin/editor/new?type=${currentView === 'see-and-do' ? 'destination' : 'story'}`}>
                 <Plus size={18} className="mr-2" /> New {currentView === 'packages' ? 'Package' : 'Article'}
@@ -179,32 +175,6 @@ const AdminDashboard = () => {
             </Button>
           )}
         </header>
-
-        <Dialog open={isGalleryOpen} onOpenChange={setIsGalleryOpen}>
-          <DialogContent className="rounded-none border-4 border-black p-0 overflow-hidden">
-            <DialogHeader className="p-6 border-b bg-secondary/20">
-              <DialogTitle className="text-sm font-black uppercase tracking-widest">Add Gallery Image</DialogTitle>
-            </DialogHeader>
-            <div className="p-6 space-y-4">
-              <div className="space-y-1">
-                <Label className="text-[10px] font-black uppercase">Image URL</Label>
-                <Input value={galleryForm.url} onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} className="rounded-none h-10 text-xs" />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-[10px] font-black uppercase">Caption</Label>
-                <Input value={galleryForm.caption} onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} className="rounded-none h-10 text-xs" />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-[10px] font-black uppercase">Order (Number)</Label>
-                <Input type="number" value={galleryForm.order} onChange={e => setGalleryForm({...galleryForm, order: parseInt(e.target.value) || 0})} className="rounded-none h-10 text-xs" />
-              </div>
-            </div>
-            <DialogFooter className="p-6 border-t bg-secondary/10">
-              <Button variant="ghost" onClick={() => setIsGalleryOpen(false)} className="rounded-none font-black uppercase text-[10px]">Cancel</Button>
-              <Button onClick={handleAddGallery} className="bg-primary text-white rounded-none h-12 px-8 font-black uppercase text-[10px]">Add to Gallery</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
 
         {currentView === 'settings' ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
@@ -258,6 +228,82 @@ const AdminDashboard = () => {
               <Button onClick={handleSaveConfig} disabled={isSavingConfig} className="bg-primary text-white rounded-none h-14 px-12 font-black uppercase text-[10px] tracking-widest gap-2">
                 {isSavingConfig ? <Loader2 className="animate-spin h-4 w-4" /> : <Save size={18} />} Save All Settings
               </Button>
+            </div>
+          </div>
+        ) : currentView === 'gallery' ? (
+          <div className="space-y-8">
+            <Card className="rounded-none border-2 shadow-xl bg-white p-8">
+              <div className="border-b pb-4 mb-6">
+                <h3 className="text-lg font-black uppercase tracking-tight">Gallery Quick Add</h3>
+                <p className="text-[10px] font-bold uppercase text-muted-foreground">Add new photos to the trip gallery instantly.</p>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <Label className="text-[10px] font-black uppercase">Image URL</Label>
+                    <Input 
+                      value={galleryForm.url} 
+                      onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 
+                      className="rounded-none border-2 h-10 text-xs" 
+                      placeholder="https://..."
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] font-black uppercase">Caption</Label>
+                    <Input 
+                      value={galleryForm.caption} 
+                      onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
+                      className="rounded-none border-2 h-10 text-xs" 
+                      placeholder="Description..."
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] font-black uppercase">Display Order</Label>
+                      <Input 
+                        type="number" 
+                        value={galleryForm.order} 
+                        onChange={e => setGalleryForm({...galleryForm, order: parseInt(e.target.value) || 0})} 
+                        className="rounded-none border-2 h-10 text-xs" 
+                      />
+                    </div>
+                    <div className="flex items-end">
+                      <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-10 font-black uppercase text-[10px] tracking-widest gap-2">
+                        <Save size={14} /> Save Image
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div className="lg:col-span-2 space-y-2">
+                  <Label className="text-[10px] font-black uppercase">Live Preview</Label>
+                  <div className="aspect-[21/9] bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden">
+                    {galleryForm.url ? (
+                      <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
+                    ) : (
+                      <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2">
+                        <ImageIcon size={32} className="opacity-20" />
+                        No Image URL provided
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+               {isGalleryLoading ? (
+                 <div className="col-span-full py-20 flex justify-center"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
+               ) : allGallery?.length === 0 ? (
+                 <div className="col-span-full py-20 text-center text-[10px] font-black uppercase text-muted-foreground">No images in gallery yet.</div>
+               ) : allGallery?.map(g => (
+                 <div key={g.id} className="relative group aspect-square bg-gray-100 border overflow-hidden">
+                    <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />
+                    <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
+                      <p className="text-[9px] font-black text-white uppercase tracking-tighter leading-tight mb-2">{g.caption}</p>
+                      <div className="text-[8px] font-bold text-primary uppercase">Order: {g.order}</div>
+                    </div>
+                 </div>
+               ))}
             </div>
           </div>
         ) : (
@@ -322,23 +368,6 @@ const AdminDashboard = () => {
                           <div className="flex justify-end gap-2">
                             <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={14}/></Link></Button>
                           </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-
-                  {currentView === 'gallery' && (
-                    allGallery?.length === 0 ? (
-                      <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No images found.</TableCell></TableRow>
-                    ) : allGallery?.map(g => (
-                      <TableRow key={g.id} className="hover:bg-secondary/10 border-b">
-                        <TableCell className="p-0">
-                          <div className="w-32 h-16 bg-gray-100 border overflow-hidden">
-                            {g.url && <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />}
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-2 px-6"><span className="text-[10px] font-bold uppercase">{g.caption}</span></TableCell>
-                        <TableCell className="py-2 px-6 text-right">
                         </TableCell>
                       </TableRow>
                     ))
