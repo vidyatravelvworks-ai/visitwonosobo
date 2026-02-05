@@ -52,22 +52,21 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     focusKeyword: ''
   });
 
-  // Effect untuk auto-fill tanggal hari ini secara real-time
+  // Helper untuk mendapatkan tanggal hari ini dalam format Indonesia (05 Feb 2026)
+  const getTodayFormatted = () => {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+    const month = monthNames[now.getMonth()];
+    const year = now.getFullYear();
+    return `${day} ${month} ${year}`;
+  };
+
+  // Effect untuk auto-fill tanggal hari ini saat komponen dimuat
   useEffect(() => {
-    if (isNew) {
-      const now = new Date();
-      const day = String(now.getDate()).padStart(2, '0');
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
-      const month = monthNames[now.getMonth()];
-      const year = now.getFullYear();
-      const todayFormatted = `${day} ${month} ${year}`;
-      
-      setFormData(prev => ({ 
-        ...prev, 
-        date: todayFormatted 
-      }));
-    }
-  }, [isNew]);
+    const today = getTodayFormatted();
+    setFormData(prev => ({ ...prev, date: today }));
+  }, []);
 
   const docRef = useMemoFirebase(() => {
     if (!db || isNew) return null;
@@ -87,7 +86,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         metaTitle: article.metaTitle || '',
         category: article.category || (article.type === 'destination' ? 'Alam' : 'Sejarah'),
         type: article.type || 'destination',
-        date: article.date || '',
+        date: getTodayFormatted(), // Update ke hari ini saat dibuka untuk diedit
         focusKeyword: article.focusKeyword || ''
       });
     } else if (!isNew) {
@@ -102,7 +101,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
           metaTitle: staticArt.title,
           category: staticArt.category,
           type: staticArt.type,
-          date: staticArt.date,
+          date: getTodayFormatted(),
           focusKeyword: ''
         });
       }
@@ -160,14 +159,18 @@ const ArticleEditorPage = ({ params }: PageProps) => {
       const articleId = formData.slug.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
       const finalDocRef = doc(db, 'articles', articleId);
       
+      // Selalu update tanggal rilis ke hari ini saat disimpan
+      const finalDate = getTodayFormatted();
+
       await setDoc(finalDocRef, {
         ...formData,
+        date: finalDate,
         id: articleId,
         slug: articleId,
         updatedAt: serverTimestamp(),
       }, { merge: true });
 
-      toast({ title: 'Berhasil', description: 'Artikel telah disimpan dan dipublikasikan.' });
+      toast({ title: 'Berhasil', description: `Artikel telah diperbarui dengan tanggal rilis ${finalDate}.` });
       router.push('/admin');
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Gagal menyimpan artikel.' });
@@ -179,10 +182,10 @@ const ArticleEditorPage = ({ params }: PageProps) => {
   const getSEOAnalysis = () => {
     const wordCount = formData.content.trim() ? formData.content.split(/\s+/).length : 0;
     const checks = [
-      { id: 1, label: 'Focus Keyword in Content', pass: formData.focusKeyword && formData.content.toLowerCase().includes(formData.focusKeyword.toLowerCase()) },
+      { id: 1, label: 'Keyword in Content', pass: formData.focusKeyword && formData.content.toLowerCase().includes(formData.focusKeyword.toLowerCase()) },
       { id: 2, label: 'Meta Description Length (120-160)', pass: formData.excerpt.length >= 100 && formData.excerpt.length <= 160 },
       { id: 3, label: 'Content Length (>1000 words)', pass: wordCount >= 1000 },
-      { id: 4, label: 'Meta Title defined', pass: !!formData.metaTitle && formData.metaTitle.length <= 60 },
+      { id: 4, label: 'Meta Title Length (<60)', pass: !!formData.metaTitle && formData.metaTitle.length <= 60 },
       { id: 5, label: 'Featured Image present', pass: !!formData.image },
     ];
     const score = Math.round((checks.filter(c => c.pass).length / checks.length) * 100);
@@ -242,7 +245,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
             </span>
             <span className="h-1 w-1 rounded-full bg-white/40" />
             <span className="flex items-center gap-2">
-              <Calendar className="h-3 w-3 text-primary" /> {formData.date || 'Memuat Tanggal...'}
+              <Calendar className="h-3 w-3 text-primary" /> {formData.date || 'Memuat...'}
             </span>
           </div>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tighter leading-tight">
@@ -280,7 +283,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                      <Input 
                        value={formData.image}
                        onChange={(e) => setFormData({...formData, image: e.target.value})}
-                       placeholder="Gunakan URL dari Unsplash, Picsum, atau Cloudinary"
+                       placeholder="Gunakan URL Unsplash/Picsum"
                        className="rounded-none border-2 border-black/10 h-12 text-[11px] font-bold"
                      />
                    </div>
@@ -291,7 +294,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                      <Input 
                        value={formData.focusKeyword}
                        onChange={(e) => setFormData({...formData, focusKeyword: e.target.value})}
-                       placeholder="Contoh: kuliner khas wonosobo"
+                       placeholder="Contoh: wisata wonosobo terbaik"
                        className="rounded-none border-2 border-primary/20 h-12 text-[11px] font-bold"
                      />
                    </div>
@@ -302,7 +305,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                   <Input 
                     value={formData.title}
                     onChange={(e) => setFormData({...formData, title: e.target.value})}
-                    placeholder="Masukkan judul artikel yang menarik..."
+                    placeholder="Masukkan judul artikel..."
                     className="rounded-none border-2 border-black/10 h-14 text-xl font-black uppercase tracking-tight"
                   />
                   <Button
@@ -312,7 +315,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     className="bg-black text-white hover:bg-primary rounded-none h-12 px-8 gap-3 font-bold uppercase tracking-widest text-[10px]"
                   >
                     {isGenerating ? <Loader2 className="animate-spin h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
-                    {isGenerating ? 'AI Sedang Menulis Artikel Ilmiah...' : 'Buat Artikel Instan'}
+                    {isGenerating ? 'AI Sedang Menulis...' : 'Buat Artikel Instan'}
                   </Button>
                 </div>
 
@@ -321,8 +324,8 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                   <Textarea 
                     value={formData.content}
                     onChange={(e) => setFormData({...formData, content: e.target.value})}
-                    placeholder="Konten hasil AI atau ketikan manual akan muncul di sini..."
-                    className="rounded-none border-2 border-black/10 min-h-[650px] font-medium leading-loose p-8 text-sm"
+                    placeholder="Konten akan muncul di sini..."
+                    className="rounded-none border-2 border-black/10 min-h-[600px] font-medium leading-loose p-8 text-sm"
                   />
                 </div>
               </CardContent>
@@ -349,7 +352,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                  <div className="pt-4 border-t mt-4">
                     <div className="p-3 bg-secondary/20 border-l-2 border-primary">
                        <p className="text-[9px] font-bold text-muted-foreground leading-relaxed uppercase">
-                          {seo.score === 100 ? "Luar biasa! Artikel ini sudah teroptimasi sempurna." : "Lengkapi checklist di atas untuk performa SEO yang lebih baik."}
+                          {seo.score === 100 ? "Luar biasa! Teroptimasi sempurna." : "Lengkapi checklist untuk performa SEO."}
                        </p>
                     </div>
                  </div>
@@ -369,12 +372,12 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                   </Label>
                   
                   <div className="space-y-2">
-                    <Label className="text-[9px] font-bold uppercase">Tanggal Publikasi</Label>
+                    <Label className="text-[9px] font-bold uppercase">Tanggal Rilis (Auto-today)</Label>
                     <Input 
                       value={formData.date}
                       onChange={(e) => setFormData({...formData, date: e.target.value})}
-                      placeholder="Contoh: 05 Feb 2026"
-                      className="rounded-none border-2 text-[10px] h-10 font-bold"
+                      placeholder="05 Feb 2026"
+                      className="rounded-none border-2 text-[10px] h-10 font-bold bg-secondary/20"
                     />
                   </div>
 
