@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -86,7 +87,7 @@ const PlanYourTripPage = () => {
           />
           <div className="absolute inset-0 bg-black/50" />
         </div>
-        <div className="container mx-auto px-2 md:px-32 relative z-10 text-center">
+        <div className="container mx-auto px-2 md:px-8 lg:px-32 relative z-10 text-center">
           <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-4">
             Plan Your <span className="text-primary">Journey</span>
           </h1>
@@ -97,7 +98,7 @@ const PlanYourTripPage = () => {
       </section>
 
       <section className="relative pt-24 pb-24 overflow-hidden">
-        <div className="container mx-auto px-2 md:px-32 relative z-10">
+        <div className="container mx-auto px-2 md:px-8 lg:px-32 relative z-10">
           <div className="text-center mb-20 max-w-3xl mx-auto space-y-4">
             <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-primary">Paket Wisata Lokal</h2>
             <p className="text-muted-foreground font-medium text-sm">Nikmati perjalanan tanpa hambatan dengan pemandu lokal berpengalaman.</p>

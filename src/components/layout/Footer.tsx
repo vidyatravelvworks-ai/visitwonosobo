@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -18,9 +19,9 @@ const Footer = () => {
 
   return (
     <footer className="bg-white border-t py-20">
-      <div className="container mx-auto px-2 md:px-32">
+      <div className="container mx-auto px-2 md:px-8 lg:px-32">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-16 mb-20">
-          {/* Kolom 1: 40% lebar pada desktop */}
+          {/* Kolom 1: 40% lebar (span 2 dari 5) */}
           <div className="col-span-1 md:col-span-2 space-y-6">
             <span className="text-2xl font-black font-headline tracking-tighter uppercase text-primary">
               visitwonosobo
