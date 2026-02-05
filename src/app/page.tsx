@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -14,7 +13,8 @@ import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase
 import { collection, query, orderBy, limit, doc } from 'firebase/firestore';
 import { 
   ArrowRight, Activity, ShieldAlert, CarFront, Briefcase, 
-  Clock, ThermometerSnowflake, CheckCircle2, MessageCircle, Loader2 
+  Clock, ThermometerSnowflake, CheckCircle2, MessageCircle, Loader2,
+  AlertTriangle, Footprints
 } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
@@ -33,12 +33,36 @@ export default function Home() {
   const featuredStories = staticArticlesList.filter(a => a.type === 'story').slice(0, 3);
 
   const essentialPoints = [
-    { title: "Kondisi Fisik", icon: <Activity />, content: "Dieng berada di ketinggian >2.000 mdpl. Waspadai Altitude Sickness." },
-    { title: "Etika Budaya", icon: <ShieldAlert />, content: "Gunakan masker di kawah. Hormati ritual anak rambut gimbal." },
-    { title: "Persiapan Mobil", icon: <CarFront />, content: "Jalur Dieng memiliki tanjakan 15%. Cek rem dan kopling." },
-    { title: "Pakaian Hangat", icon: <ThermometerSnowflake />, content: "Suhu bisa mencapai 0°C. Siapkan jaket tebal, sarung tangan, dan kupluk." },
-    { title: "Uang Tunai", icon: <Briefcase />, content: "ATM sangat terbatas di area atas Dieng. Siapkan uang tunai sebelum berangkat." },
-    { title: "Waktu Terbaik", icon: <Clock />, content: "Juli - Agustus adalah waktu terbaik untuk melihat embun es (upas) yang langka." }
+    { 
+      title: "Fisik & Aklimatisasi", 
+      icon: <Activity />, 
+      content: "Dieng berada di ketinggian >2.000 mdpl. Udara tipis dapat memicu Altitude Sickness. Istirahat cukup dan hindari aktivitas berat di jam pertama." 
+    },
+    { 
+      title: "Etika & Budaya", 
+      icon: <ShieldAlert />, 
+      content: "Gunakan masker di kawah untuk hindari gas belerang. Hormati situs candi dan jangan menyentuh kepala anak rambut gimbal yang sakral." 
+    },
+    { 
+      title: "Persiapan Kendaraan", 
+      icon: <CarFront />, 
+      content: "Jalur Dieng memiliki tanjakan ekstrem 15%. Pastikan rem dan kopling prima. Driver lokal kami ahli dalam teknik engine brake di medan ini." 
+    },
+    { 
+      title: "Perlengkapan Khusus", 
+      icon: <Footprints />, 
+      content: "Bawa obat anti-mabuk jalanan berkelok, sepatu anti-slip untuk trekking Sikunir yang licin, dan uang tunai untuk transaksi di pelosok." 
+    },
+    { 
+      title: "Manajemen Waktu", 
+      icon: <Clock />, 
+      content: "Weekend sering macet total. Berangkatlah lebih awal (misal 02.30 pagi untuk Sikunir) guna menghindari kerumunan dan kemacetan." 
+    },
+    { 
+      title: "Cuaca & Suhu Ekstrem", 
+      icon: <ThermometerSnowflake />, 
+      content: "Suhu bisa -5°C (Embun Upas) pada Juli-Sept. Waspadai kabut tebal mendadak; keahlian driver lokal sangat krusial di kondisi ini." 
+    }
   ];
 
   return (
@@ -78,8 +102,8 @@ export default function Home() {
                     key={idx} 
                     className={cn(
                       "bg-white border-2 p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full",
-                      config?.packageDesign?.cardBorder || pkg.borderColor,
-                      config?.packageDesign?.cardColor || pkg.color
+                      pkg.borderColor || "border-primary/20",
+                      pkg.color || "bg-primary/5"
                     )}
                   >
                     <div className="flex justify-between items-start mb-8">
