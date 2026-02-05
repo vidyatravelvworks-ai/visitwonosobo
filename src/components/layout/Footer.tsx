@@ -60,10 +60,10 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-1">
             <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Plan Your Trip</h4>
             <ul className="space-y-4 text-sm font-medium">
-              <li><Link href="/plan-your-trip" className="hover:text-primary transition-colors">Travel Essentials</Link></li>
-              <li><Link href="/plan-your-trip" className="hover:text-primary transition-colors">Getting to Wonosobo</Link></li>
-              <li><Link href="/stories" className="hover:text-primary transition-colors">Local Customs</Link></li>
-              <li><Link href="/plan-your-trip" className="hover:text-primary transition-colors">Itineraries</Link></li>
+              <li><Link href="/plan-your-trip" className="hover:text-primary transition-colors">Paket Keliling</Link></li>
+              <li><Link href="/plan-your-trip" className="hover:text-primary transition-colors">Galeri Trip</Link></li>
+              <li><Link href="/plan-your-trip" className="hover:text-primary transition-colors">Travel Essential</Link></li>
+              <li><Link href="/plan-your-trip" className="hover:text-primary transition-colors">Cari Penginapan</Link></li>
             </ul>
           </div>
 
