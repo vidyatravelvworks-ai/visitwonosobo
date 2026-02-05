@@ -15,6 +15,7 @@ import {
   Footprints, MapPin, ArrowRight, MessageCircle
 } from 'lucide-react';
 import ArticleCard from '@/components/article/ArticleCard';
+import { cn } from '@/lib/utils';
 
 export default function Home() {
   const db = useFirestore();
@@ -104,12 +105,18 @@ export default function Home() {
                 {tourPackages.map((pkg: any, idx: number) => (
                   <div 
                     key={pkg.id || idx} 
-                    className="bg-white border-2 border-black/5 shadow-lg p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:border-primary/50"
+                    className={cn(
+                      "bg-white border-2 border-black/5 shadow-lg p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:border-primary/50",
+                      pkg.color,
+                      pkg.borderColor
+                    )}
                   >
                     <div className="flex justify-between items-start mb-10">
-                      <div className="p-4 bg-primary text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"><CarFront size={24} /></div>
+                      <div className="p-4 bg-primary text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <CarFront size={24} />
+                      </div>
                       <div className="text-right">
-                        <span className="block text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Harga Mulai</span>
+                        <span className="block text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 text-right">Harga Mulai</span>
                         <div className="bg-black text-white px-3 py-1 font-black text-lg tracking-tight inline-block">
                           {pkg.price}
                         </div>

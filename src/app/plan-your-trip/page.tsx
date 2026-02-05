@@ -34,15 +34,13 @@ const PlanYourTripPage = () => {
     <div className="bg-white">
       <section className="relative h-[45vh] w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          {heroImage && (
-            <Image 
-              src={heroImage} 
-              alt="Hero Background" 
-              fill 
-              className="object-cover" 
-              priority 
-            />
-          )}
+          <Image 
+            src={heroImage} 
+            alt="Hero Background" 
+            fill 
+            className="object-cover" 
+            priority 
+          />
           <div className="absolute inset-0 bg-black/50" />
         </div>
         <div className="container mx-auto px-12 md:px-32 relative z-10 text-center">
@@ -80,7 +78,7 @@ const PlanYourTripPage = () => {
                       <CarFront size={24} />
                     </div>
                     <div className="text-right">
-                      <span className="block text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Harga Perjalanan</span>
+                      <span className="block text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 text-right">Harga Mulai</span>
                       <div className="bg-black text-white px-3 py-1 font-black text-lg tracking-tight inline-block">
                         {pkg.price}
                       </div>
@@ -164,14 +162,12 @@ const PlanYourTripPage = () => {
                   const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/${item.id}/800/800`;
                   return (
                     <div key={item.id} className={cn("relative overflow-hidden group", spans[idx % spans.length])}>
-                      {galleryImg && (
-                        <Image 
-                          src={galleryImg} 
-                          alt={item.caption || "Trip Photo"} 
-                          fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-110" 
-                        />
-                      )}
+                      <Image 
+                        src={galleryImg} 
+                        alt={item.caption || "Trip Photo"} 
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                      />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
                         <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
                       </div>
