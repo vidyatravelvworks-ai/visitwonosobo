@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -90,7 +91,7 @@ const TripPackageEditorPage = () => {
       }, { merge: true });
 
       toast({ title: 'Berhasil', description: 'Paket trip telah diperbarui.' });
-      router.push('/admin/plan-your-trip');
+      router.push('/admin'); // Kembali ke dashboard utama
     } catch (error) {
       console.error(error);
       toast({ variant: 'destructive', title: 'Error', description: 'Gagal menyimpan paket.' });
@@ -108,9 +109,9 @@ const TripPackageEditorPage = () => {
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="flex justify-between items-center">
           <Button variant="ghost" asChild className="rounded-none hover:bg-transparent pl-0 h-auto group">
-            <Link href="/admin/plan-your-trip" className="flex items-center gap-2 font-black uppercase tracking-widest text-[10px]">
+            <Link href="/admin" className="flex items-center gap-2 font-black uppercase tracking-widest text-[10px]">
               <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              Kembali ke Daftar Paket
+              Kembali ke Dashboard
             </Link>
           </Button>
           <Button 
