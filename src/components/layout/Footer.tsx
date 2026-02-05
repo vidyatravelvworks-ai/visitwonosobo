@@ -71,6 +71,7 @@ const Footer = () => {
             <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Contact</h4>
             <ul className="space-y-4 text-sm font-medium">
               <li>
+                Co-working Space HIPMI Wonosobo<br />
                 Jl. Sindoro No.921, Kab. Wonosobo, Jawa Tengah 56311
               </li>
               <li className="text-primary font-bold">0812-3093-9128</li>
