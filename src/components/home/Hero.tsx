@@ -37,7 +37,7 @@ const Hero = () => {
           <h1 className="text-5xl md:text-9xl font-black text-white uppercase leading-none tracking-tighter">
             The Soul <br /> <span className="text-white underline decoration-primary decoration-[12px] underline-offset-[16px]">of Java</span>
           </h1>
-          <div className="pt-10 flex flex-col sm:flex-row justify-center gap-6 max-w-[280px] sm:max-w-none mx-auto">
+          <div className="pt-10 flex flex-col sm:flex-row justify-center gap-6 max-w-[220px] sm:max-w-none mx-auto">
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold uppercase px-12 py-8 rounded-none" asChild>
               <a href="#services">Explore Experiences</a>
             </Button>
