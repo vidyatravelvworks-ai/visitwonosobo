@@ -4,18 +4,14 @@ service cloud.firestore {
 
     /**
      * FIREBASE SECURITY RULES
-     * Memastikan akses publik untuk membaca artikel, namun membatasi penulisan 
-     * hanya untuk akun administrator terverifikasi.
+     * Memastikan akses publik untuk membaca artikel dan paket trip, 
+     * namun membatasi penulisan hanya untuk akun administrator terverifikasi.
      */
 
     function isSignedIn() {
       return request.auth != null;
     }
 
-    /** 
-     * @description Mengecek apakah user adalah admin.
-     * Mengizinkan UID spesifik user atau UID yang terdaftar di koleksi roles_admin.
-     */
     function isAdmin() {
       return isSignedIn() && (
         request.auth.uid == "AsSq4g4LwpV7ZmUpplRoCCzP5j33" ||
@@ -27,24 +23,24 @@ service cloud.firestore {
       return isAdmin() && resource != null;
     }
 
-    // --- Aturan Koleksi ---
-
+    // --- Aturan Koleksi Artikel ---
     match /articles/{articleId} {
       allow get, list: if true;
-      
-      allow create: if isAdmin() 
-        && request.resource.data.id == articleId;
-      
-      allow update: if isExistingAdmin() 
-        && request.resource.data.id == resource.data.id;
-        
+      allow create: if isAdmin() && request.resource.data.id == articleId;
+      allow update: if isExistingAdmin() && request.resource.data.id == resource.data.id;
       allow delete: if isExistingAdmin();
+    }
+
+    // --- Aturan Koleksi Paket Trip ---
+    match /trip_packages/{packageId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
     }
 
     match /roles_admin/{userId} {
       allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
       allow list: if isAdmin();
-      allow create, update, delete: if false; // Hanya dikelola via Admin SDK atau Master Admin UID
+      allow create, update, delete: if false;
     }
   }
 }

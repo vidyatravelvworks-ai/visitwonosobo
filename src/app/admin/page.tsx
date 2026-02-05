@@ -90,17 +90,16 @@ const AdminDashboard = () => {
         <nav className="flex-grow space-y-2">
           <Button 
             variant="ghost" 
-            onClick={() => {
-              setFilterType('all');
-              setFilterCategory('all');
-            }}
+            asChild
             className={cn(
               "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
-              filterType === 'all' && "bg-primary"
+              pathname === '/admin' && "bg-primary"
             )}
           >
-            <LayoutDashboard size={18} />
-            <span className="text-[10px] font-bold uppercase tracking-widest">Dashboard</span>
+            <Link href="/admin">
+              <LayoutDashboard size={18} />
+              <span className="text-[10px] font-bold uppercase tracking-widest">Dashboard</span>
+            </Link>
           </Button>
           
           <div className="pt-6 pb-2">
@@ -119,7 +118,7 @@ const AdminDashboard = () => {
             )}
           >
             <Map size={18} />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">See &amp; Do Articles</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">See & Do Articles</span>
           </Button>
 
           <Button 
@@ -138,7 +137,7 @@ const AdminDashboard = () => {
           </Button>
 
           <div className="pt-6 pb-2">
-            <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mb-2">Quick Access</p>
+            <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mb-2">Adjust Experience</p>
           </div>
 
           <Button 
@@ -146,9 +145,9 @@ const AdminDashboard = () => {
             asChild
             className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all"
           >
-            <Link href="/plan-your-trip" target="_blank" className="flex items-center gap-3">
+            <Link href="/admin/plan-your-trip" className="flex items-center gap-3">
               <MapPin size={18} />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">Plan Your Trip</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">Adjust Paket Trip</span>
             </Link>
           </Button>
 
@@ -172,7 +171,7 @@ const AdminDashboard = () => {
           <Button 
             variant="destructive" 
             onClick={handleSignOut} 
-            className="w-full rounded-none h-12 gap-3 shadow-lg"
+            className="w-full rounded-none h-12 gap-3 shadow-lg bg-red-600 hover:bg-red-700 text-white"
           >
             <LogOut size={18} />
             <span className="text-[10px] font-bold uppercase tracking-widest">Sign Out</span>
@@ -210,7 +209,6 @@ const AdminDashboard = () => {
               </div>
 
               <div className="flex flex-col md:flex-row w-full lg:w-auto gap-4">
-                {/* Category Filter */}
                 <div className="w-full md:w-56">
                   <Select value={filterCategory} onValueChange={setFilterCategory}>
                     <SelectTrigger className="rounded-none border-2 border-black/10 h-10 font-bold text-[10px] uppercase tracking-widest bg-white">
@@ -229,7 +227,6 @@ const AdminDashboard = () => {
                   </Select>
                 </div>
 
-                {/* Search Input */}
                 <div className="relative w-full md:w-64">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <input 
