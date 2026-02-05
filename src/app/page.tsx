@@ -69,7 +69,7 @@ export default function Home() {
       
       <section className="py-16 bg-white border-b px-6">
         <div className="container mx-auto px-0 md:px-8 lg:px-32">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-8">
             <div className="max-w-2xl">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-3">Plan Your Trip</h3>
               <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Essential Information</h2>
@@ -79,7 +79,7 @@ export default function Home() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12 gap-x-12 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12 gap-x-12 mb-10">
             {essentialPoints.map((point, idx) => (
               <div key={idx} className="group space-y-4 border-l border-primary/20 pl-6 hover:border-primary transition-all">
                 <div className="p-3 bg-secondary w-fit text-primary group-hover:bg-primary group-hover:text-white transition-colors">{point.icon}</div>
@@ -89,8 +89,8 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="pt-16 border-t">
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6">
+          <div className="pt-10 border-t">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-6">
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Paket Wisata</h2>
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-primary pl-4">Layanan Guide & Rental Lokal Terbaik</p>
             </div>
@@ -181,9 +181,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-32 bg-secondary/20 px-6">
+      <section className="py-16 bg-secondary/20 px-6">
         <div className="container mx-auto px-0 md:px-8 lg:px-32">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-10">
             <div className="max-w-2xl">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Discover More</h3>
               <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Town Stories</h2>
@@ -209,7 +209,7 @@ export default function Home() {
 
       <Services />
 
-      <section className="py-40 bg-black relative overflow-hidden px-6">
+      <section className="py-24 bg-black relative overflow-hidden px-6">
         <div className="absolute inset-0 opacity-30">
           <img 
             src="https://images.unsplash.com/photo-1595495745827-85bcc5c9a028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" 
@@ -218,14 +218,14 @@ export default function Home() {
           />
         </div>
         <div className="container mx-auto px-0 md:px-8 lg:px-32 relative z-10 text-center">
-          <div className="max-w-4xl mx-auto space-y-12">
+          <div className="max-w-4xl mx-auto space-y-8">
             <h2 className="text-5xl md:text-8xl font-black text-white uppercase leading-none tracking-tighter">
               Ready to <span className="text-primary">Explore</span> <br /> Wonosobo?
             </h2>
             <p className="text-white/60 text-sm md:text-base font-medium max-w-2xl mx-auto">
               Wujudkan perjalanan impian Anda dengan layanan guide dan rental lokal terbaik. Kami siap menyambut Anda di negeri di atas awan.
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-6 pt-10">
+            <div className="flex flex-col sm:flex-row justify-center gap-6 pt-6">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-black uppercase px-16 py-10 rounded-none text-sm tracking-widest gap-3" asChild>
                 <a href="https://wa.me/6281234567890" target="_blank">
                   <MessageCircle size={20} /> Konsultasi via WhatsApp
