@@ -279,14 +279,14 @@ const PlanYourTripPage = () => {
             )}
           </div>
 
-          <div className="mt-32 pt-24 border-t">
-            <div className="max-w-2xl mb-16">
+          <div className="mt-16 pt-12 border-t">
+            <div className="max-w-2xl mb-8">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Travel Essentials</h3>
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Essential Information</h2>
               <p className="text-muted-foreground mt-4 text-sm font-medium">Pastikan Anda mengetahui aspek-aspek penting ini sebelum memulai perjalanan di Wonosobo.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-16 gap-x-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-8 gap-x-12">
               {essentialPoints.map((point, idx) => (
                 <div key={idx} className="group space-y-4 border-l border-primary/20 pl-6 hover:border-primary transition-all">
                   <div className="p-3 bg-secondary w-fit text-primary group-hover:bg-primary group-hover:text-white transition-colors">{point.icon}</div>
