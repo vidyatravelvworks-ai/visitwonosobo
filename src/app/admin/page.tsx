@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -149,7 +150,7 @@ const AdminDashboard = () => {
   };
 
   /**
-   * Fungsi verifikasi hapus yang robust.
+   * Fungsi verifikasi hapus yang sangat eksplisit.
    */
   const requestDeleteConfirmation = (itemType: string): boolean => {
     const message = `Ketik "hapus" untuk mengonfirmasi penghapusan ${itemType} ini:`;
@@ -171,7 +172,11 @@ const AdminDashboard = () => {
     e.preventDefault();
     e.stopPropagation();
     
-    if (!requestDeleteConfirmation('gambar galeri')) return;
+    console.log("Attempting to delete gallery item:", id);
+    
+    const confirmed = requestDeleteConfirmation('gambar galeri');
+    if (!confirmed) return;
+    
     if (!db) return;
 
     const docRef = doc(db, 'gallery', id);
@@ -187,9 +192,13 @@ const AdminDashboard = () => {
       });
   };
 
-  const handleDeleteArticle = (id: string) => {
+  const handleDeleteArticle = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     if (!requestDeleteConfirmation('artikel')) return;
     if (!db) return;
+    
     const docRef = doc(db, 'articles', id);
     deleteDoc(docRef)
       .then(() => {
@@ -203,9 +212,13 @@ const AdminDashboard = () => {
       });
   };
 
-  const handleDeletePackage = (id: string) => {
+  const handleDeletePackage = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     if (!requestDeleteConfirmation('paket trip')) return;
     if (!db) return;
+    
     const docRef = doc(db, 'trip_packages', id);
     deleteDoc(docRef)
       .then(() => {
@@ -315,7 +328,7 @@ const AdminDashboard = () => {
                         <TableCell className="py-1 px-4"><Badge className="bg-primary rounded-none text-[8px] uppercase">{p.price}</Badge></TableCell>
                         <TableCell className="py-1 px-4 text-right space-x-1">
                           <Button variant="ghost" size="icon" className="h-7 w-7" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={12}/></Link></Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => handleDeletePackage(p.id)}><Trash2 size={12}/></Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={(e) => handleDeletePackage(e, p.id)}><Trash2 size={12}/></Button>
                         </TableCell>
                       </TableRow>
                     ))
@@ -334,7 +347,7 @@ const AdminDashboard = () => {
                         <TableCell className="py-1 px-4"><Badge variant="outline" className="rounded-none text-[8px] uppercase">{a.category}</Badge></TableCell>
                         <TableCell className="py-1 px-4 text-right space-x-1">
                           <Button variant="ghost" size="icon" className="h-7 w-7" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={12}/></Link></Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => handleDeleteArticle(a.id)}><Trash2 size={12}/></Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={(e) => handleDeleteArticle(e, a.id)}><Trash2 size={12}/></Button>
                         </TableCell>
                       </TableRow>
                     ))
@@ -509,16 +522,18 @@ const AdminDashboard = () => {
                       </div>
                     )}
                     
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <Button 
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10 pointer-events-none group-hover:pointer-events-auto">
+                      <button 
                         type="button"
-                        variant="destructive" 
-                        size="icon"
-                        className="rounded-none h-12 w-12 z-30"
-                        onClick={(e) => handleDeleteGallery(e, item.id)}
+                        className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-none shadow-2xl transition-all active:scale-90 pointer-events-auto relative z-30"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleDeleteGallery(e, item.id);
+                        }}
                       >
-                        <Trash2 className="h-6 w-6 text-white" />
-                      </Button>
+                        <Trash2 className="h-6 w-6" />
+                      </button>
                     </div>
                   </div>
                 </Card>
