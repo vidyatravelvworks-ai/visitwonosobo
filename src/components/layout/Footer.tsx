@@ -8,10 +8,11 @@ import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 
 const Footer = () => {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const [year, setYear] = useState<string>('2025');
 
   useEffect(() => {
-    // Memperbarui tahun hanya di sisi klien setelah mount untuk menghindari hydration mismatch
+    setMounted(true);
     setYear(new Date().getFullYear().toString());
   }, []);
 
@@ -33,10 +34,18 @@ const Footer = () => {
               Kami adalah kolektif penjelajah lokal yang berdedikasi untuk menunjukkan keindahan dan budaya otentik Wonosobo kepada dunia.
             </p>
             <div className="flex gap-4 pt-4">
-              <Instagram className="h-5 w-5 cursor-pointer hover:text-primary" aria-label="Instagram" />
-              <Facebook className="h-5 w-5 cursor-pointer hover:text-primary" aria-label="Facebook" />
-              <Twitter className="h-5 w-5 cursor-pointer hover:text-primary" aria-label="Twitter" />
-              <Youtube className="h-5 w-5 cursor-pointer hover:text-primary" aria-label="Youtube" />
+              <Link href="#" aria-label="Instagram" className="hover:text-primary transition-colors">
+                <Instagram className="h-5 w-5" />
+              </Link>
+              <Link href="#" aria-label="Facebook" className="hover:text-primary transition-colors">
+                <Facebook className="h-5 w-5" />
+              </Link>
+              <Link href="#" aria-label="Twitter" className="hover:text-primary transition-colors">
+                <Twitter className="h-5 w-5" />
+              </Link>
+              <Link href="#" aria-label="Youtube" className="hover:text-primary transition-colors">
+                <Youtube className="h-5 w-5" />
+              </Link>
             </div>
           </div>
 
@@ -75,7 +84,7 @@ const Footer = () => {
         
         <div className="pt-10 border-t flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
           <p>
-            &copy; <span suppressHydrationWarning>{year}</span>{' '}
+            &copy; <span suppressHydrationWarning>{mounted ? year : '2025'}</span>{' '}
             <Link href="/login" className="hover:text-primary transition-colors">
               visitwonosobo
             </Link>
