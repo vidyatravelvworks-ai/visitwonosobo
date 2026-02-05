@@ -386,8 +386,8 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                 </div>
 
                 <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-                    <div className="md:col-span-1 space-y-2">
+                  <div className="grid grid-cols-1 md:grid-cols-10 gap-6 items-end">
+                    <div className="md:col-span-6 space-y-2">
                       <Label className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
                         <Search size={12} /> Focus Keyword (SEO)
                       </Label>
@@ -398,7 +398,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                         className="rounded-none border-2 border-primary/20 h-14 text-[11px] font-bold"
                       />
                     </div>
-                    <div className="md:col-span-2">
+                    <div className="md:col-span-4">
                         <Button
                           type="button"
                           onClick={handleGenerateAI}
