@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { generateArticle } from '@/ai/flows/generate-article-flow';
 import { articles as staticArticles } from '@/data/articles';
 import { cn } from '@/lib/utils';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -123,17 +124,25 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         focusKeyword: formData.focusKeyword 
       });
       
+      // Cari gambar yang disarankan dari pustaka lokal
+      let suggestedImage = formData.image;
+      if (result.suggestedImageId) {
+        const found = PlaceHolderImages.find(img => img.id === result.suggestedImageId);
+        if (found) suggestedImage = found.imageUrl;
+      }
+
       setFormData(prev => ({
         ...prev,
         content: result.content,
         metaTitle: result.metaTitle,
         excerpt: result.metaDescription,
-        focusKeyword: result.focusKeywordSuggested || prev.focusKeyword
+        focusKeyword: result.focusKeywordSuggested || prev.focusKeyword,
+        image: suggestedImage
       }));
 
       toast({
         title: 'Berhasil',
-        description: 'Artikel SEO 1100+ kata berhasil dibuat. Keyword fokus juga telah diatur.',
+        description: 'Artikel SEO 1100+ kata dan gambar relevan berhasil disiapkan.',
       });
     } catch (error) {
       toast({
@@ -307,7 +316,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                      <Input 
                        value={formData.image}
                        onChange={(e) => setFormData({...formData, image: e.target.value})}
-                       placeholder="Gunakan URL Unsplash/Picsum"
+                       placeholder="Gunakan URL Unsplash/Picsum atau biarkan AI memilih"
                        className="rounded-none border-2 border-black/10 h-12 text-[11px] font-bold"
                      />
                    </div>
@@ -339,7 +348,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     className="bg-black text-white hover:bg-primary rounded-none h-12 px-8 gap-3 font-bold uppercase tracking-widest text-[10px]"
                   >
                     {isGenerating ? <Loader2 className="animate-spin h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
-                    {isGenerating ? 'AI Sedang Menulis Artikel SEO...' : 'Buat Artikel Instan'}
+                    {isGenerating ? 'AI Sedang Menulis & Memilih Gambar...' : 'Buat Artikel Instan'}
                   </Button>
                 </div>
 

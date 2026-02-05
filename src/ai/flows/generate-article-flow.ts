@@ -1,7 +1,7 @@
 'use server';
 /**
  * @fileOverview Flow untuk menghasilkan artikel ilmiah populer dengan standar SEO Senior.
- * Ditambahkan kemampuan untuk menyarankan kata kunci fokus jika belum ada.
+ * Ditambahkan kemampuan untuk menyarankan kata kunci fokus dan memilih gambar relevan.
  */
 
 import { ai } from '@/ai/genkit';
@@ -19,6 +19,7 @@ const GenerateArticleOutputSchema = z.object({
   metaDescription: z.string().describe('Deskripsi singkat untuk SEO (Meta Description) max 155 karakter'),
   focusKeywordSuggested: z.string().describe('Kata kunci fokus yang digunakan (atau disarankan jika input kosong)'),
   internalLinks: z.string().describe('Rekomendasi internal link untuk artikel terkait'),
+  suggestedImageId: z.string().describe('ID gambar dari daftar yang disediakan yang paling relevan dengan isi artikel'),
 });
 export type GenerateArticleOutput = z.infer<typeof GenerateArticleOutputSchema>;
 
@@ -58,6 +59,25 @@ KRITERIA WAJIB UNTUK SKOR SEO SEMPURNA:
    - metaTitle: Harus di bawah 60 karakter dan mengandung kata kunci fokus.
    - metaDescription: Antara 140-155 karakter, harus persuasif dan mengandung kata kunci fokus.
    - focusKeywordSuggested: Jika user memberikan input, kembalikan input tersebut. Jika kosong, berikan saran terbaik Anda.
+
+5. PEMILIHAN GAMBAR (suggestedImageId):
+   Pilih satu ID gambar yang PALING RELEVAN dengan topik artikel dari daftar berikut:
+   - hero-sikunir: Sunrise, Alam, Bukit
+   - candi-arjuna: Sejarah, Budaya, Candi, Hindu
+   - mie-ongklok: Kuliner, Makanan, Mie, Khas
+   - telaga-warna: Danau, Alam, Wisata Air
+   - kawah-sikidang: Kawah, Vulkanik, Belerang
+   - kebun-teh: Perkebunan, Teh, Pemandangan Hijau
+   - waterfall: Air Terjun, Alam, Sikarim
+   - carica: Buah, Oleh-oleh, Kuliner Khas
+   - coffee: Kopi, Minuman, Kafe
+   - cave: Gua, Mistik, Petualangan
+   - mountain-prau: Gunung, Hiking, Camping
+   - ritual: Budaya, Upacara, Anak Rambut Gimbal
+   - street-food: Jajanan, Kuliner Malam, Pasar
+   - lake-morning: Danau, Kabut, Pagi Hari
+   - batik-craft: Kerajinan, Batik, Budaya
+   - traditional-dance-lengger: Tari, Budaya, Kesenian
 
 Tuliskan artikel secara lengkap dan profesional agar langsung siap terbit dengan performa SEO maksimal.`,
 });
