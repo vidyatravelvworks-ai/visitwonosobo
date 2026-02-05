@@ -63,7 +63,14 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (dbConfig) {
-      setConfigData(dbConfig);
+      // Pastikan struktur data lengkap agar tidak terjadi error saat input diakses
+      setConfigData({
+        heroImages: dbConfig.heroImages || { home: '', seeAndDo: '', stories: '' },
+        categoryImages: dbConfig.categoryImages || {
+          'Alam': '', 'Budaya': '', 'Kuliner': '', 
+          'Sejarah': '', 'Sosial': '', 'Geografis': '', 'Tips': ''
+        }
+      });
     } else if (!isConfigLoading && dbConfig === null) {
       setConfigData({
         heroImages: { home: '', seeAndDo: '', stories: '' },
@@ -85,11 +92,16 @@ const AdminDashboard = () => {
     if (!db || !configData) return;
     setIsSavingConfig(true);
     const docRef = doc(db, 'config', 'website');
-    setDoc(docRef, configData, { merge: true })
+    
+    // Hapus field id internal jika ada agar tidak tersimpan di database
+    const dataToSave = { ...configData };
+    delete dataToSave.id;
+
+    setDoc(docRef, dataToSave, { merge: true })
       .then(() => {
         toast({ 
           title: 'Berhasil Disimpan', 
-          description: 'Konfigurasi website telah diperbarui dan akan muncul di homepage dalam beberapa saat.',
+          description: 'Konfigurasi website telah diperbarui. Jika gambar belum muncul, pastikan domain URL sudah didukung (Unsplash, Picsum, dll).',
         });
         setIsSavingConfig(false);
       })
@@ -98,7 +110,7 @@ const AdminDashboard = () => {
         errorEmitter.emit('permission-error', new FirestorePermissionError({
           path: docRef.path,
           operation: 'write',
-          requestResourceData: configData
+          requestResourceData: dataToSave
         }));
       });
   };
