@@ -104,7 +104,7 @@ const TripPackageEditorPage = ({ params }: PageProps) => {
           <CardHeader className="p-6 border-b"><CardTitle className="text-[10px] font-black uppercase tracking-widest">General Information</CardTitle></CardHeader>
           <CardContent className="p-6 space-y-4">
             <div className="space-y-1">
-              <Label className="text-[10px] font-black uppercase">Package Title</Label>
+              <Label className="text-[10px] font-black uppercase">Package Title (Full Width)</Label>
               <Input value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="rounded-none h-12 text-lg font-black uppercase border-2" />
             </div>
             <div className="grid grid-cols-2 gap-4">

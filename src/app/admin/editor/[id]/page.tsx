@@ -94,33 +94,34 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     }
     setIsGenerating(true);
     try {
-      const { data: result, error } = await generateArticle({ 
+      const result = await generateArticle({ 
         title: formData.title, 
         focusKeyword: formData.focusKeyword 
       });
       
-      if (error) {
+      if (result.error) {
         toast({ 
           variant: 'destructive', 
-          title: error === 'QUOTA_EXCEEDED' ? 'AI Quota Exceeded' : 'Generation Failed',
-          description: error === 'QUOTA_EXCEEDED' ? 'Harap tunggu 60 detik sebelum mencoba lagi.' : 'Terjadi kesalahan sistem.'
+          title: result.error === 'QUOTA_EXCEEDED' ? 'AI Quota Exceeded' : 'Generation Failed',
+          description: result.error === 'QUOTA_EXCEEDED' ? 'Harap tunggu 60 detik sebelum mencoba lagi.' : 'Terjadi kesalahan sistem.'
         });
         return;
       }
 
-      if (result) {
+      if (result.data) {
+        const data = result.data;
         let suggestedImg = formData.image;
-        if (result.suggestedImageId) {
-          const found = PlaceHolderImages.find(img => img.id === result.suggestedImageId);
+        if (data.suggestedImageId) {
+          const found = PlaceHolderImages.find(img => img.id === data.suggestedImageId);
           if (found) suggestedImg = found.imageUrl;
         }
 
         setFormData(prev => ({
           ...prev,
-          content: result.content,
-          metaTitle: result.metaTitle,
-          excerpt: result.metaDescription,
-          focusKeyword: result.focusKeywordSuggested || prev.focusKeyword,
+          content: data.content,
+          metaTitle: data.metaTitle,
+          excerpt: data.metaDescription,
+          focusKeyword: data.focusKeywordSuggested || prev.focusKeyword,
           image: suggestedImg,
           slug: prev.slug || formData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
         }));
@@ -137,7 +138,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     if (!db) return;
     setIsSaving(true);
     try {
-      const articleId = formData.slug || formData.title.toLowerCase().replace(/\s+/g, '-');
+      const articleId = formData.slug || formData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
       await setDoc(doc(db, 'articles', articleId), {
         ...formData,
         id: articleId,
