@@ -4,9 +4,11 @@
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Clock, MessageCircle, Loader2, Grid, MapPin, CheckCircle2, XCircle } from 'lucide-react';
+import { 
+  Clock, Loader2, Grid, MapPin, 
+  CheckCircle2, XCircle, CarFront, ArrowRight 
+} from 'lucide-react';
 import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { staticPackages } from '@/data/packages';
@@ -50,81 +52,84 @@ const PlanYourTripPage = () => {
         <div className="container mx-auto px-12 md:px-32 relative z-10">
           <div className="text-center mb-20 max-w-3xl mx-auto space-y-4">
             <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-primary">Paket Wisata Lokal</h2>
-            <p className="text-muted-foreground font-medium">Nikmati perjalanan tanpa hambatan dengan pemandu lokal berpengalaman.</p>
+            <p className="text-muted-foreground font-medium text-sm">Nikmati perjalanan tanpa hambatan dengan pemandu lokal berpengalaman.</p>
           </div>
 
           {isPkgsLoading ? (
             <div className="flex justify-center p-12"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {packages.map((pkg: any, idx: number) => (
-                <Card 
+                <div 
                   key={pkg.id || idx} 
-                  className={cn(
-                    "border-2 rounded-none overflow-hidden hover:shadow-2xl transition-all duration-500",
-                    pkg.borderColor || "border-primary/20",
-                    pkg.color || "bg-primary/5"
-                  )}
+                  className="bg-white border-2 border-black/5 shadow-lg p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:border-primary/50"
                 >
-                  <CardHeader className="p-10 pb-0">
-                    <CardTitle className="text-3xl font-black uppercase tracking-tighter mb-6">{pkg.title}</CardTitle>
-                    <div className="bg-primary px-8 py-5 text-white inline-block shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] border-l-8 border-black w-fit">
-                      <span className="block text-[10px] font-bold uppercase tracking-widest mb-1 opacity-80">Harga Perjalanan</span>
-                      <div className="flex items-baseline gap-2">
-                        <span className="font-black text-3xl tracking-tighter">{pkg.price}</span>
-                        <span className="text-[10px] font-bold uppercase">/ Armada</span>
+                  <div className="flex justify-between items-start mb-10">
+                    <div className="p-4 bg-primary text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                      <CarFront size={24} />
+                    </div>
+                    <div className="text-right">
+                      <span className="block text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Harga Perjalanan</span>
+                      <div className="bg-black text-white px-3 py-1 font-black text-lg tracking-tight inline-block">
+                        {pkg.price}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 mt-6 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      <Clock className="h-4 w-4 text-primary" /> {pkg.time}
+                  </div>
+
+                  <h4 className="text-2xl font-black uppercase tracking-tighter mb-4 group-hover:text-primary transition-colors leading-none">
+                    {pkg.title}
+                  </h4>
+                  
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-6 flex items-center gap-2">
+                    <Clock size={12} className="text-primary" /> {pkg.time}
+                  </p>
+
+                  <div className="h-px bg-black/10 w-full mb-6" style={{ backgroundImage: 'linear-gradient(to right, rgba(0,0,0,0.1) 50%, transparent 50%)', backgroundSize: '10px 1px', backgroundRepeat: 'repeat-x', height: '1px' }} />
+                  
+                  <div className="space-y-6 flex-grow">
+                    <div>
+                      <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-3">Destinasi Rute</p>
+                      <ul className="space-y-2">
+                        {pkg.spots?.map((spot: string, i: number) => (
+                          <li key={i} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-tight">
+                            <MapPin className="h-3 w-3 text-muted-foreground shrink-0" /> 
+                            <span className="truncate">{spot}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                  </CardHeader>
-                  <CardContent className="p-10 space-y-10">
-                    <div className="h-px bg-border w-full border-dashed" />
-                    
-                    <div className="space-y-8">
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-dashed">
                       <div>
-                        <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">Destinasi Rute</h4>
-                        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          {pkg.spots?.map((spot: string, i: number) => (
-                            <li key={i} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-tight">
-                              <MapPin className="h-3 w-3 text-muted-foreground" /> {spot}
+                        <p className="text-[9px] font-black uppercase tracking-widest text-green-600 mb-2">Include</p>
+                        <ul className="space-y-1.5">
+                          {pkg.includes?.map((item: string, i: number) => (
+                            <li key={i} className="flex items-start gap-2 text-[9px] font-bold uppercase text-muted-foreground leading-tight">
+                              <CheckCircle2 className="h-3 w-3 text-green-600 shrink-0 mt-0.5" /> {item}
                             </li>
                           ))}
                         </ul>
                       </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-6 border-t">
-                        <div>
-                          <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-green-600 mb-4">Sudah Termasuk</h4>
-                          <ul className="space-y-2">
-                            {pkg.includes?.map((item: string, i: number) => (
-                              <li key={i} className="flex items-start gap-2 text-[10px] font-bold uppercase text-muted-foreground">
-                                <CheckCircle2 className="h-3 w-3 text-green-600 shrink-0 mt-0.5" /> {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-red-600 mb-4">Belum Termasuk</h4>
-                          <ul className="space-y-2">
-                            {pkg.excludes?.map((item: string, i: number) => (
-                              <li key={i} className="flex items-start gap-2 text-[10px] font-bold uppercase text-muted-foreground">
-                                <XCircle className="h-3 w-3 text-red-600 shrink-0 mt-0.5" /> {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+                      <div>
+                        <p className="text-[9px] font-black uppercase tracking-widest text-red-600 mb-2">Exclude</p>
+                        <ul className="space-y-1.5">
+                          {pkg.excludes?.map((item: string, i: number) => (
+                            <li key={i} className="flex items-start gap-2 text-[9px] font-bold uppercase text-muted-foreground leading-tight">
+                              <XCircle className="h-3 w-3 text-red-600 shrink-0 mt-0.5" /> {item}
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
+                  </div>
 
-                    <Button className="w-full bg-black hover:bg-primary text-white font-bold uppercase tracking-[0.2em] py-10 rounded-none text-xs" asChild>
-                      <a href={`https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20pesan%20${encodeURIComponent(pkg.title)}`} target="_blank">
-                        Ambil Paket Ini <MessageCircle className="ml-3 h-5 w-5" />
-                      </a>
-                    </Button>
-                  </CardContent>
-                </Card>
+                  <Button className="w-full bg-black hover:bg-primary text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-2 group/btn mt-10" asChild>
+                    <a href={`https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20pesan%20${encodeURIComponent(pkg.title)}`} target="_blank">
+                      Pesan Sekarang
+                      <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                    </a>
+                  </Button>
+                </div>
               ))}
             </div>
           )}
