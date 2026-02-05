@@ -16,7 +16,7 @@ import {
 import { 
   Save, Globe, FileText, ArrowLeft, Sparkles, Loader2, 
   Search, Tag, Calendar, Layers, Activity, CheckCircle2, AlertCircle, Clock,
-  Image as ImageIcon, ExternalLink, Check, MousePointer2
+  Image as ImageIcon, ExternalLink, Check, MousePointer2, Info
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
@@ -41,6 +41,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
   const [isSaving, setIsSaving] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const queryType = searchParams.get('type') as 'destination' | 'story' || 'destination';
 
@@ -89,7 +90,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         metaTitle: article.metaTitle || '',
         category: article.category || (article.type === 'destination' ? 'Alam' : 'Sejarah'),
         type: article.type || 'destination',
-        date: getTodayFormatted(),
+        date: article.date || getTodayFormatted(),
         focusKeyword: article.focusKeyword || ''
       });
     } else if (!isNew) {
@@ -104,7 +105,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
           metaTitle: staticArt.title,
           category: staticArt.category,
           type: staticArt.type,
-          date: getTodayFormatted(),
+          date: staticArt.date || getTodayFormatted(),
           focusKeyword: ''
         });
       }
@@ -146,7 +147,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
 
       toast({
         title: 'Berhasil',
-        description: 'Artikel SEO 1100+ kata dan gambar relevan berhasil disiapkan.',
+        description: 'Artikel SEO 1100+ kata, Keyword, dan Gambar Relevan telah siap.',
       });
     } catch (error) {
       toast({
@@ -172,11 +173,9 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     try {
       const articleId = formData.slug.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
       const finalDocRef = doc(db, 'articles', articleId);
-      const finalDate = getTodayFormatted();
 
       await setDoc(finalDocRef, {
         ...formData,
-        date: finalDate,
         id: articleId,
         slug: articleId,
         updatedAt: serverTimestamp(),
@@ -194,15 +193,15 @@ const ArticleEditorPage = ({ params }: PageProps) => {
   const getSEOAnalysis = () => {
     const wordCount = formData.content.trim() ? formData.content.split(/\s+/).length : 0;
     const contentLower = formData.content.toLowerCase();
-    const keywordLower = formData.focusKeyword.toLowerCase();
+    const keywordLower = formData.focusKeyword?.toLowerCase() || '';
     
     const checks = [
-      { id: 1, label: 'Keyword in Content', pass: formData.focusKeyword && contentLower.includes(keywordLower) },
-      { id: 2, label: 'Meta Description (120-160 chars)', pass: formData.excerpt.length >= 120 && formData.excerpt.length <= 160 },
-      { id: 3, label: 'High Content Density (>1100 words)', pass: wordCount >= 1100 },
-      { id: 4, label: 'Optimized Meta Title (<60 chars)', pass: !!formData.metaTitle && formData.metaTitle.length <= 60 && formData.metaTitle.length > 25 },
-      { id: 5, label: 'Keyword in First Paragraph', pass: formData.focusKeyword && contentLower.split('\n')[0]?.includes(keywordLower) },
-      { id: 6, label: 'Visual Media Ready (Featured Image)', pass: !!formData.image },
+      { id: 1, label: 'Keyword in Content', pass: keywordLower && contentLower.includes(keywordLower) },
+      { id: 2, label: 'Meta Description (120-160 chars)', pass: formData.excerpt.length >= 110 && formData.excerpt.length <= 170 },
+      { id: 3, label: 'High Content Density (>1100 words)', pass: wordCount >= 1050 },
+      { id: 4, label: 'Optimized Meta Title (<60 chars)', pass: !!formData.metaTitle && formData.metaTitle.length <= 70 && formData.metaTitle.length > 20 },
+      { id: 5, label: 'Keyword in First Paragraph', pass: keywordLower && contentLower.split('\n')[0]?.includes(keywordLower) },
+      { id: 6, label: 'Featured Image Attached', pass: !!formData.image },
     ];
     
     const score = Math.round((checks.filter(c => c.pass).length / checks.length) * 100);
@@ -226,9 +225,14 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     setIsPickerOpen(false);
     toast({
       title: "Gambar Dipilih",
-      description: "URL gambar berhasil diperbarui.",
+      description: "URL gambar telah diperbarui.",
     });
   };
+
+  const filteredLibrary = PlaceHolderImages.filter(img => 
+    img.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    img.imageHint.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (isUserLoading || (isLoading && !isNew)) {
     return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Loading Editor...</div>;
@@ -238,26 +242,51 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     <div className="min-h-screen bg-secondary/10 flex flex-col">
       {/* Picker Modal */}
       <Dialog open={isPickerOpen} onOpenChange={setIsPickerOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto rounded-none border-4 border-black">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-black uppercase tracking-tighter flex items-center gap-2">
-              <ImageIcon className="text-primary" /> Browse Wonosobo Library
-            </DialogTitle>
-          </DialogHeader>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2">
-            {PlaceHolderImages.map((img) => (
-              <div 
-                key={img.id} 
-                className="group relative aspect-video bg-gray-100 border-2 border-transparent hover:border-primary cursor-pointer transition-all overflow-hidden"
-                onClick={() => selectFromLibrary(img.imageUrl)}
-              >
-                <img src={img.imageUrl} alt={img.description} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-opacity text-center p-2">
-                  <Check className="text-white h-8 w-8 mb-2" />
-                  <span className="text-[8px] font-black text-white uppercase tracking-widest leading-tight">{img.description}</span>
-                </div>
+        <DialogContent className="max-w-5xl max-h-[85vh] overflow-hidden flex flex-col rounded-none border-4 border-black p-0">
+          <DialogHeader className="p-6 border-b">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <DialogTitle className="text-xl font-black uppercase tracking-tighter flex items-center gap-2">
+                <ImageIcon className="text-primary" /> Wonosobo Image Library
+              </DialogTitle>
+              <div className="relative flex-grow max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input 
+                  placeholder="Cari gambar (misal: 'candi', 'sunrise', 'mie')..." 
+                  className="pl-10 rounded-none border-2 border-black/10 focus:border-primary text-xs"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
               </div>
-            ))}
+            </div>
+          </DialogHeader>
+          <div className="flex-grow overflow-y-auto p-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {filteredLibrary.map((img) => (
+                <div 
+                  key={img.id} 
+                  className="group relative aspect-video bg-gray-100 border-2 border-transparent hover:border-primary cursor-pointer transition-all overflow-hidden"
+                  onClick={() => selectFromLibrary(img.imageUrl)}
+                >
+                  <img src={img.imageUrl} alt={img.description} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-opacity text-center p-2">
+                    <Check className="text-white h-8 w-8 mb-2" />
+                    <span className="text-[8px] font-black text-white uppercase tracking-widest leading-tight">{img.description}</span>
+                  </div>
+                </div>
+              ))}
+              {filteredLibrary.length === 0 && (
+                <div className="col-span-full py-20 text-center space-y-4">
+                   <AlertCircle className="mx-auto h-10 w-10 text-muted-foreground" />
+                   <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Tidak menemukan gambar lokal? Gunakan pencarian Google/Unsplash di editor.</p>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="p-4 bg-secondary/30 border-t flex justify-between items-center px-8">
+             <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+               <Info size={12} /> Klik gambar untuk memilih langsung
+             </p>
+             <Button variant="outline" onClick={() => setIsPickerOpen(false)} className="rounded-none h-8 text-[9px] font-black uppercase tracking-widest">Tutup</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -297,7 +326,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                <div className="bg-white/20 backdrop-blur-md border border-white/30 text-white px-6 py-3 font-black uppercase tracking-widest text-[10px] flex items-center gap-2">
-                 <ExternalLink size={12} /> Open Image Source
+                 <ExternalLink size={12} /> Lihat Gambar Ukuran Penuh
                </div>
             </div>
           </a>
@@ -352,7 +381,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                      <Input 
                        value={formData.image}
                        onChange={(e) => setFormData({...formData, image: e.target.value})}
-                       placeholder="Pilih dari library atau paste URL"
+                       placeholder="Paste URL (Google/Unsplash) atau pilih dari library"
                        className="rounded-none border-2 border-black/10 h-12 text-[11px] font-bold"
                      />
                      <div className="flex gap-2">
@@ -386,6 +415,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                        placeholder="AI akan menyarankan jika dikosongkan"
                        className="rounded-none border-2 border-primary/20 h-12 text-[11px] font-bold"
                      />
+                     <p className="text-[9px] text-muted-foreground italic">Keyword ini akan digunakan AI untuk menulis artikel teroptimasi.</p>
                    </div>
                 </div>
 
@@ -404,7 +434,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     className="bg-black text-white hover:bg-primary rounded-none h-12 px-8 gap-3 font-bold uppercase tracking-widest text-[10px]"
                   >
                     {isGenerating ? <Loader2 className="animate-spin h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
-                    {isGenerating ? 'AI Sedang Menulis & Memilih Gambar...' : 'Buat Artikel Instan'}
+                    {isGenerating ? 'AI Sedang Menulis & Memilih Gambar Relevan...' : 'Buat Artikel Instan (Full SEO)'}
                   </Button>
                 </div>
 
@@ -425,7 +455,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
             <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white">
               <CardHeader className="border-b p-6 bg-secondary/10">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
-                  <Activity className="text-primary" size={16} /> SEO Health
+                  <Activity className="text-primary" size={16} /> SEO Health Analysis
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 space-y-4">
@@ -439,8 +469,8 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                  </div>
                  <div className="pt-4 border-t mt-4">
                     <div className={cn("p-3 border-l-2", seo.score === 100 ? "bg-green-50 border-green-500" : "bg-secondary/20 border-primary")}>
-                       <p className="text-[9px] font-bold text-muted-foreground leading-relaxed uppercase">
-                          {seo.score === 100 ? "Luar biasa! Teroptimasi sempurna." : `Skor: ${seo.score}%. Lengkapi checklist untuk performa maksimal.`}
+                       <p className="text-[9px] font-black text-muted-foreground leading-relaxed uppercase">
+                          {seo.score === 100 ? "Luar biasa! Skor SEO 100%. Artikel teroptimasi sempurna." : `Skor: ${seo.score}%. AI akan membantu Anda mencapai 100%.`}
                        </p>
                     </div>
                  </div>
@@ -460,7 +490,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                   </Label>
                   
                   <div className="space-y-2">
-                    <Label className="text-[9px] font-bold uppercase">Tanggal Rilis (Auto-today)</Label>
+                    <Label className="text-[9px] font-bold uppercase">Tanggal Rilis</Label>
                     <Input 
                       value={formData.date}
                       onChange={(e) => setFormData({...formData, date: e.target.value})}
