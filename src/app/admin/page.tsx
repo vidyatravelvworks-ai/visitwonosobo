@@ -516,7 +516,7 @@ const AdminDashboard = () => {
                       </div>
                     )}
                     
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20 pointer-events-none group-hover:pointer-events-auto">
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20 group-hover:pointer-events-auto">
                       <button 
                         type="button"
                         className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-none shadow-2xl transition-all active:scale-90 pointer-events-auto relative z-30"

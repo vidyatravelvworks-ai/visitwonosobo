@@ -231,7 +231,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
 
   return (
     <div className="min-h-screen bg-secondary/10 flex flex-col">
-      {/* Picker Modal */}
       <Dialog open={isPickerOpen} onOpenChange={setIsPickerOpen}>
         <DialogContent className="max-w-5xl max-h-[85vh] overflow-hidden flex flex-col rounded-none border-4 border-black p-0">
           <DialogHeader className="p-6 border-b">
@@ -376,6 +375,16 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                    />
                 </div>
 
+                <div className="space-y-4">
+                   <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Article Title</Label>
+                   <Input 
+                      value={formData.title}
+                      onChange={(e) => setFormData({...formData, title: e.target.value})}
+                      placeholder="Judul Artikel..."
+                      className="rounded-none border-2 border-black/10 h-14 text-xl font-black uppercase tracking-tight w-full"
+                    />
+                </div>
+
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
                     <div className="md:col-span-1 space-y-2">
@@ -389,25 +398,16 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                         className="rounded-none border-2 border-primary/20 h-14 text-[11px] font-bold"
                       />
                     </div>
-                    <div className="md:col-span-2 space-y-2">
-                      <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Article Title</Label>
-                      <div className="flex flex-col md:flex-row gap-2">
-                        <Input 
-                          value={formData.title}
-                          onChange={(e) => setFormData({...formData, title: e.target.value})}
-                          placeholder="Judul Artikel..."
-                          className="rounded-none border-2 border-black/10 h-14 text-xl font-black uppercase tracking-tight flex-grow"
-                        />
+                    <div className="md:col-span-2">
                         <Button
                           type="button"
                           onClick={handleGenerateAI}
                           disabled={isGenerating}
-                          className="bg-black text-white hover:bg-primary rounded-none h-14 px-8 gap-3 font-bold uppercase tracking-widest text-[10px] shrink-0"
+                          className="bg-black text-white hover:bg-primary rounded-none h-14 px-8 gap-3 font-bold uppercase tracking-widest text-[10px] w-full"
                         >
                           {isGenerating ? <Loader2 className="animate-spin h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
                           {isGenerating ? 'AI Writing...' : 'Buat Artikel Instan'}
                         </Button>
-                      </div>
                     </div>
                   </div>
                   <p className="text-[9px] text-muted-foreground italic -mt-4">Keyword ini akan digunakan AI untuk menulis artikel teroptimasi.</p>
