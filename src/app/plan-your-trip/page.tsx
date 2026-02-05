@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -186,16 +187,19 @@ const PlanYourTripPage = () => {
             {isGalleryLoading ? (
               <div className="flex justify-center p-20"><Loader2 className="animate-spin h-10 w-10 text-primary" /></div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 h-[1200px] md:h-[800px]">
-                {galleryItems?.slice(0, 8).map((item, idx) => {
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 auto-rows-[250px] md:auto-rows-[300px]">
+                {galleryItems?.slice(0, 16).map((item, idx) => {
                   const spans = [
                     "col-span-2 row-span-2", "col-span-1 row-span-1", "col-span-1 row-span-2",
                     "col-span-1 row-span-1", "col-span-2 row-span-1", "col-span-1 row-span-2",
-                    "col-span-1 row-span-1", "col-span-1 row-span-1"
+                    "col-span-1 row-span-1", "col-span-1 row-span-1", "col-span-1 row-span-2",
+                    "col-span-2 row-span-2", "col-span-1 row-span-1", "col-span-1 row-span-1",
+                    "col-span-1 row-span-2", "col-span-1 row-span-1", "col-span-2 row-span-1",
+                    "col-span-1 row-span-1"
                   ];
                   const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/${item.id}/800/800`;
                   return (
-                    <div key={item.id} className={cn("relative overflow-hidden group", spans[idx % spans.length])}>
+                    <div key={item.id} className={cn("relative overflow-hidden group border", spans[idx % spans.length])}>
                       <Image 
                         src={galleryImg} 
                         alt={item.caption || "Trip Photo"} 
