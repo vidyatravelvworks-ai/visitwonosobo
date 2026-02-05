@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -8,6 +9,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Clock, MapPin, CheckCircle2, MessageCircle, Loader2 } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
+import { staticPackages } from '@/data/packages';
 
 const PlanYourTripPage = () => {
   const db = useFirestore();
@@ -20,28 +22,6 @@ const PlanYourTripPage = () => {
   const { data: dbPackages, isLoading } = useCollection(q);
 
   const heroImage = PlaceHolderImages.find(img => img.id === 'car-rental');
-
-  // Static Fallback Data
-  const staticPackages = [
-    {
-      title: "Paket Keliling Zona 1 (Sunrise)",
-      time: "05:00 - 15:00 (Opsional)",
-      price: "Rp 650.000",
-      description: "Mobil, BBM, Driver as Guide",
-      spots: ["Pintu Langit", "Candi Arjuna", "Kawah Sikidang", "Batu Ratapan", "Bukit Scooter", "Telaga Warna"],
-      color: "bg-primary/5",
-      borderColor: "border-primary/20"
-    },
-    {
-      title: "Paket Keliling Zona 2",
-      time: "07:00 - 16:00 (Opsional)",
-      price: "Rp 650.000",
-      description: "Mobil, BBM, Driver as Guide",
-      spots: ["Bukit Sikunir", "Air Terjun Sikarim", "Swiss Van Java", "Telaga Menjer", "Kahyangan Skyline", "Kebun Teh Panama"],
-      color: "bg-secondary/50",
-      borderColor: "border-border"
-    }
-  ];
 
   const packages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticPackages;
 

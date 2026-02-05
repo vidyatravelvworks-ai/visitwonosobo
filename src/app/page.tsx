@@ -1,12 +1,17 @@
 
+'use client';
+
 import React from 'react';
 import Hero from '@/components/home/Hero';
 import Services from '@/components/home/Services';
 import ArticleCard from '@/components/article/ArticleCard';
-import { articles } from '@/data/articles';
+import { articles as staticArticlesList } from '@/data/articles';
+import { staticPackages as staticTripPackages } from '@/data/packages';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { 
   ArrowRight, 
   Activity, 
@@ -16,12 +21,24 @@ import {
   Clock, 
   ThermometerSnowflake,
   CheckCircle2,
-  MessageCircle
+  MessageCircle,
+  Loader2
 } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
-  const featuredStories = articles.filter(a => a.type === 'story').slice(0, 3);
+  const db = useFirestore();
+
+  // Firestore Data Queries
+  const packagesQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'trip_packages'), orderBy('title', 'asc'), limit(3));
+  }, [db]);
+
+  const { data: dbPackages, isLoading: isPkgsLoading } = useCollection(packagesQuery);
+  const tourPackages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticTripPackages.slice(0, 3);
+
+  const featuredStories = staticArticlesList.filter(a => a.type === 'story').slice(0, 3);
 
   const essentialPoints = [
     {
@@ -53,30 +70,6 @@ export default function Home() {
       title: "Cuaca & Suhu Ekstrem",
       icon: <ThermometerSnowflake className="h-6 w-6 text-primary" />,
       content: "Suhu bisa mencapai -5°C (Juli-Sept). Siapkan jaket down jacket, sarung tangan, dan kupluk. Kabut tebal sering membatasi pandangan hingga 5 meter; hafal lekuk jalan adalah kunci keselamatan."
-    }
-  ];
-
-  const tourPackages = [
-    {
-      title: "Paket Keliling Zona 1 (Sunrise)",
-      price: "Rp 650.000",
-      description: "Mobil, BBM, Driver as Guide (05:00 - 15:00)",
-      icon: <CarFront className="h-6 w-6" />,
-      features: ["Pintu Langit", "Candi Arjuna", "Kawah Sikidang", "Batu Ratapan", "Bukit Scooter", "Telaga Warna"]
-    },
-    {
-      title: "Paket Keliling Zona 2",
-      price: "Rp 650.000",
-      description: "Mobil, BBM, Driver as Guide (07:00 - 16:00)",
-      icon: <CarFront className="h-6 w-6" />,
-      features: ["Bukit Sikunir", "Air Terjun Sikarim", "Swiss Van Java", "Telaga Menjer", "Kahyangan Skyline", "Kebun Teh Panama"]
-    },
-    {
-      title: "Rental Mobil + Guide",
-      price: "Mulai Rp 500rb",
-      description: "Avanza, Innova, Hiace. Driver = Guide Lokal.",
-      icon: <CarFront className="h-6 w-6" />,
-      features: ["BBM Termasuk", "Driver Berpengalaman", "Waktu Fleksibel", "Antar Jemput Hotel"]
     }
   ];
 
@@ -139,44 +132,50 @@ export default function Home() {
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Paket Wisata <br /> Keliling Wonosobo</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {tourPackages.map((pkg, idx) => (
-                <div key={idx} className="bg-white border-2 border-border p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full">
-                  <div className="flex justify-between items-start mb-8">
-                    <div className="p-4 bg-secondary text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-                      {pkg.icon}
+            {isPkgsLoading ? (
+              <div className="flex justify-center p-20">
+                <Loader2 className="animate-spin text-primary h-10 w-10" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {tourPackages.map((pkg: any, idx: number) => (
+                  <div key={idx} className="bg-white border-2 border-border p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full">
+                    <div className="flex justify-between items-start mb-8">
+                      <div className="p-4 bg-secondary text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                        <CarFront className="h-6 w-6" />
+                      </div>
+                      <div className="text-right">
+                        <span className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Mulai Dari</span>
+                        <span className="text-2xl font-black text-primary tracking-tighter">{pkg.price}</span>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <span className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Mulai Dari</span>
-                      <span className="text-2xl font-black text-primary tracking-tighter">{pkg.price}</span>
+                    
+                    <div className="mb-8 flex-grow">
+                      <h4 className="text-xl font-black uppercase tracking-tight mb-3 group-hover:text-primary transition-colors">
+                        {pkg.title}
+                      </h4>
+                      <p className="text-xs text-muted-foreground font-medium leading-relaxed mb-6">
+                        {pkg.description}
+                      </p>
+                      <ul className="space-y-3">
+                        {pkg.spots?.slice(0, 5).map((feature: string, i: number) => (
+                          <li key={i} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-foreground">
+                            <CheckCircle2 className="h-3 w-3 text-primary" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                  </div>
-                  
-                  <div className="mb-8 flex-grow">
-                    <h4 className="text-xl font-black uppercase tracking-tight mb-3 group-hover:text-primary transition-colors">
-                      {pkg.title}
-                    </h4>
-                    <p className="text-xs text-muted-foreground font-medium leading-relaxed mb-6">
-                      {pkg.description}
-                    </p>
-                    <ul className="space-y-3">
-                      {pkg.features.map((feature, i) => (
-                        <li key={i} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wide text-foreground">
-                          <CheckCircle2 className="h-3 w-3 text-primary" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
 
-                  <Button className="w-full bg-black hover:bg-primary text-white font-bold uppercase tracking-widest py-6 text-[10px] rounded-none group/btn" asChild>
-                    <a href={`https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20pesan%20${encodeURIComponent(pkg.title)}`} target="_blank">
-                      Pesan Sekarang <MessageCircle className="ml-2 h-4 w-4 group-hover/btn:rotate-12 transition-transform" />
-                    </a>
-                  </Button>
-                </div>
-              ))}
-            </div>
+                    <Button className="w-full bg-black hover:bg-primary text-white font-bold uppercase tracking-widest py-6 text-[10px] rounded-none group/btn" asChild>
+                      <a href={`https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20pesan%20${encodeURIComponent(pkg.title)}`} target="_blank">
+                        Pesan Sekarang <MessageCircle className="ml-2 h-4 w-4 group-hover/btn:rotate-12 transition-transform" />
+                      </a>
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>

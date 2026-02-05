@@ -1,19 +1,21 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useUser, useFirestore, useCollection } from '@/firebase';
-import { collection, doc, deleteDoc, query, orderBy } from 'firebase/firestore';
+import { collection, doc, deleteDoc, query, orderBy, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, Search, Map, BookOpen, MapPin, Globe, Clock, Tag } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, LayoutDashboard, Search, Map, BookOpen, MapPin, Globe, Clock, RefreshCw } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import { getAuth, signOut } from 'firebase/auth';
 import { cn } from '@/lib/utils';
+import { staticPackages } from '@/data/packages';
 import {
   Select,
   SelectContent,
@@ -30,11 +32,11 @@ const AdminDashboard = () => {
   const pathname = usePathname();
   const { toast } = useToast();
 
-  // State for Navigation and Filtering
   const [currentView, setCurrentView] = useState<'articles' | 'packages'>('articles');
   const [filterType, setFilterType] = useState<'all' | 'destination' | 'story'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState<string>('all');
+  const [isSyncing, setIsSyncing] = useState(false);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -42,7 +44,6 @@ const AdminDashboard = () => {
     }
   }, [user, isUserLoading, router]);
 
-  // Firestore Queries
   const articlesQuery = useMemoFirebase(() => {
     if (!db) return null;
     return query(collection(db, 'articles'), orderBy('updatedAt', 'desc'));
@@ -76,6 +77,24 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleSyncPackages = async () => {
+    if (!db || isSyncing) return;
+    setIsSyncing(true);
+    try {
+      for (const pkg of staticPackages) {
+        await setDoc(doc(db, 'trip_packages', pkg.id), {
+          ...pkg,
+          updatedAt: serverTimestamp()
+        });
+      }
+      toast({ title: 'Success', description: 'Static packages synced to cloud.' });
+    } catch (error) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Sync failed.' });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -86,10 +105,9 @@ const AdminDashboard = () => {
   };
 
   if (isUserLoading || !user) {
-    return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Authenticating...</div>;
+    return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs text-muted-foreground animate-pulse">Authenticating Admin...</div>;
   }
 
-  // Filter Logic
   const filteredArticles = articles?.filter(a => {
     const matchesSearch = a.title?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = filterType === 'all' ? true : a.type === filterType;
@@ -108,7 +126,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-secondary/20 flex">
-      {/* Unified Sidebar */}
       <aside className="w-64 bg-black text-white flex flex-col p-8 fixed h-full z-20">
         <div className="mb-12">
           <span className="text-xl font-black uppercase tracking-tighter text-primary">Admin Panel</span>
@@ -211,7 +228,6 @@ const AdminDashboard = () => {
         </div>
       </aside>
 
-      {/* Main Content Area */}
       <main className="flex-grow ml-64 p-12">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div>
@@ -224,12 +240,25 @@ const AdminDashboard = () => {
               Manage your {currentView === 'packages' ? 'trip packages' : 'articles'} in real-time.
             </p>
           </div>
-          <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
-            <Link href={getNewLink()}>
-              <Plus size={18} />
-              New {currentView === 'packages' ? 'Package' : 'Article'}
-            </Link>
-          </Button>
+          <div className="flex gap-4">
+            {currentView === 'packages' && packages && packages.length === 0 && (
+              <Button 
+                onClick={handleSyncPackages} 
+                disabled={isSyncing}
+                variant="outline"
+                className="border-2 border-primary text-primary rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]"
+              >
+                <RefreshCw className={cn("h-4 w-4", isSyncing && "animate-spin")} />
+                Sync Static Packages
+              </Button>
+            )}
+            <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
+              <Link href={getNewLink()}>
+                <Plus size={18} />
+                New {currentView === 'packages' ? 'Package' : 'Article'}
+              </Link>
+            </Button>
+          </div>
         </header>
 
         <Card className="rounded-none border-2 border-black/5 shadow-xl">
@@ -289,7 +318,7 @@ const AdminDashboard = () => {
                   </TableHeader>
                   <TableBody>
                     {isArticlesLoading ? (
-                      <TableRow><TableCell colSpan={4} className="p-12 text-center text-xs font-bold uppercase">Loading Articles...</TableCell></TableRow>
+                      <TableRow><TableCell colSpan={4} className="p-12 text-center text-xs font-bold uppercase text-muted-foreground animate-pulse">Loading Articles...</TableCell></TableRow>
                     ) : filteredArticles.map(a => (
                       <TableRow key={a.id} className="hover:bg-secondary/10">
                         <TableCell className="p-6">
@@ -324,7 +353,7 @@ const AdminDashboard = () => {
                   </TableHeader>
                   <TableBody>
                     {isPackagesLoading ? (
-                      <TableRow><TableCell colSpan={4} className="p-12 text-center text-xs font-bold uppercase">Loading Packages...</TableCell></TableRow>
+                      <TableRow><TableCell colSpan={4} className="p-12 text-center text-xs font-bold uppercase text-muted-foreground animate-pulse">Loading Packages...</TableCell></TableRow>
                     ) : filteredPackages.map(p => (
                       <TableRow key={p.id} className="hover:bg-secondary/10">
                         <TableCell className="p-6">
@@ -345,6 +374,13 @@ const AdminDashboard = () => {
                         </TableCell>
                       </TableRow>
                     ))}
+                    {!isPackagesLoading && filteredPackages.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={4} className="p-12 text-center text-[10px] font-bold uppercase text-muted-foreground">
+                          Belum ada paket trip di database. Klik "Sync Static Packages" untuk memulai.
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </>
               )}
