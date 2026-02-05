@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -69,7 +70,10 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-1">
             <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Contact</h4>
             <ul className="space-y-4 text-sm font-medium">
-              <li>Jl. Sindoro No.921, Wonosobo Timur, Wonosobo Tim., Kec. Wonosobo, Kabupaten Wonosobo, Jawa Tengah 56311</li>
+              <li>
+                <span className="block font-bold mb-1">Co-working Space HIPMI Wonosobo</span>
+                Jl. Sindoro No.921, Wonosobo Timur, Wonosobo Tim., Kec. Wonosobo, Kabupaten Wonosobo, Jawa Tengah 56311
+              </li>
               <li className="text-primary font-bold">+62 812 3456 7890</li>
               <li>hello@visitwonosobo.com</li>
             </ul>
