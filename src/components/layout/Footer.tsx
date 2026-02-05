@@ -75,7 +75,6 @@ const Footer = () => {
                 Jl. Sindoro No.921, Wonosobo Timur, Wonosobo Tim., Kec. Wonosobo, Kabupaten Wonosobo, Jawa Tengah 56311
               </li>
               <li className="text-primary font-bold">+62 812 3456 7890</li>
-              <li>hello@visitwonosobo.com</li>
             </ul>
           </div>
         </div>
