@@ -28,7 +28,7 @@ export default function Home() {
 
   const { data: dbPackages, isLoading: isPkgsLoading } = useCollection(packagesQ);
   const { data: dbStories, isLoading: isStoriesLoading } = useCollection(storiesQ);
-  const { data: config } = useDoc(configRef);
+  const { data: config, isLoading: isConfigLoading } = useDoc(configRef);
 
   const tourPackages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticTripPackages.slice(0, 3);
   const latestStories = (dbStories && dbStories.length > 0) ? dbStories : staticArticles.filter(a => a.type === 'story').slice(0, 3);
@@ -72,12 +72,12 @@ export default function Home() {
 
   return (
     <div className="bg-white">
-      <Hero />
+      <Hero config={config} isLoading={isConfigLoading} />
       
       {/* 1. Discover New Experiences (Services) */}
       <Services />
 
-      {/* 2. Town Stories (Discover More) - Moved below Services as requested */}
+      {/* 2. Town Stories (Discover More) */}
       <section className="py-16 bg-secondary/20 px-6">
         <div className="container mx-auto px-0 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-10">
@@ -222,11 +222,13 @@ export default function Home() {
       {/* 4. Ready to Explore CTA - Background synced with Hero Image */}
       <section className="py-24 bg-black relative overflow-hidden px-6">
         <div className="absolute inset-0 opacity-30">
-          <img 
-            src={heroImage} 
-            alt="CTA Background" 
-            className="w-full h-full object-cover"
-          />
+          {!isConfigLoading && heroImage && (
+            <img 
+              src={heroImage} 
+              alt="CTA Background" 
+              className="w-full h-full object-cover animate-in fade-in duration-700"
+            />
+          )}
         </div>
         <div className="container mx-auto px-0 md:px-8 lg:px-32 relative z-10 text-center">
           <div className="max-w-4xl mx-auto space-y-8">
