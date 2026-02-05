@@ -149,7 +149,10 @@ const AdminDashboard = () => {
       });
   };
 
-  // Unified Security Prompt Helper
+  /**
+   * Helper untuk konfirmasi keamanan sebelum menghapus data.
+   * Meminta user mengetik kata "hapus".
+   */
   const confirmWithHapus = (itemType: string) => {
     const input = window.prompt(`Ketik "hapus" untuk mengonfirmasi penghapusan ${itemType} ini:`);
     if (input === 'hapus') return true;
