@@ -17,6 +17,7 @@ import {
   Image as ImageIcon, ExternalLink, User as UserIcon
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { generateArticle } from '@/ai/flows/generate-article-flow';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
