@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, use } from 'react';
@@ -287,31 +286,31 @@ const ArticleEditorPage = ({ params }: PageProps) => {
 
           <Card className="rounded-none border-2 bg-white shadow-sm">
             <CardHeader className="p-4 border-b"><CardTitle className="text-[10px] font-black uppercase tracking-widest">Metadata Sidebar</CardTitle></CardHeader>
-            <CardContent className="p-4 space-y-3">
+            <CardContent className="p-4 space-y-2">
               <div className="space-y-1">
                 <Label className="text-[9px] font-black uppercase">URL Slug</Label>
-                <Input value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="h-8 text-[10px] rounded-none" />
+                <Input value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="h-8 text-[9px] rounded-none" />
               </div>
               <div className="space-y-1">
                 <Label className="text-[9px] font-black uppercase">Meta SEO Title</Label>
-                <Input value={formData.metaTitle} onChange={e => setFormData({...formData, metaTitle: e.target.value})} className="h-8 text-[10px] rounded-none" />
+                <Input value={formData.metaTitle} onChange={e => setFormData({...formData, metaTitle: e.target.value})} className="h-8 text-[9px] rounded-none" />
               </div>
               <div className="space-y-1">
                 <Label className="text-[9px] font-black uppercase">Meta Description (Excerpt)</Label>
-                <Textarea value={formData.excerpt} onChange={e => setFormData({...formData, excerpt: e.target.value})} className="h-20 text-[10px] rounded-none" />
+                <Textarea value={formData.excerpt} onChange={e => setFormData({...formData, excerpt: e.target.value})} className="h-20 text-[9px] rounded-none" />
               </div>
               <div className="space-y-1">
                 <Label className="text-[9px] font-black uppercase">Publish Date</Label>
-                <Input value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="h-8 text-[10px] rounded-none" />
+                <Input value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="h-8 text-[9px] rounded-none" />
               </div>
               <div className="space-y-1">
                 <Label className="text-[9px] font-black uppercase">Author Name</Label>
-                <Input value={formData.author} onChange={e => setFormData({...formData, author: e.target.value})} className="h-8 text-[10px] rounded-none" />
+                <Input value={formData.author} onChange={e => setFormData({...formData, author: e.target.value})} className="h-8 text-[9px] rounded-none" />
               </div>
               <div className="space-y-1">
                 <Label className="text-[9px] font-black uppercase">Category</Label>
                 <Select value={formData.category} onValueChange={v => setFormData({...formData, category: v})}>
-                  <SelectTrigger className="h-8 text-[10px] rounded-none"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="h-8 text-[9px] rounded-none"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {formData.type === 'destination' ? (
                       <>
