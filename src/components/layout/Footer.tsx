@@ -1,13 +1,18 @@
 
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 
 const Footer = () => {
   const pathname = usePathname();
+  const [year, setYear] = useState<number>(2025);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
 
   // Hide Footer on Login and Admin pages
   const isExcludedPage = pathname === '/login' || pathname.startsWith('/admin');
@@ -69,7 +74,7 @@ const Footer = () => {
         
         <div className="pt-10 border-t flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
           <p>
-            &copy; {new Date().getFullYear()}{' '}
+            &copy; {year}{' '}
             <Link href="/login" className="hover:text-primary transition-colors">
               visitwonosobo
             </Link>

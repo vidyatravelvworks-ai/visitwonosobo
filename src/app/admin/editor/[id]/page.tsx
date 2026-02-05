@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -36,8 +37,17 @@ const ArticleEditorPage = () => {
     image: '',
     category: queryType === 'destination' ? 'Alam' : 'Sejarah',
     type: queryType,
-    date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
+    date: ''
   });
+
+  useEffect(() => {
+    if (isNew && !formData.date) {
+      setFormData(prev => ({
+        ...prev,
+        date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
+      }));
+    }
+  }, [isNew, formData.date]);
 
   const docRef = useMemoFirebase(() => {
     if (!db || isNew) return null;
@@ -59,7 +69,7 @@ const ArticleEditorPage = () => {
         date: article.date || formData.date
       });
     }
-  }, [article]);
+  }, [article, formData.date]);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
