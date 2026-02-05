@@ -230,7 +230,7 @@ export default function Home() {
                   <MessageCircle size={20} /> Konsultasi via WhatsApp
                 </a>
               </Button>
-              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-black font-black uppercase px-16 py-10 rounded-none text-sm tracking-widest" asChild>
+              <Button size="lg" variant="outline" className="text-primary border-white hover:bg-white hover:text-black font-black uppercase px-16 py-10 rounded-none text-sm tracking-widest" asChild>
                 <Link href="/plan-your-trip">Lihat Semua Paket</Link>
               </Button>
             </div>
