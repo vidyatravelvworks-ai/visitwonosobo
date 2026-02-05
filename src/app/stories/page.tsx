@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -58,7 +57,9 @@ const StoriesPage = () => {
     <div className="bg-white">
       <section className="relative h-[45vh] w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image src={heroImage} alt="Hero" fill className="object-cover" priority />
+          {heroImage && (
+            <Image src={heroImage} alt="Hero" fill className="object-cover" priority />
+          )}
           <div className="absolute inset-0 bg-black/50" />
         </div>
         <div className="container mx-auto px-12 md:px-32 relative z-10 text-center">
@@ -75,12 +76,14 @@ const StoriesPage = () => {
 
             return (
               <div key={cat.id} className="group relative aspect-[4/5] overflow-hidden bg-black">
-                <Image
-                  src={catImg}
-                  alt={cat.title}
-                  fill
-                  className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
-                />
+                {catImg && (
+                  <Image
+                    src={catImg}
+                    alt={cat.title}
+                    fill
+                    className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
+                  />
+                )}
                 <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
                   <div className="mb-4 p-2 bg-primary w-fit">{cat.icon}</div>
                   <h3 className="text-2xl font-black uppercase mb-2 tracking-tight">{cat.title}</h3>

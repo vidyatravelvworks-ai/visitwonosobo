@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -35,7 +34,15 @@ const PlanYourTripPage = () => {
     <div className="bg-white">
       <section className="relative h-[45vh] w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image src={heroImage} alt="Hero Background" fill className="object-cover" priority />
+          {heroImage && (
+            <Image 
+              src={heroImage} 
+              alt="Hero Background" 
+              fill 
+              className="object-cover" 
+              priority 
+            />
+          )}
           <div className="absolute inset-0 bg-black/50" />
         </div>
         <div className="container mx-auto px-12 md:px-32 relative z-10 text-center">
@@ -62,7 +69,11 @@ const PlanYourTripPage = () => {
               {packages.map((pkg: any, idx: number) => (
                 <div 
                   key={pkg.id || idx} 
-                  className="bg-white border-2 border-black/5 shadow-lg p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:border-primary/50"
+                  className={cn(
+                    "bg-white border-2 border-black/5 shadow-lg p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:border-primary/50",
+                    pkg.color,
+                    pkg.borderColor
+                  )}
                 >
                   <div className="flex justify-between items-start mb-10">
                     <div className="p-4 bg-primary text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
@@ -153,12 +164,14 @@ const PlanYourTripPage = () => {
                   const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/${item.id}/800/800`;
                   return (
                     <div key={item.id} className={cn("relative overflow-hidden group", spans[idx % spans.length])}>
-                      <Image 
-                        src={galleryImg} 
-                        alt={item.caption || "Trip Photo"} 
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110" 
-                      />
+                      {galleryImg && (
+                        <Image 
+                          src={galleryImg} 
+                          alt={item.caption || "Trip Photo"} 
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                        />
+                      )}
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
                         <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
                       </div>
