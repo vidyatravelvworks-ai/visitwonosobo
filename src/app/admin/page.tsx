@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useUser, useFirestore, useCollection } from '@/firebase';
 import { collection, doc, deleteDoc, query, orderBy } from 'firebase/firestore';
@@ -27,6 +27,7 @@ const AdminDashboard = () => {
   const db = useFirestore();
   const auth = getAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'destination' | 'story'>('all');
