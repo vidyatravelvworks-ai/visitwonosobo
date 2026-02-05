@@ -8,7 +8,7 @@ import { collection, doc, deleteDoc, query, orderBy } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, Search, Map, BookOpen, MapPin, Globe } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, LayoutDashboard, Search, Map, BookOpen, MapPin, Globe, Clock, Tag } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
@@ -29,8 +29,11 @@ const AdminDashboard = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useToast();
-  const [searchTerm, setSearchTerm] = useState('');
+
+  // State for Navigation and Filtering
+  const [currentView, setCurrentView] = useState<'articles' | 'packages'>('articles');
   const [filterType, setFilterType] = useState<'all' | 'destination' | 'story'>('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState<string>('all');
 
   useEffect(() => {
@@ -39,20 +42,37 @@ const AdminDashboard = () => {
     }
   }, [user, isUserLoading, router]);
 
+  // Firestore Queries
   const articlesQuery = useMemoFirebase(() => {
     if (!db) return null;
     return query(collection(db, 'articles'), orderBy('updatedAt', 'desc'));
   }, [db]);
 
-  const { data: articles, isLoading: isArticlesLoading } = useCollection(articlesQuery);
+  const packagesQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'trip_packages'), orderBy('title', 'asc'));
+  }, [db]);
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Apakah Anda yakin ingin menghapus artikel ini?')) return;
+  const { data: articles, isLoading: isArticlesLoading } = useCollection(articlesQuery);
+  const { data: packages, isLoading: isPackagesLoading } = useCollection(packagesQuery);
+
+  const handleDeleteArticle = async (id: string) => {
+    if (!window.confirm('Hapus artikel ini?')) return;
     try {
-      await deleteDoc(doc(db, 'articles', id));
+      await deleteDoc(doc(db!, 'articles', id));
       toast({ title: 'Berhasil', description: 'Artikel telah dihapus.' });
     } catch (error) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus artikel.' });
+      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus.' });
+    }
+  };
+
+  const handleDeletePackage = async (id: string) => {
+    if (!window.confirm('Hapus paket trip ini?')) return;
+    try {
+      await deleteDoc(doc(db!, 'trip_packages', id));
+      toast({ title: 'Berhasil', description: 'Paket telah dihapus.' });
+    } catch (error) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus.' });
     }
   };
 
@@ -66,22 +86,29 @@ const AdminDashboard = () => {
   };
 
   if (isUserLoading || !user) {
-    return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Authenticating Admin...</div>;
+    return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Authenticating...</div>;
   }
 
+  // Filter Logic
   const filteredArticles = articles?.filter(a => {
-    const matchesSearch = a.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (a.category && a.category.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesSearch = a.title?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = filterType === 'all' ? true : a.type === filterType;
     const matchesCategory = filterCategory === 'all' ? true : a.category === filterCategory;
     return matchesSearch && matchesType && matchesCategory;
   }) || [];
 
-  const newArticleUrl = `/admin/editor/new${filterType !== 'all' ? `?type=${filterType}` : ''}`;
+  const filteredPackages = packages?.filter(p => 
+    p.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
+
+  const getNewLink = () => {
+    if (currentView === 'packages') return '/admin/plan-your-trip/editor/new';
+    return `/admin/editor/new?type=${filterType === 'all' ? 'destination' : filterType}`;
+  };
 
   return (
     <div className="min-h-screen bg-secondary/20 flex">
-      {/* Sidebar */}
+      {/* Unified Sidebar */}
       <aside className="w-64 bg-black text-white flex flex-col p-8 fixed h-full z-20">
         <div className="mb-12">
           <span className="text-xl font-black uppercase tracking-tighter text-primary">Admin Panel</span>
@@ -91,16 +118,17 @@ const AdminDashboard = () => {
         <nav className="flex-grow space-y-2">
           <Button 
             variant="ghost" 
-            asChild
+            onClick={() => {
+              setCurrentView('articles');
+              setFilterType('all');
+            }}
             className={cn(
               "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
-              pathname === '/admin' && "bg-primary"
+              currentView === 'articles' && filterType === 'all' && "bg-primary"
             )}
           >
-            <Link href="/admin">
-              <LayoutDashboard size={18} />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Dashboard</span>
-            </Link>
+            <LayoutDashboard size={18} />
+            <span className="text-[10px] font-bold uppercase tracking-widest">Dashboard</span>
           </Button>
           
           <div className="pt-6 pb-2">
@@ -110,12 +138,13 @@ const AdminDashboard = () => {
           <Button 
             variant="ghost" 
             onClick={() => {
+              setCurrentView('articles');
               setFilterType('destination');
               setFilterCategory('all');
             }}
             className={cn(
               "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
-              filterType === 'destination' && "bg-primary"
+              currentView === 'articles' && filterType === 'destination' && "bg-primary"
             )}
           >
             <Map size={18} />
@@ -125,12 +154,13 @@ const AdminDashboard = () => {
           <Button 
             variant="ghost" 
             onClick={() => {
+              setCurrentView('articles');
               setFilterType('story');
               setFilterCategory('all');
             }}
             className={cn(
               "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
-              filterType === 'story' && "bg-primary"
+              currentView === 'articles' && filterType === 'story' && "bg-primary"
             )}
           >
             <BookOpen size={18} />
@@ -143,13 +173,14 @@ const AdminDashboard = () => {
 
           <Button 
             variant="ghost" 
-            asChild
-            className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all"
+            onClick={() => setCurrentView('packages')}
+            className={cn(
+              "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
+              currentView === 'packages' && "bg-primary"
+            )}
           >
-            <Link href="/admin/plan-your-trip" className="flex items-center gap-3">
-              <MapPin size={18} />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">Adjust Paket Trip</span>
-            </Link>
+            <MapPin size={18} />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">Adjust Paket Trip</span>
           </Button>
 
           <Button 
@@ -157,7 +188,7 @@ const AdminDashboard = () => {
             asChild
             className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all"
           >
-            <Link href="/" target="_blank" className="flex items-center gap-3">
+            <Link href="/" target="_blank">
               <Globe size={18} />
               <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">View Website</span>
             </Link>
@@ -180,58 +211,62 @@ const AdminDashboard = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
+      {/* Main Content Area */}
       <main className="flex-grow ml-64 p-12">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div>
             <h1 className="text-4xl font-black uppercase tracking-tighter">
-              {filterType === 'all' ? 'All Content' : filterType === 'destination' ? 'See & Do Content' : 'Stories Content'}
+              {currentView === 'packages' ? 'Paket Wisata' : 
+               filterType === 'all' ? 'All Articles' : 
+               filterType === 'destination' ? 'See & Do Content' : 'Stories Content'}
             </h1>
-            <p className="text-sm font-medium text-muted-foreground mt-2">Manage your articles and destinations in real-time.</p>
+            <p className="text-sm font-medium text-muted-foreground mt-2">
+              Manage your {currentView === 'packages' ? 'trip packages' : 'articles'} in real-time.
+            </p>
           </div>
-          <div className="flex gap-4">
-            <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
-              <Link href={newArticleUrl}>
-                <Plus size={18} />
-                New Article
-              </Link>
-            </Button>
-          </div>
+          <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
+            <Link href={getNewLink()}>
+              <Plus size={18} />
+              New {currentView === 'packages' ? 'Package' : 'Article'}
+            </Link>
+          </Button>
         </header>
 
         <Card className="rounded-none border-2 border-black/5 shadow-xl">
           <CardHeader className="p-8 border-b">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
               <div className="flex items-center gap-4">
-                <CardTitle className="text-xl font-black uppercase tracking-tight">Content Directory</CardTitle>
+                <CardTitle className="text-xl font-black uppercase tracking-tight">Directory</CardTitle>
                 <Badge variant="secondary" className="rounded-none border-2 border-black/10 font-black text-[10px] uppercase tracking-widest px-3 py-1">
-                  {filterType === 'all' ? 'All' : filterType === 'destination' ? 'See & Do' : 'Stories'}
+                  {currentView === 'packages' ? 'TRIP PACKAGES' : filterType.toUpperCase()}
                 </Badge>
               </div>
 
               <div className="flex flex-col md:flex-row w-full lg:w-auto gap-4">
-                <div className="w-full md:w-56">
-                  <Select value={filterCategory} onValueChange={setFilterCategory}>
-                    <SelectTrigger className="rounded-none border-2 border-black/10 h-10 font-bold text-[10px] uppercase tracking-widest bg-white">
-                      <SelectValue placeholder="All Categories" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-none border-2">
-                      <SelectItem value="all">All Categories</SelectItem>
-                      <SelectItem value="Alam">Nature & Adventure</SelectItem>
-                      <SelectItem value="Budaya">Heritage & Culture</SelectItem>
-                      <SelectItem value="Kuliner">Food & Drink</SelectItem>
-                      <SelectItem value="Sejarah">Sejarah & Warisan</SelectItem>
-                      <SelectItem value="Sosial">Masyarakat & Budaya</SelectItem>
-                      <SelectItem value="Geografis">Bentang Alam & Geografis</SelectItem>
-                      <SelectItem value="Tips">Tips & Panduan</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                {currentView === 'articles' && (
+                  <div className="w-full md:w-56">
+                    <Select value={filterCategory} onValueChange={setFilterCategory}>
+                      <SelectTrigger className="rounded-none border-2 border-black/10 h-10 font-bold text-[10px] uppercase tracking-widest bg-white">
+                        <SelectValue placeholder="All Categories" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-none border-2">
+                        <SelectItem value="all">All Categories</SelectItem>
+                        <SelectItem value="Alam">Nature & Adventure</SelectItem>
+                        <SelectItem value="Budaya">Heritage & Culture</SelectItem>
+                        <SelectItem value="Kuliner">Food & Drink</SelectItem>
+                        <SelectItem value="Sejarah">Sejarah & Warisan</SelectItem>
+                        <SelectItem value="Sosial">Masyarakat & Budaya</SelectItem>
+                        <SelectItem value="Geografis">Bentang Alam & Geografis</SelectItem>
+                        <SelectItem value="Tips">Tips & Panduan</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
 
                 <div className="relative w-full md:w-64">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <input 
-                    placeholder="Search titles..." 
+                    placeholder="Search..." 
                     className="pl-10 w-full rounded-none border-2 border-black/10 focus:border-primary h-10 font-bold text-[10px] uppercase tracking-widest outline-none bg-white"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -242,74 +277,77 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent className="p-0">
             <Table>
-              <TableHeader>
-                <TableRow className="bg-secondary/50 hover:bg-secondary/50">
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6 w-24">Preview</TableHead>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Judul Artikel</TableHead>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Kategori</TableHead>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6 text-right">Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isArticlesLoading ? (
-                  <TableRow>
-                    <TableCell colSpan={4} className="p-12 text-center text-[10px] font-bold uppercase text-muted-foreground">Fetching data...</TableCell>
-                  </TableRow>
-                ) : filteredArticles.length > 0 ? (
-                  filteredArticles.map((article) => (
-                    <TableRow key={article.id} className="hover:bg-secondary/10 group">
-                      <TableCell className="p-6">
-                        <div className="w-16 h-12 relative bg-gray-200 border border-black/5 overflow-hidden">
-                          {article.image ? (
-                            <img 
-                              src={article.image} 
-                              alt={article.title} 
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="flex items-center justify-center h-full text-muted-foreground font-black text-[10px]">NO IMG</div>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="p-6">
-                        <div className="font-bold uppercase tracking-tight text-sm">
-                          {article.title}
-                        </div>
-                        <div className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">
-                          Type: <span className="text-primary">{article.type}</span> | Slug: /{article.id}
-                        </div>
-                      </TableCell>
-                      <TableCell className="p-6">
-                        <Badge variant="outline" className="rounded-none border-2 border-black/20 font-black text-[8px] uppercase tracking-widest">
-                          {article.category}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="p-6 text-right space-x-2">
-                        <Button variant="ghost" size="icon" className="rounded-none hover:bg-black hover:text-white" asChild title="Edit Artikel">
-                          <Link href={`/admin/editor/${article.id}`}>
-                            <Edit size={16} />
-                          </Link>
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="rounded-none hover:bg-red-50 text-red-600"
-                          onClick={() => handleDelete(article.id)}
-                          title="Hapus Artikel"
-                        >
-                          <Trash2 size={16} />
-                        </Button>
-                      </TableCell>
+              {currentView === 'articles' ? (
+                <>
+                  <TableHeader>
+                    <TableRow className="bg-secondary/50">
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6 w-24">Preview</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Judul Artikel</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Kategori</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6 text-right">Action</TableHead>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={4} className="p-12 text-center text-[10px] font-bold uppercase text-muted-foreground">
-                      No {filterType !== 'all' ? filterType : ''} content found.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
+                  </TableHeader>
+                  <TableBody>
+                    {isArticlesLoading ? (
+                      <TableRow><TableCell colSpan={4} className="p-12 text-center text-xs font-bold uppercase">Loading Articles...</TableCell></TableRow>
+                    ) : filteredArticles.map(a => (
+                      <TableRow key={a.id} className="hover:bg-secondary/10">
+                        <TableCell className="p-6">
+                          <div className="w-16 h-12 bg-gray-200 border overflow-hidden">
+                            {a.image && <img src={a.image} alt="" className="w-full h-full object-cover" />}
+                          </div>
+                        </TableCell>
+                        <TableCell className="p-6">
+                          <div className="font-bold uppercase text-sm">{a.title}</div>
+                          <div className="text-[9px] font-bold text-muted-foreground mt-1 uppercase">Type: {a.type} | Slug: /{a.id}</div>
+                        </TableCell>
+                        <TableCell className="p-6">
+                          <Badge variant="outline" className="rounded-none border-2 font-black text-[8px] uppercase tracking-widest">{a.category}</Badge>
+                        </TableCell>
+                        <TableCell className="p-6 text-right space-x-2">
+                          <Button variant="ghost" size="icon" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={16}/></Link></Button>
+                          <Button variant="ghost" size="icon" className="text-red-600" onClick={() => handleDeleteArticle(a.id)}><Trash2 size={16}/></Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </>
+              ) : (
+                <>
+                  <TableHeader>
+                    <TableRow className="bg-secondary/50">
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Nama Paket</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Harga</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Durasi</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6 text-right">Action</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {isPackagesLoading ? (
+                      <TableRow><TableCell colSpan={4} className="p-12 text-center text-xs font-bold uppercase">Loading Packages...</TableCell></TableRow>
+                    ) : filteredPackages.map(p => (
+                      <TableRow key={p.id} className="hover:bg-secondary/10">
+                        <TableCell className="p-6">
+                          <div className="font-bold uppercase text-sm">{p.title}</div>
+                          <div className="text-[9px] font-bold text-muted-foreground mt-1 uppercase">{p.description}</div>
+                        </TableCell>
+                        <TableCell className="p-6">
+                          <Badge className="bg-primary text-white font-black text-[10px] uppercase rounded-none">{p.price}</Badge>
+                        </TableCell>
+                        <TableCell className="p-6">
+                          <div className="flex items-center gap-2 text-xs font-bold">
+                            <Clock size={14} className="text-primary" /> {p.time}
+                          </div>
+                        </TableCell>
+                        <TableCell className="p-6 text-right space-x-2">
+                          <Button variant="ghost" size="icon" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={16}/></Link></Button>
+                          <Button variant="ghost" size="icon" className="text-red-600" onClick={() => handleDeletePackage(p.id)}><Trash2 size={16}/></Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </>
+              )}
             </Table>
           </CardContent>
         </Card>
