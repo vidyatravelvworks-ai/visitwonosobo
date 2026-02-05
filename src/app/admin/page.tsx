@@ -239,10 +239,10 @@ const AdminDashboard = () => {
                 <h3 className="text-lg font-black uppercase tracking-tight">Gallery Quick Add</h3>
                 <p className="text-[10px] font-bold uppercase text-muted-foreground">Add new photos to the trip gallery instantly.</p>
               </div>
-              <div className="space-y-1">
-                <Label className="text-[10px] font-black uppercase">Image URL</Label>
-                <div className="flex flex-col lg:flex-row gap-8 items-stretch">
-                  <div className="w-32 shrink-0 bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden">
+              <div className="flex flex-col lg:flex-row gap-8 items-stretch">
+                <div className="w-32 shrink-0 flex flex-col items-stretch">
+                  <div className="h-5"></div> {/* Offset for top label on the right */}
+                  <div className="flex-grow bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden">
                     {galleryForm.url ? (
                       <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
                     ) : (
@@ -252,26 +252,31 @@ const AdminDashboard = () => {
                       </div>
                     )}
                   </div>
-                  <div className="flex-grow space-y-4">
+                </div>
+                <div className="flex-grow space-y-4">
+                  <div className="space-y-1">
+                    <div className="flex justify-end">
+                      <Label className="text-[10px] font-black uppercase">Image URL</Label>
+                    </div>
                     <Input 
                       value={galleryForm.url} 
                       onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 
                       className="rounded-none border-2 h-10 text-xs" 
                       placeholder="https://..."
                     />
-                    <div className="space-y-1">
-                      <Label className="text-[10px] font-black uppercase">Caption</Label>
-                      <Input 
-                        value={galleryForm.caption} 
-                        onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
-                        className="rounded-none border-2 h-10 text-xs" 
-                        placeholder="Description..."
-                      />
-                    </div>
-                    <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-10 font-black uppercase text-[10px] tracking-widest gap-2">
-                      <Save size={14} /> Save Image
-                    </Button>
                   </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] font-black uppercase">Caption</Label>
+                    <Input 
+                      value={galleryForm.caption} 
+                      onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
+                      className="rounded-none border-2 h-10 text-xs" 
+                      placeholder="Description..."
+                    />
+                  </div>
+                  <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-10 font-black uppercase text-[10px] tracking-widest gap-2">
+                    <Save size={14} /> Save Image
+                  </Button>
                 </div>
               </div>
             </Card>
