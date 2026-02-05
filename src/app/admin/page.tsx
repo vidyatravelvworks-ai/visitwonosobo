@@ -168,19 +168,6 @@ const AdminDashboard = () => {
       </aside>
 
       <main className="flex-grow ml-64 p-12">
-        {currentView !== 'gallery' && (
-          <header className="flex justify-between items-end mb-12">
-            <h1 className="text-4xl font-black uppercase tracking-tighter">{currentView.replace('-', ' ')}</h1>
-            {currentView !== 'settings' && (
-              <Button asChild className="bg-primary text-white rounded-none h-14 px-8 font-black uppercase text-[10px] tracking-widest">
-                <Link href={currentView === 'packages' ? '/admin/plan-your-trip/editor/new' : `/admin/editor/new?type=${currentView === 'see-and-do' ? 'destination' : 'story'}`}>
-                  <Plus size={18} className="mr-2" /> New {currentView === 'packages' ? 'Package' : 'Article'}
-                </Link>
-              </Button>
-            )}
-          </header>
-        )}
-
         {currentView === 'settings' ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
             <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
@@ -242,43 +229,38 @@ const AdminDashboard = () => {
                 <h3 className="text-lg font-black uppercase tracking-tight">Gallery Quick Add</h3>
                 <p className="text-[10px] font-bold uppercase text-muted-foreground">Add new photos to the trip gallery instantly.</p>
               </div>
-              <div className="flex flex-col lg:flex-row gap-8 items-stretch">
-                <div className="w-32 shrink-0 aspect-square bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden">
-                  {galleryForm.url && galleryForm.url.trim() !== "" ? (
-                    <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
-                  ) : (
-                    <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2 px-2 text-center">
-                      <ImageIcon size={24} className="opacity-20" />
-                      <span className="text-[8px]">No Preview</span>
+              <div className="flex flex-col space-y-4">
+                <div className="space-y-1">
+                  <Label className="text-[10px] font-black uppercase">Image URL</Label>
+                  <div className="flex gap-4 items-stretch">
+                    <div className="w-[136px] h-[136px] bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0">
+                      {galleryForm.url && galleryForm.url.trim() !== "" ? (
+                        <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
+                      ) : (
+                        <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2 px-2 text-center">
+                          <ImageIcon size={24} className="opacity-20" />
+                          <span className="text-[8px]">No Preview</span>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                <div className="flex-grow flex flex-col justify-between">
-                  <div className="space-y-4">
-                    <div className="space-y-1">
-                      <div className="flex justify-between items-center">
-                        <Label className="text-[10px] font-black uppercase">Image URL</Label>
-                      </div>
+                    <div className="flex-grow flex flex-col justify-between">
                       <Input 
                         value={galleryForm.url} 
                         onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 
                         className="rounded-none border-2 h-10 text-xs" 
                         placeholder="https://..."
                       />
-                    </div>
-                    <div className="space-y-1">
-                      <Label className="text-[10px] font-black uppercase">Caption</Label>
                       <Input 
                         value={galleryForm.caption} 
                         onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
                         className="rounded-none border-2 h-10 text-xs" 
                         placeholder="Description..."
                       />
+                      <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-10 font-black uppercase text-[10px] tracking-widest gap-2">
+                        <Save size={14} /> Save Image
+                      </Button>
                     </div>
                   </div>
-                  <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-10 font-black uppercase text-[10px] tracking-widest gap-2">
-                    <Save size={14} /> Save Image
-                  </Button>
                 </div>
               </div>
             </Card>
@@ -300,75 +282,85 @@ const AdminDashboard = () => {
             </div>
           </div>
         ) : (
-          <Card className="rounded-none border-2 shadow-xl overflow-hidden bg-white">
-            {isLoading ? <div className="p-20 flex justify-center"><Loader2 className="animate-spin text-primary h-10 w-10" /></div> : (
-              <Table>
-                <TableHeader className="bg-secondary/50">
-                  <TableRow>
-                    <TableHead className="p-0 min-w-[320px] border-r">
-                      <div className="relative flex items-center h-full">
-                        <Search className="absolute left-4 h-3 w-3 text-muted-foreground" />
-                        <Input 
-                          placeholder="SEARCH CONTENT..." 
-                          value={tableSearch}
-                          onChange={(e) => setTableSearch(e.target.value)}
-                          className="pl-10 h-12 border-none rounded-none text-[10px] font-black uppercase focus-visible:ring-0 bg-transparent w-full"
-                        />
-                      </div>
-                    </TableHead>
-                    <TableHead className="text-[10px] font-black uppercase tracking-widest px-6">CATEGORY</TableHead>
-                    <TableHead className="text-[10px] font-black uppercase tracking-widest text-right px-6">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {(currentView === 'see-and-do' || currentView === 'stories') && (
-                    filteredArticles.length === 0 ? (
-                      <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No articles found.</TableCell></TableRow>
-                    ) : filteredArticles.map(a => (
-                      <TableRow key={a.id} className="hover:bg-secondary/10 border-b">
-                        <TableCell className="p-0 flex items-center gap-4">
-                          <div className="w-32 h-16 bg-gray-100 border overflow-hidden shrink-0">
-                            {a.image && <img src={a.image} className="w-full h-full object-cover" alt={a.title} />}
-                          </div>
-                          <div className="flex flex-col justify-center max-w-md pr-4 py-2">
-                            <div className="font-black uppercase text-[11px] leading-tight truncate">{a.title}</div>
-                            <div className="text-[8px] text-muted-foreground uppercase mt-1 font-bold tracking-wider">{a.date} | {a.author || 'Admin'}</div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-2 px-6"><Badge className="rounded-none text-[8px] uppercase font-black px-2">{getCategoryLabel(a.category)}</Badge></TableCell>
-                        <TableCell className="py-2 px-6 text-right">
-                          <div className="flex justify-end gap-2">
-                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={14}/></Link></Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
+          <div className="space-y-6">
+            <div className="flex justify-between items-end mb-6">
+              <h1 className="text-4xl font-black uppercase tracking-tighter">{currentView.replace('-', ' ')}</h1>
+              <Button asChild className="bg-primary text-white rounded-none h-14 px-8 font-black uppercase text-[10px] tracking-widest">
+                <Link href={currentView === 'packages' ? '/admin/plan-your-trip/editor/new' : `/admin/editor/new?type=${currentView === 'see-and-do' ? 'destination' : 'story'}`}>
+                  <Plus size={18} className="mr-2" /> New {currentView === 'packages' ? 'Package' : 'Article'}
+                </Link>
+              </Button>
+            </div>
+            <Card className="rounded-none border-2 shadow-xl overflow-hidden bg-white">
+              {isLoading ? <div className="p-20 flex justify-center"><Loader2 className="animate-spin text-primary h-10 w-10" /></div> : (
+                <Table>
+                  <TableHeader className="bg-secondary/50">
+                    <TableRow>
+                      <TableHead className="p-0 min-w-[320px] border-r">
+                        <div className="relative flex items-center h-full">
+                          <Search className="absolute left-4 h-3 w-3 text-muted-foreground" />
+                          <Input 
+                            placeholder="SEARCH CONTENT..." 
+                            value={tableSearch}
+                            onChange={(e) => setTableSearch(e.target.value)}
+                            className="pl-10 h-12 border-none rounded-none text-[10px] font-black uppercase focus-visible:ring-0 bg-transparent w-full"
+                          />
+                        </div>
+                      </TableHead>
+                      <TableHead className="text-[10px] font-black uppercase tracking-widest px-6">CATEGORY</TableHead>
+                      <TableHead className="text-[10px] font-black uppercase tracking-widest text-right px-6">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {(currentView === 'see-and-do' || currentView === 'stories') && (
+                      filteredArticles.length === 0 ? (
+                        <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No articles found.</TableCell></TableRow>
+                      ) : filteredArticles.map(a => (
+                        <TableRow key={a.id} className="hover:bg-secondary/10 border-b">
+                          <TableCell className="p-0 flex items-center gap-4">
+                            <div className="w-32 h-16 bg-gray-100 border overflow-hidden shrink-0">
+                              {a.image && <img src={a.image} className="w-full h-full object-cover" alt={a.title} />}
+                            </div>
+                            <div className="flex flex-col justify-center max-w-md pr-4 py-2">
+                              <div className="font-black uppercase text-[11px] leading-tight truncate">{a.title}</div>
+                              <div className="text-[8px] text-muted-foreground uppercase mt-1 font-bold tracking-wider">{a.date} | {a.author || 'Admin'}</div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="py-2 px-6"><Badge className="rounded-none text-[8px] uppercase font-black px-2">{getCategoryLabel(a.category)}</Badge></TableCell>
+                          <TableCell className="py-2 px-6 text-right">
+                            <div className="flex justify-end gap-2">
+                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={14}/></Link></Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
 
-                  {currentView === 'packages' && (
-                    filteredPackages?.length === 0 ? (
-                      <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No packages found.</TableCell></TableRow>
-                    ) : filteredPackages?.map(p => (
-                      <TableRow key={p.id} className="hover:bg-secondary/10 border-b">
-                        <TableCell className="py-2 px-4">
-                          <div className="flex flex-col">
-                            <div className="font-black uppercase text-[11px] leading-tight">{p.title}</div>
-                            <div className="text-[8px] text-muted-foreground uppercase mt-1 font-bold tracking-wider">{p.time}</div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-2 px-6"><span className="text-[10px] font-black text-primary">{p.price}</span></TableCell>
-                        <TableCell className="py-2 px-6 text-right">
-                          <div className="flex justify-end gap-2">
-                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={14}/></Link></Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            )}
-          </Card>
+                    {currentView === 'packages' && (
+                      filteredPackages?.length === 0 ? (
+                        <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No packages found.</TableCell></TableRow>
+                      ) : filteredPackages?.map(p => (
+                        <TableRow key={p.id} className="hover:bg-secondary/10 border-b">
+                          <TableCell className="py-2 px-4">
+                            <div className="flex flex-col">
+                              <div className="font-black uppercase text-[11px] leading-tight">{p.title}</div>
+                              <div className="text-[8px] text-muted-foreground uppercase mt-1 font-bold tracking-wider">{p.time}</div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="py-2 px-6"><span className="text-[10px] font-black text-primary">{p.price}</span></TableCell>
+                          <TableCell className="py-2 px-6 text-right">
+                            <div className="flex justify-end gap-2">
+                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={14}/></Link></Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              )}
+            </Card>
+          </div>
         )}
       </main>
     </div>

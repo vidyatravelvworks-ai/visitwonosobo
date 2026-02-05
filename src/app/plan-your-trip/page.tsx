@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -39,9 +40,11 @@ const PlanYourTripPage = () => {
     order: i + 100 
   }));
 
-  const galleryItems = (dbGalleryItems && dbGalleryItems.length > 0) 
+  const rawGalleryItems = (dbGalleryItems && dbGalleryItems.length > 0) 
     ? [...dbGalleryItems, ...defaultGalleryItems].slice(0, 20)
     : defaultGalleryItems;
+
+  const galleryItems = rawGalleryItems.filter(item => item.url && item.url.trim() !== "");
 
   const essentialPoints = [
     { 
