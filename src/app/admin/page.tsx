@@ -47,7 +47,10 @@ const AdminDashboard = () => {
   const [configForm, setConfigForm] = useState({
     heroHome: '',
     heroSeeDo: '',
-    heroStories: ''
+    heroStories: '',
+    catNature: '',
+    catHeritage: '',
+    catFood: ''
   });
 
   useEffect(() => {
@@ -55,7 +58,10 @@ const AdminDashboard = () => {
       setConfigForm({
         heroHome: websiteConfig.heroImages?.home || '',
         heroSeeDo: websiteConfig.heroImages?.seeAndDo || '',
-        heroStories: websiteConfig.heroImages?.stories || ''
+        heroStories: websiteConfig.heroImages?.stories || '',
+        catNature: websiteConfig.categoryImages?.['Nature & Adventure'] || '',
+        catHeritage: websiteConfig.categoryImages?.['Heritage & Culture'] || '',
+        catFood: websiteConfig.categoryImages?.['Food & Drink'] || ''
       });
     }
   }, [websiteConfig]);
@@ -69,6 +75,11 @@ const AdminDashboard = () => {
           home: configForm.heroHome,
           seeAndDo: configForm.heroSeeDo,
           stories: configForm.heroStories
+        },
+        categoryImages: {
+          'Nature & Adventure': configForm.catNature,
+          'Heritage & Culture': configForm.catHeritage,
+          'Food & Drink': configForm.catFood
         },
         updatedAt: serverTimestamp()
       }, { merge: true });
@@ -191,34 +202,59 @@ const AdminDashboard = () => {
         </Dialog>
 
         {currentView === 'settings' ? (
-          <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-8 max-w-4xl">
-            <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
+            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
               <div className="border-b pb-4">
-                <h3 className="text-lg font-black uppercase tracking-tight">Hero Configuration</h3>
+                <h3 className="text-lg font-black uppercase tracking-tight">Main Hero Configuration</h3>
                 <p className="text-[10px] font-bold uppercase text-muted-foreground">Manage background images for main pages.</p>
               </div>
-              <div className="grid grid-cols-1 gap-6">
+              <div className="space-y-4">
                 {[
                   { label: 'Home Hero', key: 'heroHome', value: configForm.heroHome },
                   { label: 'See & Do Hero', key: 'heroSeeDo', value: configForm.heroSeeDo },
                   { label: 'Stories Hero', key: 'heroStories', value: configForm.heroStories }
                 ].map((field) => (
-                  <div key={field.key} className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase">{field.label} URL</Label>
+                  <div key={field.key} className="space-y-1">
+                    <Label className="text-[10px] font-black uppercase">{field.label}</Label>
                     <Input 
                       value={field.value} 
                       onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} 
-                      className="rounded-none border-2 h-12 text-xs" 
+                      className="rounded-none border-2 h-10 text-xs" 
                     />
-                    {field.value && <div className="mt-2 aspect-[4/1] w-full overflow-hidden border"><img src={field.value} className="w-full h-full object-cover" /></div>}
                   </div>
                 ))}
               </div>
-              <Button onClick={handleSaveConfig} disabled={isSavingConfig} className="bg-primary text-white rounded-none h-14 px-10 font-black uppercase text-[10px] tracking-widest gap-2">
-                {isSavingConfig ? <Loader2 className="animate-spin h-4 w-4" /> : <Save size={18} />} Save Configuration
+            </Card>
+
+            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
+              <div className="border-b pb-4">
+                <h3 className="text-lg font-black uppercase tracking-tight">Category Covers</h3>
+                <p className="text-[10px] font-bold uppercase text-muted-foreground">Visuals for See & Do categories.</p>
+              </div>
+              <div className="space-y-4">
+                {[
+                  { label: 'Nature & Adventure', key: 'catNature', value: configForm.catNature },
+                  { label: 'Heritage & Culture', key: 'catHeritage', value: configForm.catHeritage },
+                  { label: 'Food & Drink', key: 'catFood', value: configForm.catFood }
+                ].map((field) => (
+                  <div key={field.key} className="space-y-1">
+                    <Label className="text-[10px] font-black uppercase">{field.label}</Label>
+                    <Input 
+                      value={field.value} 
+                      onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} 
+                      className="rounded-none border-2 h-10 text-xs" 
+                    />
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            <div className="lg:col-span-2">
+              <Button onClick={handleSaveConfig} disabled={isSavingConfig} className="bg-primary text-white rounded-none h-14 px-12 font-black uppercase text-[10px] tracking-widest gap-2">
+                {isSavingConfig ? <Loader2 className="animate-spin h-4 w-4" /> : <Save size={18} />} Save All Settings
               </Button>
             </div>
-          </Card>
+          </div>
         ) : (
           <Card className="rounded-none border-2 shadow-xl overflow-hidden bg-white">
             {isLoading ? <div className="p-20 flex justify-center"><Loader2 className="animate-spin text-primary h-10 w-10" /></div> : (
@@ -256,6 +292,28 @@ const AdminDashboard = () => {
                     ))
                   )}
 
+                  {currentView === 'packages' && (
+                    allPackages?.length === 0 ? (
+                      <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">Tidak ada paket.</TableCell></TableRow>
+                    ) : allPackages?.map(p => (
+                      <TableRow key={p.id} className="hover:bg-secondary/10 h-20">
+                        <TableCell className="py-2 px-4">
+                          <div className="flex flex-col">
+                            <div className="font-black uppercase text-[11px] leading-tight">{p.title}</div>
+                            <div className="text-[8px] text-muted-foreground uppercase mt-1 font-bold tracking-wider">{p.time}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-2 px-4"><span className="text-[10px] font-black text-primary">{p.price}</span></TableCell>
+                        <TableCell className="py-2 px-4 text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={14}/></Link></Button>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600 hover:bg-red-50 relative z-50" onClick={(e) => handleDelete(e, 'trip_packages', p.id)}><Trash2 size={14}/></Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+
                   {currentView === 'gallery' && (
                     allGallery?.length === 0 ? (
                       <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">Tidak ada gambar.</TableCell></TableRow>
@@ -273,7 +331,6 @@ const AdminDashboard = () => {
                       </TableRow>
                     ))
                   )}
-                  {/* ... other views like packages remain same ... */}
                 </TableBody>
               </Table>
             )}

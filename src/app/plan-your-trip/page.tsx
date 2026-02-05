@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -33,14 +32,16 @@ const PlanYourTripPage = () => {
 
   const packages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticPackages;
 
-  const defaultGalleryItems = Array.from({ length: 20 }).map((_, i) => ({
+  const defaultGalleryItems = Array.from({ length: 12 }).map((_, i) => ({
     id: `dummy-${i}`,
     url: `https://picsum.photos/seed/trip-${i + 20}/800/800`,
     caption: `Experience Wonosobo ${i + 1}`,
     order: i + 100 
   }));
 
-  const galleryItems = [...(dbGalleryItems || []), ...defaultGalleryItems].slice(0, 20);
+  const galleryItems = (dbGalleryItems && dbGalleryItems.length > 0) 
+    ? [...dbGalleryItems, ...defaultGalleryItems].slice(0, 20)
+    : defaultGalleryItems;
 
   const essentialPoints = [
     { 
@@ -79,22 +80,11 @@ const PlanYourTripPage = () => {
     <div className="bg-white">
       <section className="relative h-[45vh] w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image 
-            src={heroImage} 
-            alt="Hero Background" 
-            fill 
-            className="object-cover" 
-            priority 
-          />
+          <Image src={heroImage} alt="Hero Background" fill className="object-cover" priority />
           <div className="absolute inset-0 bg-black/50" />
         </div>
         <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10 text-center">
-          <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-4">
-            Plan Your <span className="text-primary">Journey</span>
-          </h1>
-          <p className="text-white/80 text-sm max-w-2xl mx-auto font-medium tracking-wide">
-            Pilih paket perjalanan yang telah kami susun dengan teliti untuk pengalaman Wonosobo yang tak terlupakan.
-          </p>
+          <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-4">Plan Your <span className="text-primary">Journey</span></h1>
         </div>
       </section>
 
@@ -110,78 +100,30 @@ const PlanYourTripPage = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {packages.map((pkg: any, idx: number) => (
-                <div 
-                  key={pkg.id || idx} 
-                  className={cn(
-                    "bg-white border-2 border-black/5 shadow-lg p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:border-primary/50",
-                    pkg.color || "bg-white",
-                    pkg.borderColor || "border-border"
-                  )}
-                >
+                <div key={pkg.id || idx} className={cn("bg-white border-2 border-black/5 shadow-lg p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:border-primary/50", pkg.color || "bg-white", pkg.borderColor || "border-border")}>
                   <div className="flex justify-between items-start mb-10">
-                    <div className="p-4 bg-primary text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                      <CarFront size={24} />
-                    </div>
+                    <div className="p-4 bg-primary text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"><CarFront size={24} /></div>
                     <div className="text-right">
-                      <span className="block text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 text-right">Harga Mulai</span>
-                      <div className="bg-black text-white px-3 py-1 font-black text-lg tracking-tight inline-block">
-                        {pkg.price}
-                      </div>
+                      <span className="block text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Harga Mulai</span>
+                      <div className="bg-black text-white px-3 py-1 font-black text-lg tracking-tight inline-block">{pkg.price}</div>
                     </div>
                   </div>
-
-                  <h4 className="text-2xl font-black uppercase tracking-tighter mb-4 group-hover:text-primary transition-colors leading-none">
-                    {pkg.title}
-                  </h4>
-                  
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-6 flex items-center gap-2">
-                    <Clock size={12} className="text-primary" /> {pkg.time}
-                  </p>
-
-                  <div className="h-px bg-black/10 w-full mb-6" style={{ backgroundImage: 'linear-gradient(to right, rgba(0,0,0,0.1) 50%, transparent 50%)', backgroundSize: '10px 1px', backgroundRepeat: 'repeat-x', height: '1px' }} />
-                  
+                  <h4 className="text-2xl font-black uppercase tracking-tighter mb-4 group-hover:text-primary transition-colors leading-none">{pkg.title}</h4>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-6 flex items-center gap-2"><Clock size={12} className="text-primary" /> {pkg.time}</p>
                   <div className="space-y-6 flex-grow">
                     <div>
                       <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-3">Destinasi Rute</p>
                       <ul className="space-y-2">
                         {pkg.spots?.map((spot: string, i: number) => (
                           <li key={i} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-tight">
-                            <MapPin className="h-3 w-3 text-muted-foreground shrink-0" /> 
-                            <span className="truncate">{spot}</span>
+                            <MapPin className="h-3 w-3 text-muted-foreground shrink-0" /> <span className="truncate">{spot}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-dashed">
-                      <div>
-                        <p className="text-[9px] font-black uppercase tracking-widest text-green-600 mb-2">Include</p>
-                        <ul className="space-y-1.5">
-                          {pkg.includes?.map((item: string, i: number) => (
-                            <li key={i} className="flex items-start gap-2 text-[9px] font-bold uppercase text-muted-foreground leading-tight">
-                              <CheckCircle2 className="h-3 w-3 text-green-600 shrink-0 mt-0.5" /> {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div>
-                        <p className="text-[9px] font-black uppercase tracking-widest text-red-600 mb-2">Exclude</p>
-                        <ul className="space-y-1.5">
-                          {pkg.excludes?.map((item: string, i: number) => (
-                            <li key={i} className="flex items-start gap-2 text-[9px] font-bold uppercase text-muted-foreground leading-tight">
-                              <XCircle className="h-3 w-3 text-red-600 shrink-0 mt-0.5" /> {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
                   </div>
-
                   <Button className="w-full bg-primary text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-2 group/btn mt-10" asChild>
-                    <a href={`https://wa.me/6281230939128?text=Halo%20saya%20tertarik%20pesan%20${encodeURIComponent(pkg.title)}`} target="_blank">
-                      Pesan Sekarang
-                      <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                    </a>
+                    <a href={`https://wa.me/6281230939128?text=Halo%20saya%20tertarik%20pesan%20${encodeURIComponent(pkg.title)}`} target="_blank">Booking Sekarang</a>
                   </Button>
                 </div>
               ))}
@@ -194,147 +136,32 @@ const PlanYourTripPage = () => {
                 <div className="p-2 bg-primary text-white"><Grid size={24} /></div>
                 <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Trip Gallery</h2>
               </div>
-              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-primary pl-4 max-w-xs">
-                Momen terbaik dalam format marquee 2 baris yang luas.
-              </p>
             </div>
             
             {isGalleryLoading ? (
               <div className="flex justify-center p-20"><Loader2 className="animate-spin h-10 w-10 text-primary" /></div>
             ) : (
               <div className="relative overflow-hidden">
-                <div className="flex overflow-x-auto pb-8 no-scrollbar scroll-smooth cursor-grab active:cursor-grabbing">
-                  <div className="flex animate-marquee hover:[animation-play-state:paused] whitespace-nowrap">
-                    <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px] shrink-0 pr-4">
-                      {galleryItems.map((item, idx) => {
-                        const patterns = [
-                          "row-span-2 col-span-2 w-[400px] md:w-[500px]", 
-                          "row-span-1 col-span-1 w-[200px] md:w-[250px]", 
-                          "row-span-1 col-span-1 w-[200px] md:w-[250px]", 
-                          "row-span-1 col-span-2 w-[400px] md:w-[500px]", 
-                          "row-span-1 col-span-2 w-[400px] md:w-[500px]", 
-                          "row-span-2 col-span-1 w-[300px] md:w-[350px]", 
-                        ];
-                        const patternClass = patterns[idx % patterns.length];
-                        const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/trip-${idx + 40}/800/800`;
-                        
-                        return (
-                          <div 
-                            key={`set1-${item.id}`} 
-                            className={cn(
-                              "relative overflow-hidden group border-2 border-black/5 shadow-md",
-                              patternClass
-                            )}
-                          >
-                            <Image 
-                              src={galleryImg} 
-                              alt={item.caption || "Trip Photo"} 
-                              fill
-                              className="object-cover transition-transform duration-700 group-hover:scale-110" 
-                            />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                              <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    {/* Duplicate for seamless loop */}
-                    <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px] shrink-0 pr-4">
-                      {galleryItems.map((item, idx) => {
-                        const patterns = [
-                          "row-span-2 col-span-2 w-[400px] md:w-[500px]", 
-                          "row-span-1 col-span-1 w-[200px] md:w-[250px]", 
-                          "row-span-1 col-span-1 w-[200px] md:w-[250px]", 
-                          "row-span-1 col-span-2 w-[400px] md:w-[500px]", 
-                          "row-span-1 col-span-2 w-[400px] md:w-[500px]", 
-                          "row-span-2 col-span-1 w-[300px] md:w-[350px]", 
-                        ];
-                        const patternClass = patterns[idx % patterns.length];
-                        const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/trip-${idx + 40}/800/800`;
-                        
-                        return (
-                          <div 
-                            key={`set2-${item.id}`} 
-                            className={cn(
-                              "relative overflow-hidden group border-2 border-black/5 shadow-md",
-                              patternClass
-                            )}
-                          >
-                            <Image 
-                              src={galleryImg} 
-                              alt={item.caption || "Trip Photo"} 
-                              fill
-                              className="object-cover transition-transform duration-700 group-hover:scale-110" 
-                            />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                              <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                <div className="flex animate-marquee hover:[animation-play-state:paused] whitespace-nowrap">
+                  <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px] shrink-0 pr-4">
+                    {galleryItems.map((item, idx) => (
+                      <div key={item.id} className="relative overflow-hidden group border-2 border-black/5 shadow-md w-[300px] md:w-[400px]">
+                        <Image src={item.url} alt={item.caption || "Trip Photo"} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6"><p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p></div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px] shrink-0 pr-4">
+                    {galleryItems.map((item, idx) => (
+                      <div key={`dup-${item.id}`} className="relative overflow-hidden group border-2 border-black/5 shadow-md w-[300px] md:w-[400px]">
+                        <Image src={item.url} alt={item.caption || "Trip Photo"} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6"><p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p></div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
             )}
-          </div>
-
-          <div className="mt-16 pt-12 border-t">
-            <div className="max-w-2xl mb-8">
-              <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Travel Essentials</h3>
-              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Essential Information</h2>
-              <p className="text-muted-foreground mt-4 text-sm font-medium">Pastikan Anda mengetahui aspek-aspek penting ini sebelum memulai perjalanan di Wonosobo.</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-8 gap-x-12">
-              {essentialPoints.map((point, idx) => (
-                <div key={idx} className="group space-y-4 border-l border-primary/20 pl-6 hover:border-primary transition-all">
-                  <div className="p-3 bg-secondary w-fit text-primary group-hover:bg-primary group-hover:text-white transition-colors">{point.icon}</div>
-                  <h4 className="font-bold uppercase text-xs tracking-widest">{point.title}</h4>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{point.content}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* New CTA Section */}
-          <div className="mt-24 pt-16 border-t border-black/5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-black text-white p-10 md:p-16 flex flex-col justify-between items-start space-y-8 group transition-all duration-500 hover:bg-primary">
-                <div className="space-y-4">
-                  <div className="p-3 bg-white/10 w-fit group-hover:bg-white group-hover:text-primary transition-colors">
-                    <Settings2 size={24} />
-                  </div>
-                  <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none">Custom Your Trip</h3>
-                  <p className="text-white/60 text-[11px] font-medium leading-relaxed max-w-sm group-hover:text-white/80 transition-colors">
-                    Punya rencana sendiri? Buat itinerary sesukamu. Konsultasikan rute impianmu dengan tim lokal kami yang ahli.
-                  </p>
-                </div>
-                <Button size="lg" className="bg-white text-black hover:bg-black hover:text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-3" asChild>
-                  <a href="https://wa.me/6281230939128?text=Halo%20saya%20ingin%20konsultasi%20Custom%20Trip%20di%20Wonosobo" target="_blank">
-                    <MessageCircle size={16} /> Konsultasi Rute
-                  </a>
-                </Button>
-              </div>
-
-              <div className="bg-secondary/30 p-10 md:p-16 flex flex-col justify-between items-start space-y-8 border-2 border-transparent hover:border-primary transition-all duration-500">
-                <div className="space-y-4">
-                  <div className="p-3 bg-primary text-white w-fit">
-                    <HomeIcon size={24} />
-                  </div>
-                  <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none text-black">Cari Penginapan</h3>
-                  <p className="text-muted-foreground text-[11px] font-medium leading-relaxed max-w-sm">
-                    Belum punya tempat menginap? Kami bantu carikan homestay atau hotel terbaik yang sesuai dengan budget dan rute wisatamu.
-                  </p>
-                </div>
-                <Button size="lg" className="bg-primary text-white hover:bg-black rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-3" asChild>
-                  <a href="https://wa.me/6281230939128?text=Halo%20saya%20butuh%20bantuan%20mencari%20penginapan%20di%20Wonosobo" target="_blank">
-                    <MessageCircle size={16} /> Cari Homestay/Hotel
-                  </a>
-                </Button>
-              </div>
-            </div>
           </div>
         </div>
       </section>

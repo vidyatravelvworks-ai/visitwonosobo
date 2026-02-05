@@ -1,18 +1,16 @@
-
 'use client';
 
 import React, { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUser, useFirestore, useDoc } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Save, MapPin, Clock, DollarSign, ListChecks, CheckCircle2, XCircle } from 'lucide-react';
+import { ArrowLeft, Save, MapPin, Clock, DollarSign, ListChecks, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useMemoFirebase } from '@/firebase';
 import Link from 'next/link';
 
 interface PageProps {
@@ -40,11 +38,7 @@ const TripPackageEditorPage = ({ params }: PageProps) => {
     borderColor: 'border-primary/20'
   });
 
-  const docRef = useMemoFirebase(() => {
-    if (!db || isNew) return null;
-    return doc(db, 'trip_packages', id);
-  }, [db, id, isNew]);
-
+  const docRef = useMemoFirebase(() => db && !isNew ? doc(db, 'trip_packages', id) : null, [db, id, isNew]);
   const { data: pkg, isLoading } = useDoc(docRef);
 
   useEffect(() => {
@@ -64,171 +58,97 @@ const TripPackageEditorPage = ({ params }: PageProps) => {
   }, [pkg]);
 
   useEffect(() => {
-    if (!isUserLoading && !user) {
-      router.push('/login');
-    }
+    if (!isUserLoading && !user) router.push('/login');
   }, [user, isUserLoading, router]);
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSave = async () => {
     if (!db) return;
-
-    if (!formData.title || !formData.price || !formData.time) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Judul, Harga, dan Waktu wajib diisi.' });
-      return;
-    }
-
     setIsSaving(true);
     try {
       const packageId = isNew ? formData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') : id;
-      const finalDocRef = doc(db, 'trip_packages', packageId);
-      
       const spots = formData.spotsRaw.split('\n').map(s => s.trim()).filter(s => s !== '');
       const includes = formData.includesRaw.split('\n').map(s => s.trim()).filter(s => s !== '');
       const excludes = formData.excludesRaw.split('\n').map(s => s.trim()).filter(s => s !== '');
 
-      await setDoc(finalDocRef, {
-        title: formData.title,
-        time: formData.time,
-        price: formData.price,
-        description: formData.description,
-        spots,
-        includes,
-        excludes,
-        color: formData.color,
-        borderColor: formData.borderColor,
+      await setDoc(doc(db, 'trip_packages', packageId), {
+        ...formData,
+        spots, includes, excludes,
         id: packageId,
         updatedAt: serverTimestamp(),
       }, { merge: true });
 
-      toast({ title: 'Berhasil', description: 'Paket trip telah diperbarui.' });
+      toast({ title: 'Saved Successfully' });
       router.push('/admin');
     } catch (error) {
-      console.error(error);
-      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menyimpan paket.' });
+      toast({ variant: 'destructive', title: 'Save Failed' });
     } finally {
       setIsSaving(false);
     }
   };
 
-  if (isUserLoading || (isLoading && !isNew)) {
-    return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Loading Editor...</div>;
-  }
+  if (isUserLoading || (isLoading && !isNew)) return <div className="h-screen flex items-center justify-center font-black uppercase text-xs">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-secondary/20 p-8 md:p-12">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="flex justify-between items-center">
-          <Button variant="ghost" asChild className="rounded-none hover:bg-transparent pl-0 h-auto group">
-            <Link href="/admin" className="flex items-center gap-2 font-black uppercase tracking-widest text-[10px]">
-              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              Kembali ke Dashboard
-            </Link>
-          </Button>
-          <Button 
-            onClick={handleSave} 
-            disabled={isSaving}
-            className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-10 gap-3 font-black uppercase tracking-widest text-[10px]"
-          >
-            <Save size={18} />
-            {isSaving ? 'Menyimpan...' : 'Simpan Perubahan'}
-          </Button>
+    <div className="min-h-screen bg-secondary/10 flex flex-col pb-20">
+      <div className="sticky top-0 z-50 bg-white border-b px-8 py-3 flex justify-between items-center shadow-sm">
+        <Button variant="ghost" asChild className="text-[10px] font-black uppercase tracking-widest px-0">
+          <Link href="/admin"><ArrowLeft size={14} className="mr-2" /> Dashboard</Link>
+        </Button>
+        <Button onClick={handleSave} disabled={isSaving} className="bg-primary text-white rounded-none font-black uppercase text-[10px] h-10 px-8 hover:bg-black transition-colors">
+          {isSaving ? 'Saving...' : 'Publish Package'}
+        </Button>
+      </div>
+
+      <div className="max-w-5xl mx-auto w-full p-6 space-y-6">
+        <Card className="rounded-none border-2 shadow-sm bg-white">
+          <CardHeader className="p-6 border-b"><CardTitle className="text-[10px] font-black uppercase tracking-widest">General Information</CardTitle></CardHeader>
+          <CardContent className="p-6 space-y-4">
+            <div className="space-y-1">
+              <Label className="text-[10px] font-black uppercase">Package Title</Label>
+              <Input value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="rounded-none h-12 text-lg font-black uppercase border-2" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <Label className="text-[10px] font-black uppercase">Price Tag</Label>
+                <Input value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} className="rounded-none h-10 text-xs" />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-[10px] font-black uppercase">Duration/Time</Label>
+                <Input value={formData.time} onChange={e => setFormData({...formData, time: e.target.value})} className="rounded-none h-10 text-xs" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-[10px] font-black uppercase">Short Description</Label>
+              <Input value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="rounded-none h-10 text-xs" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="rounded-none border-2 shadow-sm bg-white">
+            <CardHeader className="p-4 border-b bg-secondary/10"><CardTitle className="text-[10px] font-black uppercase">Destinations</CardTitle></CardHeader>
+            <CardContent className="p-4"><Textarea value={formData.spotsRaw} onChange={e => setFormData({...formData, spotsRaw: e.target.value})} className="min-h-[200px] text-xs rounded-none border-2" placeholder="One per line..." /></CardContent>
+          </Card>
+          <Card className="rounded-none border-2 shadow-sm bg-white">
+            <CardHeader className="p-4 border-b bg-green-50"><CardTitle className="text-[10px] font-black uppercase text-green-700">Included</CardTitle></CardHeader>
+            <CardContent className="p-4"><Textarea value={formData.includesRaw} onChange={e => setFormData({...formData, includesRaw: e.target.value})} className="min-h-[200px] text-xs rounded-none border-2" placeholder="One per line..." /></CardContent>
+          </Card>
+          <Card className="rounded-none border-2 shadow-sm bg-white">
+            <CardHeader className="p-4 border-b bg-red-50"><CardTitle className="text-[10px] font-black uppercase text-red-700">Excluded</CardTitle></CardHeader>
+            <CardContent className="p-4"><Textarea value={formData.excludesRaw} onChange={e => setFormData({...formData, excludesRaw: e.target.value})} className="min-h-[200px] text-xs rounded-none border-2" placeholder="One per line..." /></CardContent>
+          </Card>
         </div>
 
-        <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white">
-          <CardHeader className="border-b p-8">
-            <CardTitle className="text-xl font-black uppercase tracking-tight flex items-center gap-3">
-              <MapPin className="text-primary" size={20} />
-              Konfigurasi Paket Trip
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-8 space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Judul Paket</Label>
-                <Input 
-                  value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
-                  className="rounded-none border-2 border-black/10 h-12 font-bold"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Harga</Label>
-                <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input 
-                    value={formData.price}
-                    onChange={(e) => setFormData({...formData, price: e.target.value})}
-                    className="pl-10 rounded-none border-2 border-black/10 h-12 font-bold text-primary"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Waktu & Durasi</Label>
-                <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input 
-                    value={formData.time}
-                    onChange={(e) => setFormData({...formData, time: e.target.value})}
-                    className="pl-10 rounded-none border-2 border-black/10 h-12 font-bold"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Deskripsi</Label>
-                <Input 
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  className="rounded-none border-2 border-black/10 h-12 font-bold"
-                />
-              </div>
+        <Card className="rounded-none border-2 shadow-sm bg-white">
+          <CardHeader className="p-4 border-b"><CardTitle className="text-[10px] font-black uppercase">Design Overrides</CardTitle></CardHeader>
+          <CardContent className="p-4 grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <Label className="text-[10px] font-black uppercase">Background Class</Label>
+              <Input value={formData.color} onChange={e => setFormData({...formData, color: e.target.value})} className="h-8 text-xs font-mono rounded-none" />
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                  <ListChecks size={14} /> Destinasi (Newline)
-                </Label>
-                <Textarea 
-                  value={formData.spotsRaw}
-                  onChange={(e) => setFormData({...formData, spotsRaw: e.target.value})}
-                  className="rounded-none border-2 min-h-[150px] font-bold text-xs"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-green-600 flex items-center gap-2">
-                  <CheckCircle2 size={14} /> Include (Newline)
-                </Label>
-                <Textarea 
-                  value={formData.includesRaw}
-                  onChange={(e) => setFormData({...formData, includesRaw: e.target.value})}
-                  className="rounded-none border-2 min-h-[150px] font-bold text-xs"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-red-600 flex items-center gap-2">
-                  <XCircle size={14} /> Exclude (Newline)
-                </Label>
-                <Textarea 
-                  value={formData.excludesRaw}
-                  onChange={(e) => setFormData({...formData, excludesRaw: e.target.value})}
-                  className="rounded-none border-2 min-h-[150px] font-bold text-xs"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">BG Color Class</Label>
-                <Input value={formData.color} onChange={(e) => setFormData({...formData, color: e.target.value})} className="rounded-none border-2 h-10 font-mono text-xs" />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Border Color Class</Label>
-                <Input value={formData.borderColor} onChange={(e) => setFormData({...formData, borderColor: e.target.value})} className="rounded-none border-2 h-10 font-mono text-xs" />
-              </div>
+            <div className="space-y-1">
+              <Label className="text-[10px] font-black uppercase">Border Class</Label>
+              <Input value={formData.borderColor} onChange={e => setFormData({...formData, borderColor: e.target.value})} className="h-8 text-xs font-mono rounded-none" />
             </div>
           </CardContent>
         </Card>
