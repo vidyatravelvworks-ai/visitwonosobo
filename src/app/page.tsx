@@ -34,27 +34,27 @@ export default function Home() {
     { 
       title: "Fisik & Aklimatisasi", 
       icon: <Activity className="h-6 w-6" />, 
-      content: "Dieng berada di ketinggian >2.000 mdpl. Udara tipis dapat memicu Altitude Sickness. Istirahat cukup dan hindari aktivitas berat di jam pertama." 
+      content: "Dieng berada di ketinggian >2.000 mdpl. Udara tipis dapat memicu Altitude Sickness. Istirahat cukup and hindari aktivitas berat di jam pertama." 
     },
     { 
       title: "Etika & Budaya", 
       icon: <ShieldAlert className="h-6 w-6" />, 
-      content: "Gunakan masker di kawah untuk hindari gas belerang. Hormati situs candi dan jangan menyentuh kepala anak rambut gimbal yang sakral." 
+      content: "Gunakan masker di kawah untuk hindari gas belerang. Hormati situs candi and jangan menyentuh kepala anak rambut gimbal yang sakral." 
     },
     { 
       title: "Persiapan Kendaraan", 
       icon: <CarFront className="h-6 w-6" />, 
-      content: "Jalur Dieng memiliki tanjakan ekstrem 15%. Pastikan rem dan kopling prima. Driver lokal kami ahli dalam teknik engine brake di medan ini." 
+      content: "Jalur Dieng memiliki tanjakan ekstrem 15%. Pastikan rem and kopling prima. Driver lokal kami ahli dalam teknik engine brake di medan ini." 
     },
     { 
       title: "Perlengkapan Khusus", 
       icon: <Footprints className="h-6 w-6" />, 
-      content: "Bawa obat anti-mabuk jalanan berkelok, sepatu anti-slip untuk trekking Sikunir yang licin, dan uang tunai untuk transaksi di pelosok." 
+      content: "Bawa obat anti-mabuk jalanan berkelok, sepatu anti-slip untuk trekking Sikunir yang licin, and uang tunai untuk transaksi di pelosok." 
     },
     { 
       title: "Manajemen Waktu", 
       icon: <Clock className="h-6 w-6" />, 
-      content: "Weekend sering macet total. Berangkatlah lebih awal (misal 02.30 pagi untuk Sikunir) guna menghindari kerumunan dan kemacetan." 
+      content: "Weekend sering macet total. Berangkatlah lebih awal (misal 02.30 pagi untuk Sikunir) guna menghindari kerumunan and kemacetan." 
     },
     { 
       title: "Cuaca & Suhu Ekstrem", 
@@ -67,12 +67,12 @@ export default function Home() {
     <div className="bg-white">
       <Hero />
       
-      <section className="py-16 bg-white border-b">
-        <div className="container mx-auto px-6 md:px-8 lg:px-32">
+      <section className="py-16 bg-white border-b px-6">
+        <div className="container mx-auto px-0 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
             <div className="max-w-2xl">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Plan Your Trip</h3>
-              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Essential Info</h2>
+              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Essential Information</h2>
             </div>
             <Button variant="outline" className="border-primary text-primary rounded-none h-14 px-8 font-black uppercase text-[10px]" asChild>
               <Link href="/plan-your-trip">Lihat Detail Paket</Link>
@@ -181,8 +181,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-32 bg-secondary/20">
-        <div className="container mx-auto px-6 md:px-8 lg:px-32">
+      <section className="py-32 bg-secondary/20 px-6">
+        <div className="container mx-auto px-0 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
             <div className="max-w-2xl">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Discover More</h3>
@@ -209,7 +209,7 @@ export default function Home() {
 
       <Services />
 
-      <section className="py-40 bg-black relative overflow-hidden">
+      <section className="py-40 bg-black relative overflow-hidden px-6">
         <div className="absolute inset-0 opacity-30">
           <img 
             src="https://images.unsplash.com/photo-1595495745827-85bcc5c9a028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" 
@@ -217,7 +217,7 @@ export default function Home() {
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10 text-center">
+        <div className="container mx-auto px-0 md:px-8 lg:px-32 relative z-10 text-center">
           <div className="max-w-4xl mx-auto space-y-12">
             <h2 className="text-5xl md:text-8xl font-black text-white uppercase leading-none tracking-tighter">
               Ready to <span className="text-primary">Explore</span> <br /> Wonosobo?
