@@ -35,7 +35,7 @@ const PlanYourTripPage = () => {
   // Fallback data for gallery if Firestore is empty
   const defaultGalleryItems = Array.from({ length: 20 }).map((_, i) => ({
     id: `dummy-${i}`,
-    url: `https://picsum.photos/seed/trip-${i + 10}/800/800`,
+    url: `https://picsum.photos/seed/trip-${i + 20}/800/800`,
     caption: `Experience Wonosobo ${i + 1}`,
     order: i
   }));
@@ -189,45 +189,57 @@ const PlanYourTripPage = () => {
           )}
 
           <div className="mt-32">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
               <div className="flex items-center gap-4">
                 <div className="p-2 bg-primary text-white"><Grid size={24} /></div>
                 <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Trip Gallery</h2>
               </div>
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-primary pl-4 max-w-xs">
-                Momen-momen terbaik dari para penjelajah kami di Wonosobo.
+                Momen-momen terbaik dalam format dua baris yang estetik.
               </p>
             </div>
             
             {isGalleryLoading ? (
               <div className="flex justify-center p-20"><Loader2 className="animate-spin h-10 w-10 text-primary" /></div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 auto-rows-[250px] md:auto-rows-[300px]">
-                {galleryItems.map((item, idx) => {
-                  const spans = [
-                    "col-span-2 row-span-2", "col-span-1 row-span-1", "col-span-1 row-span-2",
-                    "col-span-1 row-span-1", "col-span-2 row-span-1", "col-span-1 row-span-2",
-                    "col-span-1 row-span-1", "col-span-1 row-span-1", "col-span-1 row-span-2",
-                    "col-span-2 row-span-2", "col-span-1 row-span-1", "col-span-1 row-span-1",
-                    "col-span-1 row-span-2", "col-span-1 row-span-1", "col-span-2 row-span-1",
-                    "col-span-1 row-span-1", "col-span-1 row-span-2", "col-span-2 row-span-1",
-                    "col-span-1 row-span-1", "col-span-1 row-span-1"
-                  ];
-                  const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/trip-${idx + 10}/800/800`;
-                  return (
-                    <div key={item.id} className={cn("relative overflow-hidden group border-2 border-black/5", spans[idx % spans.length])}>
-                      <Image 
-                        src={galleryImg} 
-                        alt={item.caption || "Trip Photo"} 
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110" 
-                      />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                        <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="relative">
+                <div className="flex overflow-x-auto pb-6 gap-2 no-scrollbar snap-x snap-mandatory">
+                  <div className="grid grid-rows-2 grid-flow-col gap-2 h-[500px] md:h-[600px]">
+                    {galleryItems.map((item, idx) => {
+                      // Pola berulang untuk 2 baris yang bagus
+                      const patterns = [
+                        "row-span-2 col-span-2 w-[400px] md:w-[500px]", // Big Square
+                        "row-span-1 col-span-1 w-[200px] md:w-[250px]", // Small SQ Top
+                        "row-span-1 col-span-1 w-[200px] md:w-[250px]", // Small SQ Bottom
+                        "row-span-1 col-span-2 w-[400px] md:w-[500px]", // Landscape Top
+                        "row-span-1 col-span-2 w-[400px] md:w-[500px]", // Landscape Bottom
+                        "row-span-2 col-span-1 w-[200px] md:w-[250px]", // Tall Vertical (Alternative SQ)
+                      ];
+                      const patternClass = patterns[idx % patterns.length];
+                      const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/trip-${idx + 40}/800/800`;
+                      
+                      return (
+                        <div 
+                          key={item.id} 
+                          className={cn(
+                            "relative overflow-hidden group border-2 border-black/5 snap-start",
+                            patternClass
+                          )}
+                        >
+                          <Image 
+                            src={galleryImg} 
+                            alt={item.caption || "Trip Photo"} 
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                          />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                            <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             )}
           </div>
