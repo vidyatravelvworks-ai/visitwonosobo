@@ -8,22 +8,23 @@ import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 
 const Footer = () => {
   const pathname = usePathname();
-  const [year, setYear] = useState<number>(2025);
+  const [year, setYear] = useState<string>('2025');
 
   useEffect(() => {
-    setYear(new Date().getFullYear());
+    // Memperbarui tahun hanya di sisi klien setelah mount untuk menghindari hydration mismatch
+    setYear(new Date().getFullYear().toString());
   }, []);
 
-  // Hide Footer on Login and Admin pages
+  // Sembunyikan Footer di halaman Login dan Admin
   const isExcludedPage = pathname === '/login' || pathname.startsWith('/admin');
   if (isExcludedPage) return null;
 
   return (
     <footer className="bg-white border-t py-20">
       <div className="container mx-auto px-12 md:px-32">
-        {/* Grid 5 kolom untuk mencapai rasio 40% (2/5) dan 20% (1/5) */}
+        {/* Grid 5 kolom: Kolom pertama 40% (span 2), sisanya masing-masing 20% (span 1) */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-16 mb-20">
-          {/* Kolom 1: 40% lebar (span 2 dari 5) */}
+          {/* Kolom 1: Branding & Deskripsi (40%) */}
           <div className="col-span-1 md:col-span-2 space-y-6">
             <span className="text-2xl font-black font-headline tracking-tighter uppercase text-primary">
               visitwonosobo
@@ -32,14 +33,14 @@ const Footer = () => {
               Kami adalah kolektif penjelajah lokal yang berdedikasi untuk menunjukkan keindahan dan budaya otentik Wonosobo kepada dunia.
             </p>
             <div className="flex gap-4 pt-4">
-              <Instagram className="h-5 w-5 cursor-pointer hover:text-primary" />
-              <Facebook className="h-5 w-5 cursor-pointer hover:text-primary" />
-              <Twitter className="h-5 w-5 cursor-pointer hover:text-primary" />
-              <Youtube className="h-5 w-5 cursor-pointer hover:text-primary" />
+              <Instagram className="h-5 w-5 cursor-pointer hover:text-primary" aria-label="Instagram" />
+              <Facebook className="h-5 w-5 cursor-pointer hover:text-primary" aria-label="Facebook" />
+              <Twitter className="h-5 w-5 cursor-pointer hover:text-primary" aria-label="Twitter" />
+              <Youtube className="h-5 w-5 cursor-pointer hover:text-primary" aria-label="Youtube" />
             </div>
           </div>
 
-          {/* Kolom 2: 20% lebar (span 1 dari 5) */}
+          {/* Kolom 2: Experiences (20%) */}
           <div className="col-span-1 md:col-span-1">
             <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Experiences</h4>
             <ul className="space-y-4 text-sm font-medium">
@@ -49,7 +50,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Kolom 3: 20% lebar (span 1 dari 5) */}
+          {/* Kolom 3: Plan Your Trip (20%) */}
           <div className="col-span-1 md:col-span-1">
             <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Plan Your Trip</h4>
             <ul className="space-y-4 text-sm font-medium">
@@ -60,7 +61,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Kolom 4: 20% lebar (span 1 dari 5) */}
+          {/* Kolom 4: Contact (20%) */}
           <div className="col-span-1 md:col-span-1">
             <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Contact</h4>
             <ul className="space-y-4 text-sm font-medium">
@@ -81,9 +82,9 @@ const Footer = () => {
             . All Rights Reserved.
           </p>
           <div className="flex gap-10">
-            <Link href="#" className="hover:text-black">Privacy Policy</Link>
-            <Link href="#" className="hover:text-black">Terms of Use</Link>
-            <Link href="#" className="hover:text-black">Cookie Policy</Link>
+            <Link href="#" className="hover:text-black transition-colors">Privacy Policy</Link>
+            <Link href="#" className="hover:text-black transition-colors">Terms of Use</Link>
+            <Link href="#" className="hover:text-black transition-colors">Cookie Policy</Link>
           </div>
         </div>
       </div>
