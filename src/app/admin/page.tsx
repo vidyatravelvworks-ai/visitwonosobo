@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -269,7 +268,7 @@ const AdminDashboard = () => {
                     filteredArticles.length === 0 ? (
                       <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No articles found.</TableCell></TableRow>
                     ) : filteredArticles.map(a => (
-                      <TableRow key={a.id} className="hover:bg-secondary/10 h-20">
+                      <TableRow key={a.id} className="hover:bg-secondary/10 border-b">
                         <TableCell className="p-0 flex items-center gap-4">
                           <div className="w-32 h-16 bg-gray-100 border overflow-hidden shrink-0">
                             {a.image && <img src={a.image} className="w-full h-full object-cover" alt={a.title} />}
@@ -293,7 +292,7 @@ const AdminDashboard = () => {
                     allPackages?.length === 0 ? (
                       <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No packages found.</TableCell></TableRow>
                     ) : allPackages?.map(p => (
-                      <TableRow key={p.id} className="hover:bg-secondary/10 h-20">
+                      <TableRow key={p.id} className="hover:bg-secondary/10 border-b">
                         <TableCell className="py-2 px-4">
                           <div className="flex flex-col">
                             <div className="font-black uppercase text-[11px] leading-tight">{p.title}</div>
@@ -314,7 +313,7 @@ const AdminDashboard = () => {
                     allGallery?.length === 0 ? (
                       <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No images found.</TableCell></TableRow>
                     ) : allGallery?.map(g => (
-                      <TableRow key={g.id} className="hover:bg-secondary/10 h-20">
+                      <TableRow key={g.id} className="hover:bg-secondary/10 border-b">
                         <TableCell className="p-0">
                           <div className="w-32 h-16 bg-gray-100 border overflow-hidden">
                             {g.url && <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />}
