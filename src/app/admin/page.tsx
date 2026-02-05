@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { 
   Plus, Edit, Trash2, LogOut, Map, BookOpen, MapPin, 
-  Layout, Save, Grid, Loader2 
+  Layout, Save, Grid, Loader2, CheckCircle 
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -87,7 +87,10 @@ const AdminDashboard = () => {
     const docRef = doc(db, 'config', 'website');
     setDoc(docRef, configData, { merge: true })
       .then(() => {
-        toast({ title: 'Success', description: 'Website configuration saved.' });
+        toast({ 
+          title: 'Berhasil Disimpan', 
+          description: 'Konfigurasi website telah diperbarui dan akan muncul di homepage dalam beberapa saat.',
+        });
         setIsSavingConfig(false);
       })
       .catch((err) => {
@@ -177,6 +180,12 @@ const AdminDashboard = () => {
     }
   };
 
+  const heroLabels: Record<string, string> = {
+    home: 'Banner Beranda (Home Hero)',
+    seeAndDo: 'Banner See & Do',
+    stories: 'Banner Stories'
+  };
+
   if (isUserLoading || !user) {
     return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Authenticating...</div>;
   }
@@ -223,7 +232,7 @@ const AdminDashboard = () => {
             <h1 className="text-4xl font-black uppercase tracking-tighter">
               {currentView.replace('-', ' ')}
             </h1>
-            <p className="text-sm font-medium text-muted-foreground mt-2">Adjust your website elements in real-time.</p>
+            <p className="text-sm font-medium text-muted-foreground mt-2">Atur tampilan dan konten website secara real-time.</p>
           </div>
           {(currentView === 'see-and-do' || currentView === 'stories' || currentView === 'packages' || currentView === 'gallery') && (
             <Button onClick={currentView === 'gallery' ? handleAddGalleryImage : undefined} asChild={currentView !== 'gallery'} className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
@@ -300,15 +309,16 @@ const AdminDashboard = () => {
               <>
                 <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
                   <Card className="rounded-none border-2 border-black/5 shadow-xl">
-                    <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Hero Banner Images</CardTitle></CardHeader>
-                    <CardContent className="p-6 space-y-4">
+                    <CardHeader className="border-b bg-white"><CardTitle className="text-xs font-black uppercase tracking-widest">Gambar Banner Utama (Hero)</CardTitle></CardHeader>
+                    <CardContent className="p-6 space-y-4 bg-white">
                       {['home', 'seeAndDo', 'stories'].map(page => (
                         <div key={page} className="space-y-1">
-                          <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{page} Page Hero URL</Label>
+                          <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{heroLabels[page] || page} URL</Label>
                           <Input 
                             value={configData.heroImages?.[page] || ''} 
                             onChange={(e) => setConfigData({...configData, heroImages: {...configData.heroImages, [page]: e.target.value}})}
-                            className="rounded-none border-2 text-[10px] h-10"
+                            className="rounded-none border-2 text-[10px] h-10 focus:border-primary"
+                            placeholder="https://example.com/image.jpg"
                           />
                         </div>
                       ))}
@@ -317,24 +327,31 @@ const AdminDashboard = () => {
                 </div>
 
                 <Card className="rounded-none border-2 border-black/5 shadow-xl">
-                  <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Category Images</CardTitle></CardHeader>
-                  <CardContent className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <CardHeader className="border-b bg-white"><CardTitle className="text-xs font-black uppercase tracking-widest">Gambar Per Kategori</CardTitle></CardHeader>
+                  <CardContent className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 bg-white">
                     {['Alam', 'Budaya', 'Kuliner', 'Sejarah', 'Sosial', 'Geografis', 'Tips'].map(cat => (
                       <div key={cat} className="space-y-1">
-                        <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{cat} Category URL</Label>
+                        <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{cat} URL</Label>
                         <Input 
                           value={configData.categoryImages?.[cat] || ''} 
                           onChange={(e) => setConfigData({...configData, categoryImages: {...configData.categoryImages, [cat]: e.target.value}})}
-                          className="rounded-none border-2 text-[10px] h-10"
+                          className="rounded-none border-2 text-[10px] h-10 focus:border-primary"
+                          placeholder="https://example.com/image.jpg"
                         />
                       </div>
                     ))}
                   </CardContent>
                 </Card>
 
-                <Button onClick={handleSaveConfig} disabled={isSavingConfig} className="bg-black hover:bg-primary text-white rounded-none h-14 w-full gap-3 font-black uppercase tracking-widest text-[10px]">
-                  <Save size={18} /> {isSavingConfig ? 'Saving...' : 'Save Configuration'}
-                </Button>
+                <div className="flex flex-col gap-4">
+                   <Button onClick={handleSaveConfig} disabled={isSavingConfig} className="bg-black hover:bg-primary text-white rounded-none h-16 w-full gap-3 font-black uppercase tracking-widest text-[11px] shadow-lg transition-all active:scale-[0.98]">
+                    {isSavingConfig ? <Loader2 className="animate-spin" /> : <Save size={20} />}
+                    {isSavingConfig ? 'Menyimpan Konfigurasi...' : 'Simpan Perubahan Website'}
+                  </Button>
+                  <p className="text-[9px] font-medium text-muted-foreground italic text-center">
+                    Pastikan URL gambar valid dan menggunakan domain yang didukung (Unsplash, Picsum, Cloudinary, Imgur, dsb).
+                  </p>
+                </div>
               </>
             )}
           </div>
