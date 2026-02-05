@@ -1,19 +1,18 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser, useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
-import { collection, doc, deleteDoc, query, orderBy, setDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, deleteDoc, query, orderBy, setDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { 
-  Plus, Edit, Trash2, LogOut, Map, BookOpen, MapPin, Globe, 
-  Layout, Save, Grid 
+  Plus, Edit, Trash2, LogOut, Map, BookOpen, MapPin, 
+  Layout, Save, Grid, Loader2 
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -53,16 +52,28 @@ const AdminDashboard = () => {
     return query(collection(db, 'gallery'), orderBy('order', 'asc'));
   }, [db]);
 
-  const { data: allArticles } = useCollection(articlesQuery);
-  const { data: packages } = useCollection(packagesQuery);
-  const { data: galleryItems } = useCollection(galleryQuery);
+  const { data: allArticles, isLoading: isArticlesLoading } = useCollection(articlesQuery);
+  const { data: packages, isLoading: isPkgsLoading } = useCollection(packagesQuery);
+  const { data: galleryItems, isLoading: isGalleryLoading } = useCollection(galleryQuery);
   
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
-  const { data: dbConfig } = useDoc(configRef);
+  const { data: dbConfig, isLoading: isConfigLoading } = useDoc(configRef);
 
+  // Initialize configData with defaults if not exists in DB
   useEffect(() => {
-    if (dbConfig) setConfigData(dbConfig);
-  }, [dbConfig]);
+    if (dbConfig) {
+      setConfigData(dbConfig);
+    } else if (!isConfigLoading && dbConfig === null) {
+      setConfigData({
+        heroImages: { home: '', seeAndDo: '', stories: '' },
+        categoryImages: {
+          'Alam': '', 'Budaya': '', 'Kuliner': '', 
+          'Sejarah': '', 'Sosial': '', 'Geografis': '', 'Tips': ''
+        },
+        packageDesign: { cardColor: 'bg-primary/5', cardBorder: 'border-primary/20' }
+      });
+    }
+  }, [dbConfig, isConfigLoading]);
 
   const filteredArticles = allArticles?.filter(a => {
     if (currentView === 'see-and-do') return a.type === 'destination';
@@ -97,7 +108,12 @@ const AdminDashboard = () => {
 
   const handleDeleteGallery = async (id: string) => {
     if (!window.confirm('Hapus gambar galeri ini?')) return;
-    await deleteDoc(doc(db!, 'gallery', id));
+    try {
+      await deleteDoc(doc(db!, 'gallery', id));
+      toast({ title: 'Berhasil', description: 'Gambar dihapus.' });
+    } catch (error) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus.' });
+    }
   };
 
   const handleDeleteArticle = async (id: string) => {
@@ -195,121 +211,133 @@ const AdminDashboard = () => {
         {/* VIEW: ARTICLES & PACKAGES TABLE */}
         {(currentView === 'see-and-do' || currentView === 'stories' || currentView === 'packages') && (
           <Card className="rounded-none border-2 border-black/5 shadow-xl">
-            <Table>
-              <TableHeader className="bg-secondary/50">
-                <TableRow>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest py-1 px-4">Title / Info</TableHead>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest py-1 px-4">Category / Price</TableHead>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest py-1 px-4 text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {currentView === 'packages' ? (
-                  packages?.map(p => (
-                    <TableRow key={p.id} className="hover:bg-secondary/10">
-                      <TableCell className="py-1 px-4">
-                        <div className="font-bold uppercase text-[11px]">{p.title}</div>
-                        <div className="text-[8px] text-muted-foreground">{p.time}</div>
-                      </TableCell>
-                      <TableCell className="py-1 px-4"><Badge className="bg-primary rounded-none text-[8px] uppercase">{p.price}</Badge></TableCell>
-                      <TableCell className="py-1 px-4 text-right space-x-1">
-                        <Button variant="ghost" size="icon" className="h-7 w-7" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={12}/></Link></Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => handleDeletePackage(p.id)}><Trash2 size={12}/></Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  filteredArticles.map(a => (
-                    <TableRow key={a.id} className="hover:bg-secondary/10">
-                      <TableCell className="py-1 px-4 flex items-center gap-3">
-                        <div className="w-10 h-7 bg-gray-200 border p-0.5"><img src={a.image} className="w-full h-full object-cover" /></div>
-                        <div>
-                          <div className="font-bold uppercase text-[11px] truncate max-w-[300px]">{a.title}</div>
-                          <div className="text-[8px] text-muted-foreground uppercase">{a.date}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="py-1 px-4"><Badge variant="outline" className="rounded-none text-[8px] uppercase">{a.category}</Badge></TableCell>
-                      <TableCell className="py-1 px-4 text-right space-x-1">
-                        <Button variant="ghost" size="icon" className="h-7 w-7" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={12}/></Link></Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => handleDeleteArticle(a.id)}><Trash2 size={12}/></Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+            {(isArticlesLoading || isPkgsLoading) ? (
+              <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
+            ) : (
+              <Table>
+                <TableHeader className="bg-secondary/50">
+                  <TableRow>
+                    <TableHead className="text-[10px] font-bold uppercase tracking-widest py-1 px-4">Title / Info</TableHead>
+                    <TableHead className="text-[10px] font-bold uppercase tracking-widest py-1 px-4">Category / Price</TableHead>
+                    <TableHead className="text-[10px] font-bold uppercase tracking-widest py-1 px-4 text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentView === 'packages' ? (
+                    packages?.map(p => (
+                      <TableRow key={p.id} className="hover:bg-secondary/10">
+                        <TableCell className="py-1 px-4">
+                          <div className="font-bold uppercase text-[11px]">{p.title}</div>
+                          <div className="text-[8px] text-muted-foreground">{p.time}</div>
+                        </TableCell>
+                        <TableCell className="py-1 px-4"><Badge className="bg-primary rounded-none text-[8px] uppercase">{p.price}</Badge></TableCell>
+                        <TableCell className="py-1 px-4 text-right space-x-1">
+                          <Button variant="ghost" size="icon" className="h-7 w-7" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={12}/></Link></Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => handleDeletePackage(p.id)}><Trash2 size={12}/></Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    filteredArticles.map(a => (
+                      <TableRow key={a.id} className="hover:bg-secondary/10">
+                        <TableCell className="py-1 px-4 flex items-center gap-3">
+                          <div className="w-10 h-7 bg-gray-200 border p-0.5"><img src={a.image} className="w-full h-full object-cover" /></div>
+                          <div>
+                            <div className="font-bold uppercase text-[11px] truncate max-w-[300px]">{a.title}</div>
+                            <div className="text-[8px] text-muted-foreground uppercase">{a.date}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-1 px-4"><Badge variant="outline" className="rounded-none text-[8px] uppercase">{a.category}</Badge></TableCell>
+                        <TableCell className="py-1 px-4 text-right space-x-1">
+                          <Button variant="ghost" size="icon" className="h-7 w-7" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={12}/></Link></Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => handleDeleteArticle(a.id)}><Trash2 size={12}/></Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            )}
           </Card>
         )}
 
         {/* VIEW: WEBSITE CONFIG */}
-        {currentView === 'website-config' && configData && (
+        {currentView === 'website-config' && (
           <div className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <Card className="rounded-none border-2 border-black/5 shadow-xl">
-                <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Hero Banner Images</CardTitle></CardHeader>
-                <CardContent className="p-6 space-y-4">
-                  {['home', 'seeAndDo', 'stories'].map(page => (
-                    <div key={page} className="space-y-1">
-                      <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{page} Page Hero URL</Label>
-                      <Input 
-                        value={configData.heroImages?.[page] || ''} 
-                        onChange={(e) => setConfigData({...configData, heroImages: {...configData.heroImages, [page]: e.target.value}})}
-                        className="rounded-none border-2 text-[10px] h-10"
-                      />
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+            {isConfigLoading ? (
+              <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
+            ) : configData && (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <Card className="rounded-none border-2 border-black/5 shadow-xl">
+                    <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Hero Banner Images</CardTitle></CardHeader>
+                    <CardContent className="p-6 space-y-4">
+                      {['home', 'seeAndDo', 'stories'].map(page => (
+                        <div key={page} className="space-y-1">
+                          <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{page} Page Hero URL</Label>
+                          <Input 
+                            value={configData.heroImages?.[page] || ''} 
+                            onChange={(e) => setConfigData({...configData, heroImages: {...configData.heroImages, [page]: e.target.value}})}
+                            className="rounded-none border-2 text-[10px] h-10"
+                          />
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
 
-              <Card className="rounded-none border-2 border-black/5 shadow-xl">
-                <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Trip Card Design</CardTitle></CardHeader>
-                <CardContent className="p-6 space-y-4">
-                  <div className="space-y-1">
-                    <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Card Background (Tailwind Class)</Label>
-                    <Input 
-                      value={configData.packageDesign?.cardColor || ''} 
-                      onChange={(e) => setConfigData({...configData, packageDesign: {...configData.packageDesign, cardColor: e.target.value}})}
-                      className="rounded-none border-2 text-[10px] h-10"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Card Border (Tailwind Class)</Label>
-                    <Input 
-                      value={configData.packageDesign?.cardBorder || ''} 
-                      onChange={(e) => setConfigData({...configData, packageDesign: {...configData.packageDesign, cardBorder: e.target.value}})}
-                      className="rounded-none border-2 text-[10px] h-10"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                  <Card className="rounded-none border-2 border-black/5 shadow-xl">
+                    <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Trip Card Design</CardTitle></CardHeader>
+                    <CardContent className="p-6 space-y-4">
+                      <div className="space-y-1">
+                        <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Card Background (Tailwind Class)</Label>
+                        <Input 
+                          value={configData.packageDesign?.cardColor || ''} 
+                          onChange={(e) => setConfigData({...configData, packageDesign: {...configData.packageDesign, cardColor: e.target.value}})}
+                          className="rounded-none border-2 text-[10px] h-10"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Card Border (Tailwind Class)</Label>
+                        <Input 
+                          value={configData.packageDesign?.cardBorder || ''} 
+                          onChange={(e) => setConfigData({...configData, packageDesign: {...configData.packageDesign, cardBorder: e.target.value}})}
+                          className="rounded-none border-2 text-[10px] h-10"
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
 
-            <Card className="rounded-none border-2 border-black/5 shadow-xl">
-              <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Category Images</CardTitle></CardHeader>
-              <CardContent className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                {['Alam', 'Budaya', 'Kuliner', 'Sejarah', 'Sosial', 'Geografis', 'Tips'].map(cat => (
-                  <div key={cat} className="space-y-1">
-                    <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{cat} Category URL</Label>
-                    <Input 
-                      value={configData.categoryImages?.[cat] || ''} 
-                      onChange={(e) => setConfigData({...configData, categoryImages: {...configData.categoryImages, [cat]: e.target.value}})}
-                      className="rounded-none border-2 text-[10px] h-10"
-                    />
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+                <Card className="rounded-none border-2 border-black/5 shadow-xl">
+                  <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Category Images</CardTitle></CardHeader>
+                  <CardContent className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {['Alam', 'Budaya', 'Kuliner', 'Sejarah', 'Sosial', 'Geografis', 'Tips'].map(cat => (
+                      <div key={cat} className="space-y-1">
+                        <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{cat} Category URL</Label>
+                        <Input 
+                          value={configData.categoryImages?.[cat] || ''} 
+                          onChange={(e) => setConfigData({...configData, categoryImages: {...configData.categoryImages, [cat]: e.target.value}})}
+                          className="rounded-none border-2 text-[10px] h-10"
+                        />
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
 
-            <Button onClick={handleSaveConfig} disabled={isSavingConfig} className="bg-black hover:bg-primary text-white rounded-none h-14 w-full gap-3 font-black uppercase tracking-widest text-[10px]">
-              <Save size={18} /> {isSavingConfig ? 'Saving...' : 'Save Configuration'}
-            </Button>
+                <Button onClick={handleSaveConfig} disabled={isSavingConfig} className="bg-black hover:bg-primary text-white rounded-none h-14 w-full gap-3 font-black uppercase tracking-widest text-[10px]">
+                  <Save size={18} /> {isSavingConfig ? 'Saving...' : 'Save Configuration'}
+                </Button>
+              </>
+            )}
           </div>
         )}
 
         {/* VIEW: GALLERY */}
         {currentView === 'gallery' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {galleryItems?.map(item => (
+            {isGalleryLoading ? (
+              <div className="col-span-full flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
+            ) : galleryItems?.map(item => (
               <Card key={item.id} className="rounded-none border-2 border-black/5 shadow-xl overflow-hidden group">
                 <div className="aspect-video bg-gray-100 relative">
                   {item.url ? <img src={item.url} className="w-full h-full object-cover" /> : <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-bold uppercase">No Image</div>}
