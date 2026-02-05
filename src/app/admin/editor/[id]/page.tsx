@@ -211,15 +211,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
   const seo = getSEOAnalysis();
   const readingTime = Math.ceil(seo.wordCount / 200);
 
-  const handleSearchExternal = (platform: 'unsplash' | 'google') => {
-    const query = encodeURIComponent(`${formData.focusKeyword || formData.title} wonosobo`);
-    const urls = {
-      unsplash: `https://unsplash.com/s/photos/${query}`,
-      google: `https://www.google.com/search?tbm=isch&q=${query}`
-    };
-    window.open(urls[platform], '_blank');
-  };
-
   const selectFromLibrary = (imageUrl: string) => {
     setFormData(prev => ({ ...prev, image: imageUrl }));
     setIsPickerOpen(false);
@@ -277,7 +268,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
               {filteredLibrary.length === 0 && (
                 <div className="col-span-full py-20 text-center space-y-4">
                    <AlertCircle className="mx-auto h-10 w-10 text-muted-foreground" />
-                   <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Tidak menemukan gambar lokal? Gunakan pencarian Google/Unsplash di editor.</p>
+                   <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Tidak menemukan gambar lokal.</p>
                 </div>
               )}
             </div>
@@ -366,86 +357,72 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-8 space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                   <div className="space-y-3">
-                     <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center justify-between">
-                       <span className="flex items-center gap-2"><ImageIcon size={12} /> Featured Image URL</span>
-                       <Button 
-                         variant="link" 
-                         onClick={() => setIsPickerOpen(true)}
-                         className="h-auto p-0 text-[9px] font-black uppercase text-primary tracking-widest flex items-center gap-1"
-                       >
-                         <MousePointer2 size={10} /> Browse Library
-                       </Button>
-                     </Label>
-                     <Input 
-                       value={formData.image}
-                       onChange={(e) => setFormData({...formData, image: e.target.value})}
-                       placeholder="Paste URL (Google/Unsplash) atau pilih dari library"
-                       className="rounded-none border-2 border-black/10 h-12 text-[11px] font-bold"
-                     />
-                     <div className="flex gap-2">
-                        <Button 
-                          type="button" 
-                          variant="outline" 
-                          size="sm" 
-                          onClick={() => handleSearchExternal('unsplash')}
-                          className="text-[9px] font-black uppercase tracking-widest h-8 rounded-none border-2 border-black/10 gap-2 flex-grow"
-                        >
-                          <ImageIcon size={10} /> Search Unsplash
-                        </Button>
-                        <Button 
-                          type="button" 
-                          variant="outline" 
-                          size="sm" 
-                          onClick={() => handleSearchExternal('google')}
-                          className="text-[9px] font-black uppercase tracking-widest h-8 rounded-none border-2 border-black/10 gap-2 flex-grow"
-                        >
-                          <Search size={10} /> Search Google
-                        </Button>
-                     </div>
-                   </div>
-                   <div className="space-y-3">
-                     <Label className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                       <Search size={12} /> Focus Keyword (SEO)
-                     </Label>
-                     <Input 
-                       value={formData.focusKeyword}
-                       onChange={(e) => setFormData({...formData, focusKeyword: e.target.value})}
-                       placeholder="AI akan menyarankan jika dikosongkan"
-                       className="rounded-none border-2 border-primary/20 h-12 text-[11px] font-bold"
-                     />
-                     <p className="text-[9px] text-muted-foreground italic">Keyword ini akan digunakan AI untuk menulis artikel teroptimasi.</p>
-                   </div>
+                <div className="space-y-4">
+                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center justify-between">
+                     <span className="flex items-center gap-2"><ImageIcon size={12} /> Featured Image URL</span>
+                     <Button 
+                       variant="link" 
+                       onClick={() => setIsPickerOpen(true)}
+                       className="h-auto p-0 text-[9px] font-black uppercase text-primary tracking-widest flex items-center gap-1"
+                     >
+                       <MousePointer2 size={10} /> Browse Library
+                     </Button>
+                   </Label>
+                   <Input 
+                     value={formData.image}
+                     onChange={(e) => setFormData({...formData, image: e.target.value})}
+                     placeholder="URL Gambar (Direct Link)"
+                     className="rounded-none border-2 border-black/10 h-12 text-[11px] font-bold"
+                   />
                 </div>
 
-                <div className="space-y-4">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Article Title</Label>
-                  <Input 
-                    value={formData.title}
-                    onChange={(e) => setFormData({...formData, title: e.target.value})}
-                    placeholder="Masukkan judul artikel..."
-                    className="rounded-none border-2 border-black/10 h-14 text-xl font-black uppercase tracking-tight"
-                  />
-                  <Button
-                    type="button"
-                    onClick={handleGenerateAI}
-                    disabled={isGenerating}
-                    className="bg-black text-white hover:bg-primary rounded-none h-12 px-8 gap-3 font-bold uppercase tracking-widest text-[10px]"
-                  >
-                    {isGenerating ? <Loader2 className="animate-spin h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
-                    {isGenerating ? 'AI Sedang Menulis & Memilih Gambar Relevan...' : 'Buat Artikel Instan (Full SEO)'}
-                  </Button>
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                    <div className="md:col-span-1 space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                        <Search size={12} /> Focus Keyword (SEO)
+                      </Label>
+                      <Input 
+                        value={formData.focusKeyword}
+                        onChange={(e) => setFormData({...formData, focusKeyword: e.target.value})}
+                        placeholder="Keyword Utama"
+                        className="rounded-none border-2 border-primary/20 h-14 text-[11px] font-bold"
+                      />
+                    </div>
+                    <div className="md:col-span-2 space-y-2">
+                      <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Article Title</Label>
+                      <div className="flex flex-col md:flex-row gap-2">
+                        <Input 
+                          value={formData.title}
+                          onChange={(e) => setFormData({...formData, title: e.target.value})}
+                          placeholder="Judul Artikel..."
+                          className="rounded-none border-2 border-black/10 h-14 text-xl font-black uppercase tracking-tight flex-grow"
+                        />
+                        <Button
+                          type="button"
+                          onClick={handleGenerateAI}
+                          disabled={isGenerating}
+                          className="bg-black text-white hover:bg-primary rounded-none h-14 px-8 gap-3 font-bold uppercase tracking-widest text-[10px] shrink-0"
+                        >
+                          {isGenerating ? <Loader2 className="animate-spin h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
+                          {isGenerating ? 'AI Writing...' : 'Buat Artikel Instan'}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-[9px] text-muted-foreground italic -mt-4">Keyword ini akan digunakan AI untuk menulis artikel teroptimasi.</p>
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Article Content (Markdown)</Label>
-                  <Textarea 
-                    value={formData.content}
-                    onChange={(e) => setFormData({...formData, content: e.target.value})}
-                    placeholder="Konten akan muncul di sini..."
-                    className="rounded-none border-2 border-black/10 min-h-[600px] font-medium leading-loose p-8 text-sm"
-                  />
+                  <div className="border-2 border-black/10">
+                    <Textarea 
+                      value={formData.content}
+                      onChange={(e) => setFormData({...formData, content: e.target.value})}
+                      placeholder="Konten akan muncul di sini..."
+                      className="rounded-none border-none min-h-[600px] font-medium leading-loose p-8 text-sm focus-visible:ring-0"
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>
