@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -34,10 +33,10 @@ const StoriesPage = () => {
   const heroImage = (storiesConfigHero && storiesConfigHero.trim() !== "") ? storiesConfigHero : storiesPlaceholderHero;
 
   const categoryData = [
-    { id: 'sejarah', title: 'Sejarah & Warisan', categoryName: 'Sejarah', icon: <History className="h-5 w-5" /> },
-    { id: 'sosial', title: 'Masyarakat & Budaya', categoryName: 'Sosial', icon: <Users className="h-5 w-5" /> },
-    { id: 'geografis', title: 'Bentang Alam & Geografis', categoryName: 'Geografis', icon: <Globe className="h-5 w-5" /> },
-    { id: 'tips', title: 'Tips & Panduan', categoryName: 'Tips', icon: <Info className="h-5 w-5" /> }
+    { id: 'sejarah', title: 'History & Heritage', categoryName: 'History & Heritage', icon: <History className="h-5 w-5" /> },
+    { id: 'sosial', title: 'People & Culture', categoryName: 'People & Culture', icon: <Users className="h-5 w-5" /> },
+    { id: 'geografis', title: 'Geography & Landscape', categoryName: 'Geography & Landscape', icon: <Globe className="h-5 w-5" /> },
+    { id: 'tips', title: 'Travel Tips', categoryName: 'Travel Tips', icon: <Info className="h-5 w-5" /> }
   ];
 
   const chunkIntoPairs = (arr: any[]) => {

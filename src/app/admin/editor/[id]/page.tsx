@@ -48,7 +48,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     content: '',
     image: '',
     metaTitle: '',
-    category: queryType === 'destination' ? 'Nature & Adventure' : 'Sejarah',
+    category: queryType === 'destination' ? 'Nature & Adventure' : 'History & Heritage',
     type: queryType,
     date: '', 
     author: 'Admin Lokal',
@@ -78,7 +78,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         content: article.content || '',
         image: article.image || '',
         metaTitle: article.metaTitle || '',
-        category: article.category || (article.type === 'destination' ? 'Nature & Adventure' : 'Sejarah'),
+        category: article.category || (article.type === 'destination' ? 'Nature & Adventure' : 'History & Heritage'),
         type: article.type || 'destination',
         date: article.date || getTodayFormatted(),
         author: article.author || 'Admin Lokal',
@@ -296,10 +296,10 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                       </>
                     ) : (
                       <>
-                        <SelectItem value="Sejarah">Sejarah</SelectItem>
-                        <SelectItem value="Sosial">Sosial</SelectItem>
-                        <SelectItem value="Geografis">Geografis</SelectItem>
-                        <SelectItem value="Tips">Tips</SelectItem>
+                        <SelectItem value="History & Heritage">History & Heritage</SelectItem>
+                        <SelectItem value="People & Culture">People & Culture</SelectItem>
+                        <SelectItem value="Geography & Landscape">Geography & Landscape</SelectItem>
+                        <SelectItem value="Travel Tips">Travel Tips</SelectItem>
                       </>
                     )}
                   </SelectContent>
