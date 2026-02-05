@@ -1,8 +1,8 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter, useParams, useSearchParams } from 'next/navigation';
+import React, { useState, useEffect, use } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser, useFirestore, useDoc } from '@/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
@@ -16,10 +16,13 @@ import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import Link from 'next/link';
 
-const ArticleEditorPage = () => {
-  const params = useParams();
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+const ArticleEditorPage = ({ params }: PageProps) => {
+  const { id } = use(params);
   const searchParams = useSearchParams();
-  const id = params.id as string;
   const isNew = id === 'new';
   const { user, isUserLoading } = useUser();
   const db = useFirestore();
@@ -199,10 +202,7 @@ const ArticleEditorPage = () => {
 
                 <div className="space-y-2">
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Content Type</Label>
-                  <Select value={formData.type} onValueChange={(val: any) => setFormData({...formData, type: val, category: val === 'destination' ? 'Alam' : 'Sejarah'})}>
-                    <SelectTrigger className="rounded-none border-2 text-xs font-bold"><SelectValue /></SelectTrigger>
-                    <SelectContent><SelectItem value="destination">Destination</SelectItem><SelectItem value="story">Story</SelectItem></SelectContent>
-                  </Select>
+                  <div className="h-10 border-2 px-3 flex items-center text-xs font-bold bg-muted/20 uppercase">{formData.type}</div>
                 </div>
 
                 <div className="space-y-2">

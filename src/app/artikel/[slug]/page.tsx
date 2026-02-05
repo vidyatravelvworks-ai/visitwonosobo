@@ -1,19 +1,21 @@
 
 'use client';
 
-import React from 'react';
+import React, { use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import { Calendar, Tag, ChevronLeft, Loader2 } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { articles as staticArticles } from '@/data/articles';
 
-const ArticleDetailPage = () => {
-  const params = useParams();
-  const slug = params.slug as string;
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+const ArticleDetailPage = ({ params }: PageProps) => {
+  const { slug } = use(params);
   const db = useFirestore();
 
   const docRef = useMemoFirebase(() => {

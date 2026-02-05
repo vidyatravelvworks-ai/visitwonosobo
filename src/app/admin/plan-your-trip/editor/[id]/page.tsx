@@ -1,8 +1,8 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import React, { useState, useEffect, use } from 'react';
+import { useRouter } from 'next/navigation';
 import { useUser, useFirestore, useDoc } from '@/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
@@ -15,9 +15,12 @@ import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import Link from 'next/link';
 
-const TripPackageEditorPage = () => {
-  const params = useParams();
-  const id = params.id as string;
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+const TripPackageEditorPage = ({ params }: PageProps) => {
+  const { id } = use(params);
   const isNew = id === 'new';
   const { user, isUserLoading } = useUser();
   const db = useFirestore();
