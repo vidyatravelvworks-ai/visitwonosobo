@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -26,12 +25,16 @@ const Hero = ({ config: externalConfig, isLoading: externalLoading }: HeroProps)
   const configHomeHero = config?.heroImages?.home;
   const placeholderHomeHero = PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl || 'https://picsum.photos/seed/wonosobo-home/1200/800';
   
-  // Gambar yang akan ditampilkan setelah loading selesai
+  // Gambar yang akan ditampilkan: Utamakan dari config, jika config sudah terisi namun kosong baru gunakan placeholder
   const heroImage = (configHomeHero && configHomeHero.trim() !== "") ? configHomeHero : placeholderHomeHero;
 
   return (
     <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black">
-      {/* Hanya tampilkan gambar jika proses pemuatan data selesai */}
+      {/* 
+        Sangat Ketat: Hanya tampilkan gambar jika isLoading sudah FALSE.
+        Karena isLoading dimulai dengan TRUE di hook, maka pada render pertama 
+        sebelum data siap, bagian ini akan dilewati dan hanya menampilkan bg-black.
+      */}
       {!isLoading && (
         <div className="absolute inset-0 z-0">
           <Image
@@ -45,7 +48,6 @@ const Hero = ({ config: externalConfig, isLoading: externalLoading }: HeroProps)
         </div>
       )}
 
-      {/* Konten Hero tetap ada namun dengan transisi halus saat data siap */}
       <div className="container mx-auto px-2 md:px-8 lg:px-32 relative z-10 text-center pt-32">
         <div className="max-w-4xl mx-auto space-y-8">
           <h2 className="text-white text-sm font-bold uppercase tracking-[0.4em]">Welcome to Wonosobo</h2>
