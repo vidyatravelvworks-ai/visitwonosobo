@@ -9,6 +9,7 @@ import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { articles as staticArticles } from '@/data/articles';
+import ReactMarkdown from 'react-markdown';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -96,12 +97,22 @@ const ArticleDetailPage = ({ params }: PageProps) => {
             </p>
           </div>
 
-          <div className="max-w-none text-foreground/80 leading-loose space-y-8 font-body">
-            {article.content.split('\n').filter((p: string) => p.trim()).map((paragraph: string, idx: number) => (
-              <p key={idx} className="text-sm font-medium tracking-wide">
-                {paragraph.trim()}
-              </p>
-            ))}
+          <div className="max-w-none text-foreground/80 leading-loose font-body">
+            <ReactMarkdown
+              components={{
+                p: ({ children }) => <p className="mb-8 text-sm font-medium tracking-wide leading-loose">{children}</p>,
+                h2: ({ children }) => <h2 className="text-2xl font-black uppercase tracking-tight mt-12 mb-6 text-black border-b-2 border-primary w-fit pb-1">{children}</h2>,
+                h3: ({ children }) => <h3 className="text-xl font-black uppercase tracking-tight mt-10 mb-4 text-black">{children}</h3>,
+                strong: ({ children }) => <strong className="font-black text-black">{children}</strong>,
+                em: ({ children }) => <em className="italic text-primary font-bold">{children}</em>,
+                ul: ({ children }) => <ul className="list-disc list-inside mb-8 space-y-2">{children}</ul>,
+                ol: ({ children }) => <ol className="list-decimal list-inside mb-8 space-y-2">{children}</ol>,
+                li: ({ children }) => <li className="text-sm font-medium">{children}</li>,
+                blockquote: ({ children }) => <blockquote className="border-l-4 border-primary bg-secondary/20 p-6 my-8 italic font-medium">{children}</blockquote>,
+              }}
+            >
+              {article.content}
+            </ReactMarkdown>
           </div>
 
           <div className="mt-20 pt-16 border-t border-border flex flex-col items-center text-center space-y-8">
