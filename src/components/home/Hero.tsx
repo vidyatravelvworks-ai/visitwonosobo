@@ -14,31 +14,38 @@ interface HeroProps {
   isLoading?: boolean;
 }
 
-const Hero = ({ config: externalConfig }: HeroProps) => {
+const Hero = ({ config: externalConfig, isLoading: externalLoading }: HeroProps) => {
   const db = useFirestore();
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
-  const { data: internalConfig } = useDoc(configRef);
+  const { data: internalConfig, isLoading: internalLoading } = useDoc(configRef);
 
+  // Menggabungkan status loading dari props atau internal hook
+  const isLoading = externalLoading !== undefined ? externalLoading : internalLoading;
   const config = externalConfig !== undefined ? externalConfig : internalConfig;
 
   const configHomeHero = config?.heroImages?.home;
   const placeholderHomeHero = PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl || 'https://picsum.photos/seed/wonosobo-home/1200/800';
   
+  // Gambar yang akan ditampilkan setelah loading selesai
   const heroImage = (configHomeHero && configHomeHero.trim() !== "") ? configHomeHero : placeholderHomeHero;
 
   return (
     <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black">
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={heroImage}
-          alt="Home Hero"
-          fill
-          className="object-cover animate-in fade-in duration-1000"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/30 bg-gradient-to-b from-black/50 via-transparent to-black/60" />
-      </div>
+      {/* Hanya tampilkan gambar jika proses pemuatan data selesai */}
+      {!isLoading && (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={heroImage}
+            alt="Home Hero"
+            fill
+            className="object-cover animate-in fade-in duration-1000"
+            priority
+          />
+          <div className="absolute inset-0 bg-black/30 bg-gradient-to-b from-black/50 via-transparent to-black/60" />
+        </div>
+      )}
 
+      {/* Konten Hero tetap ada namun dengan transisi halus saat data siap */}
       <div className="container mx-auto px-2 md:px-8 lg:px-32 relative z-10 text-center pt-32">
         <div className="max-w-4xl mx-auto space-y-8">
           <h2 className="text-white text-sm font-bold uppercase tracking-[0.4em]">Welcome to Wonosobo</h2>
