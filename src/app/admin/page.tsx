@@ -297,7 +297,7 @@ const AdminDashboard = () => {
                  <div className="col-span-full py-20 text-center text-[10px] font-black uppercase text-muted-foreground">No images in gallery yet.</div>
                ) : allGallery?.map(g => (
                  <div key={g.id} className="relative group aspect-square bg-gray-100 border overflow-hidden">
-                    <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />
+                    {g.url && <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />}
                     <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
                       <p className="text-[9px] font-black text-white uppercase tracking-tighter leading-tight mb-2">{g.caption}</p>
                       <div className="text-[8px] font-bold text-primary uppercase">Order: {g.order}</div>
