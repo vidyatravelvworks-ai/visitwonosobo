@@ -18,7 +18,7 @@ const Footer = () => {
   if (isExcludedPage) return null;
 
   return (
-    <footer className="bg-white border-t py-20 px-6">
+    <footer className="bg-white border-t py-0 px-6">
       <div className="container mx-auto px-0 md:px-8 lg:px-32">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-16 mb-20">
           {/* Kolom 1: 40% lebar (span 2 dari 5) */}
