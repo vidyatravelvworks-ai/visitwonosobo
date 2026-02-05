@@ -243,7 +243,7 @@ const AdminDashboard = () => {
                 <div className="w-32 shrink-0 flex flex-col items-stretch">
                   <div className="h-5"></div> {/* Offset for top label on the right */}
                   <div className="flex-grow bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden">
-                    {galleryForm.url ? (
+                    {galleryForm.url && galleryForm.url.trim() !== "" ? (
                       <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
                     ) : (
                       <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2 px-2 text-center">
@@ -255,7 +255,7 @@ const AdminDashboard = () => {
                 </div>
                 <div className="flex-grow space-y-4">
                   <div className="space-y-1">
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <Label className="text-[10px] font-black uppercase">Image URL</Label>
                     </div>
                     <Input 
