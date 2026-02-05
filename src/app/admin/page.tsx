@@ -8,7 +8,7 @@ import { collection, doc, deleteDoc, query, orderBy } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, Search, Map, BookOpen } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, LayoutDashboard, Search, Map, BookOpen, MapPin, Globe } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
@@ -135,6 +135,32 @@ const AdminDashboard = () => {
           >
             <BookOpen size={18} />
             <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">Stories Articles</span>
+          </Button>
+
+          <div className="pt-6 pb-2">
+            <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mb-2">Quick Access</p>
+          </div>
+
+          <Button 
+            variant="ghost" 
+            asChild
+            className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all"
+          >
+            <Link href="/plan-your-trip" target="_blank" className="flex items-center gap-3">
+              <MapPin size={18} />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">Plan Your Trip</span>
+            </Link>
+          </Button>
+
+          <Button 
+            variant="ghost" 
+            asChild
+            className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all"
+          >
+            <Link href="/" target="_blank" className="flex items-center gap-3">
+              <Globe size={18} />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">View Website</span>
+            </Link>
           </Button>
         </nav>
 
