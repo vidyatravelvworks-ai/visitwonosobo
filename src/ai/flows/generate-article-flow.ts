@@ -55,8 +55,15 @@ const generateArticleFlow = ai.defineFlow(
     outputSchema: GenerateArticleOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
-    if (!output) throw new Error('Gagal menghasilkan konten artikel.');
-    return output;
+    try {
+      const { output } = await prompt(input);
+      if (!output) throw new Error('Gagal menghasilkan konten artikel.');
+      return output;
+    } catch (error: any) {
+      if (error.message?.includes('429') || error.message?.includes('quota')) {
+        throw new Error('QUOTA_EXCEEDED: Batas penggunaan AI gratis tercapai. Harap tunggu 30-60 detik.');
+      }
+      throw error;
+    }
   }
 );

@@ -31,7 +31,7 @@ const AdminDashboard = () => {
 
   const handleDelete = async (e: React.MouseEvent, id: string) => {
     e.preventDefault();
-    e.stopPropagation(); // Mencegah interaksi dengan elemen induk
+    e.stopPropagation();
     if (!db) return;
     
     const confirmed = window.prompt(`Ketik "hapus" untuk mengonfirmasi penghapusan:`);

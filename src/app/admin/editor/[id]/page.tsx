@@ -114,9 +114,16 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         slug: prev.slug || formData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
       }));
       toast({ title: 'Berhasil', description: 'Artikel SEO 100% telah dibuat.' });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast({ variant: 'destructive', title: 'Gagal', description: 'Terjadi kesalahan pada AI Write.' });
+      const isQuota = error.message?.includes('QUOTA_EXCEEDED') || error.message?.includes('429');
+      toast({ 
+        variant: 'destructive', 
+        title: isQuota ? 'Kuota AI Habis' : 'Gagal', 
+        description: isQuota 
+          ? 'Batas penggunaan gratis tercapai. Mohon tunggu 60 detik sebelum mencoba lagi.' 
+          : 'Terjadi kesalahan pada AI Write.' 
+      });
     } finally {
       setIsGenerating(false);
     }
@@ -196,10 +203,10 @@ const ArticleEditorPage = ({ params }: PageProps) => {
       </div>
 
       <div className="max-w-7xl mx-auto w-full p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-3 space-y-4">
+        <div className="lg:col-span-3 space-y-3">
           <Card className="rounded-none border-2 shadow-sm">
-            <CardContent className="p-6 space-y-4">
-              <div className="space-y-2">
+            <CardContent className="p-6 space-y-3">
+              <div className="space-y-1">
                 <Label className="text-[10px] font-black uppercase flex justify-between">
                   <span>Featured Image URL</span>
                   <button onClick={() => setIsPickerOpen(true)} className="text-primary hover:underline">Browse Library</button>
@@ -207,18 +214,18 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                 <Input value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="rounded-none h-9 text-xs" />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <Label className="text-[10px] font-black uppercase">Article Title</Label>
                 <Input value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="rounded-none h-12 text-lg font-black uppercase w-full" />
               </div>
 
-              <div className="grid grid-cols-10 gap-4 items-end">
-                <div className="col-span-6 space-y-2">
+              <div className="grid grid-cols-10 gap-3 items-end">
+                <div className="col-span-6 space-y-1">
                   <Label className="text-[10px] font-black uppercase text-primary">Focus Keyword</Label>
                   <Input value={formData.focusKeyword} onChange={e => setFormData({...formData, focusKeyword: e.target.value})} className="rounded-none h-12 text-xs border-primary/30" placeholder="e.g. Wisata Dieng" />
                 </div>
                 <div className="col-span-4">
-                  <Button onClick={handleGenerateAI} disabled={isGenerating} className="w-full bg-black text-white h-12 rounded-none text-[10px] font-black uppercase gap-2">
+                  <Button onClick={handleGenerateAI} disabled={isGenerating} className="w-full bg-black text-white h-12 rounded-none text-[10px] font-black uppercase gap-2 hover:bg-primary transition-colors">
                     {isGenerating ? <Loader2 className="animate-spin h-4 w-4" /> : <Sparkles size={14} />} Buat Artikel Instan
                   </Button>
                 </div>
