@@ -310,7 +310,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
               <div className="space-y-1">
                 <Label className="text-[8px] font-black uppercase">Category</Label>
                 <Select value={formData.category} onValueChange={v => setFormData({...formData, category: v})}>
-                  <SelectTrigger className="h-8 text-[8px] rounded-none"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="h-8 text-xs rounded-none"><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {formData.type === 'destination' ? (
                       <>
