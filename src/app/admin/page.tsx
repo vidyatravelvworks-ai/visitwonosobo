@@ -271,22 +271,9 @@ const AdminDashboard = () => {
                       placeholder="Description..."
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <Label className="text-[10px] font-black uppercase">Display Order</Label>
-                      <Input 
-                        type="number" 
-                        value={galleryForm.order} 
-                        onChange={e => setGalleryForm({...galleryForm, order: parseInt(e.target.value) || 0})} 
-                        className="rounded-none border-2 h-10 text-xs" 
-                      />
-                    </div>
-                    <div className="flex items-end">
-                      <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-10 font-black uppercase text-[10px] tracking-widest gap-2">
-                        <Save size={14} /> Save Image
-                      </Button>
-                    </div>
-                  </div>
+                  <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-10 font-black uppercase text-[10px] tracking-widest gap-2">
+                    <Save size={14} /> Save Image
+                  </Button>
                 </div>
               </div>
             </Card>
