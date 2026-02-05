@@ -4,8 +4,8 @@ service cloud.firestore {
 
     /**
      * FIREBASE SECURITY RULES
-     * Memastikan akses publik untuk membaca artikel dan paket trip, 
-     * namun membatasi penulisan hanya untuk akun administrator terverifikasi.
+     * Memastikan akses publik untuk membaca konten website, 
+     * namun membatasi penulisan hanya untuk akun administrator.
      */
 
     function isSignedIn() {
@@ -35,6 +35,18 @@ service cloud.firestore {
     match /trip_packages/{packageId} {
       allow get, list: if true;
       allow create, update, delete: if isAdmin();
+    }
+
+    // --- Aturan Koleksi Galeri ---
+    match /gallery/{imageId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // --- Aturan Koleksi Konfigurasi (Hero, Design, etc) ---
+    match /config/{configId} {
+      allow get: if true;
+      allow write: if isAdmin();
     }
 
     match /roles_admin/{userId} {
