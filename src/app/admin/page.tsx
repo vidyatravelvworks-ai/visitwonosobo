@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -109,6 +110,16 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDeletePackage = async (id: string) => {
+    if (!window.confirm('Hapus paket trip ini?')) return;
+    try {
+      await deleteDoc(doc(db!, 'trip_packages', id));
+      toast({ title: 'Berhasil', description: 'Paket trip telah dihapus.' });
+    } catch (error) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus.' });
+    }
+  };
+
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -203,7 +214,7 @@ const AdminDashboard = () => {
                       <TableCell className="py-1 px-4"><Badge className="bg-primary rounded-none text-[8px] uppercase">{p.price}</Badge></TableCell>
                       <TableCell className="py-1 px-4 text-right space-x-1">
                         <Button variant="ghost" size="icon" className="h-7 w-7" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={12}/></Link></Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => deleteDoc(db!, 'trip_packages', p.id)}><Trash2 size={12}/></Button>
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => handleDeletePackage(p.id)}><Trash2 size={12}/></Button>
                       </TableCell>
                     </TableRow>
                   ))
@@ -307,7 +318,7 @@ const AdminDashboard = () => {
                   <Input 
                     placeholder="Image URL" 
                     value={item.url} 
-                    onChange={(e) => setDoc(db!, 'gallery', item.id), { ...item, url: e.target.value })}
+                    onChange={(e) => setDoc(doc(db!, 'gallery', item.id), { ...item, url: e.target.value })}
                     className="rounded-none border-2 text-[9px] h-8"
                   />
                   <div className="flex gap-2">
@@ -315,7 +326,7 @@ const AdminDashboard = () => {
                       placeholder="Order" 
                       type="number"
                       value={item.order} 
-                      onChange={(e) => setDoc(db!, 'gallery', item.id), { ...item, order: parseInt(e.target.value) })}
+                      onChange={(e) => setDoc(doc(db!, 'gallery', item.id), { ...item, order: parseInt(e.target.value) || 0 })}
                       className="rounded-none border-2 text-[9px] h-8 w-20"
                     />
                     <Button variant="ghost" className="text-red-600 h-8 px-2 ml-auto" onClick={() => handleDeleteGallery(item.id)}><Trash2 size={14}/></Button>
