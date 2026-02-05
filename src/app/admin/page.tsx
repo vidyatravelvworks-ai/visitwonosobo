@@ -11,7 +11,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save } from 'lucide-react';
+import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { getAuth, signOut } from 'firebase/auth';
@@ -29,6 +29,7 @@ const AdminDashboard = () => {
   const [isSavingConfig, setIsSavingConfig] = useState(false);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [galleryForm, setGalleryForm] = useState({ url: '', caption: '', order: 0 });
+  const [tableSearch, setTableSearch] = useState('');
 
   useEffect(() => {
     if (!isUserLoading && !user) router.push('/login');
@@ -120,9 +121,16 @@ const AdminDashboard = () => {
   if (isUserLoading || !user) return <div className="h-screen flex items-center justify-center font-black uppercase text-xs tracking-widest">Authenticating...</div>;
 
   const filteredArticles = allArticles?.filter(a => {
-    if (currentView === 'see-and-do') return a.type === 'destination';
-    if (currentView === 'stories') return a.type === 'story';
+    const matchesSearch = a.title?.toLowerCase().includes(tableSearch.toLowerCase()) || 
+                         a.category?.toLowerCase().includes(tableSearch.toLowerCase());
+    if (currentView === 'see-and-do') return a.type === 'destination' && matchesSearch;
+    if (currentView === 'stories') return a.type === 'story' && matchesSearch;
     return false;
+  }) || [];
+
+  const filteredPackages = allPackages?.filter(p => {
+    return p.title?.toLowerCase().includes(tableSearch.toLowerCase()) || 
+           p.price?.toLowerCase().includes(tableSearch.toLowerCase());
   }) || [];
 
   const isLoading = isArticlesLoading || isPkgsLoading || isGalleryLoading || isConfigLoading;
@@ -258,9 +266,19 @@ const AdminDashboard = () => {
               <Table>
                 <TableHeader className="bg-secondary/50">
                   <TableRow>
-                    <TableHead className="text-[10px] font-black uppercase tracking-widest py-4">Preview</TableHead>
-                    <TableHead className="text-[10px] font-black uppercase tracking-widest">CATEGORY</TableHead>
-                    <TableHead className="text-[10px] font-black uppercase tracking-widest text-right">Actions</TableHead>
+                    <TableHead className="p-0 min-w-[320px] border-r">
+                      <div className="relative flex items-center h-full">
+                        <Search className="absolute left-4 h-3 w-3 text-muted-foreground" />
+                        <Input 
+                          placeholder="SEARCH CONTENT..." 
+                          value={tableSearch}
+                          onChange={(e) => setTableSearch(e.target.value)}
+                          className="pl-10 h-12 border-none rounded-none text-[10px] font-black uppercase focus-visible:ring-0 bg-transparent w-full"
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest px-6">CATEGORY</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest text-right px-6">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -273,13 +291,13 @@ const AdminDashboard = () => {
                           <div className="w-32 h-16 bg-gray-100 border overflow-hidden shrink-0">
                             {a.image && <img src={a.image} className="w-full h-full object-cover" alt={a.title} />}
                           </div>
-                          <div className="flex flex-col justify-center max-w-md pr-4">
+                          <div className="flex flex-col justify-center max-w-md pr-4 py-2">
                             <div className="font-black uppercase text-[11px] leading-tight truncate">{a.title}</div>
                             <div className="text-[8px] text-muted-foreground uppercase mt-1 font-bold tracking-wider">{a.date} | {a.author || 'Admin'}</div>
                           </div>
                         </TableCell>
-                        <TableCell className="py-2 px-4"><Badge className="rounded-none text-[8px] uppercase font-black px-2">{getCategoryLabel(a.category)}</Badge></TableCell>
-                        <TableCell className="py-2 px-4 text-right">
+                        <TableCell className="py-2 px-6"><Badge className="rounded-none text-[8px] uppercase font-black px-2">{getCategoryLabel(a.category)}</Badge></TableCell>
+                        <TableCell className="py-2 px-6 text-right">
                           <div className="flex justify-end gap-2">
                             <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={14}/></Link></Button>
                           </div>
@@ -289,9 +307,9 @@ const AdminDashboard = () => {
                   )}
 
                   {currentView === 'packages' && (
-                    allPackages?.length === 0 ? (
+                    filteredPackages?.length === 0 ? (
                       <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No packages found.</TableCell></TableRow>
-                    ) : allPackages?.map(p => (
+                    ) : filteredPackages?.map(p => (
                       <TableRow key={p.id} className="hover:bg-secondary/10 border-b">
                         <TableCell className="py-2 px-4">
                           <div className="flex flex-col">
@@ -299,8 +317,8 @@ const AdminDashboard = () => {
                             <div className="text-[8px] text-muted-foreground uppercase mt-1 font-bold tracking-wider">{p.time}</div>
                           </div>
                         </TableCell>
-                        <TableCell className="py-2 px-4"><span className="text-[10px] font-black text-primary">{p.price}</span></TableCell>
-                        <TableCell className="py-2 px-4 text-right">
+                        <TableCell className="py-2 px-6"><span className="text-[10px] font-black text-primary">{p.price}</span></TableCell>
+                        <TableCell className="py-2 px-6 text-right">
                           <div className="flex justify-end gap-2">
                             <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={14}/></Link></Button>
                           </div>
@@ -319,8 +337,8 @@ const AdminDashboard = () => {
                             {g.url && <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />}
                           </div>
                         </TableCell>
-                        <TableCell className="py-2 px-4"><span className="text-[10px] font-bold uppercase">{g.caption}</span></TableCell>
-                        <TableCell className="py-2 px-4 text-right">
+                        <TableCell className="py-2 px-6"><span className="text-[10px] font-bold uppercase">{g.caption}</span></TableCell>
+                        <TableCell className="py-2 px-6 text-right">
                         </TableCell>
                       </TableRow>
                     ))
