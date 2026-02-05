@@ -1,4 +1,3 @@
-
 export interface Article {
   slug: string;
   title: string;
@@ -20,7 +19,7 @@ export const articles: Article[] = [
     slug: 'bukit-sikunir-wonosobo',
     title: 'Bukit Sikunir: Menikmati Golden Sunrise di Desa Tertinggi Jawa',
     excerpt: 'Bukit Sikunir menawarkan fenomena matahari terbit keemasan yang mempesona di ketinggian 2.263 mdpl.',
-    category: 'Alam',
+    category: 'Nature & Adventure',
     type: 'destination',
     date: '12 Feb 2025',
     image: 'https://images.unsplash.com/photo-1595495745827-85bcc5c9a028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
@@ -34,7 +33,7 @@ Gunung Sindoro yang berdiri gagah di seberang lembah menjadi latar belakang yang
     slug: 'telaga-warna-dieng',
     title: 'Telaga Warna: Rahasia Geologis di Balik Keindahan Air Tiga Warna',
     excerpt: 'Keajaiban geologis di mana air danau berubah warna karena interaksi kimiawi belerang purba.',
-    category: 'Alam',
+    category: 'Nature & Adventure',
     type: 'destination',
     date: '15 Feb 2025',
     image: 'https://images.unsplash.com/photo-1588666309990-d68f08e3d4a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
@@ -48,7 +47,7 @@ Bagi para fotografer, setiap sudut telaga ini menawarkan komposisi visual yang s
     slug: 'purwaceng-herbal',
     title: 'Purwaceng: Mengenal Tanaman Herbal Stamina dari Lereng Gunung',
     excerpt: 'Minuman herbal berkhasiat tinggi yang berasal dari tanaman endemik langka di Dataran Tinggi Dieng.',
-    category: 'Kuliner',
+    category: 'Food & Drink',
     type: 'destination',
     date: '12 Mar 2025',
     image: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
@@ -62,7 +61,7 @@ Kini, Purwaceng telah diolah secara modern menjadi berbagai produk praktis seper
     slug: 'mie-ongklok-legenda',
     title: 'Mie Ongklok: Mengenal Kuliner Paling Legendaris di Wonosobo',
     excerpt: 'Menikmati sajian mie legendaris dengan kuah kental gurih yang menghangatkan tubuh di tengah dinginnya Wonosobo.',
-    category: 'Kuliner',
+    category: 'Food & Drink',
     type: 'destination',
     date: '05 Feb 2025',
     image: 'https://images.unsplash.com/photo-1611834094235-f5478935310b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
@@ -76,7 +75,7 @@ Setiap suapan Mie Ongklok membawa narasi tentang sejarah kuliner lokal yang diwa
     slug: 'kawah-sikidang-aktif',
     title: 'Kawah Sikidang: Menjelajahi Lapangan Vulkanik Paling Aktif di Dieng',
     excerpt: 'Menjelajahi kawah aktif paling dinamis di Dieng dengan jembatan kayu estetik dan fenomena lumpur mendidih.',
-    category: 'Alam',
+    category: 'Nature & Adventure',
     type: 'destination',
     date: '18 Feb 2025',
     image: 'https://images.unsplash.com/photo-1621210179040-79883901b072?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
@@ -90,7 +89,7 @@ Kawah ini bukan hanya objek wisata, melainkan laboratorium alam yang hidup bagi 
     slug: 'kompleks-candi-arjuna',
     title: 'Kompleks Candi Arjuna: Jejak Spiritual Hindu Tertua di Tanah Jawa',
     excerpt: 'Menelusuri situs candi Hindu tertua di Jawa yang tetap berdiri kokoh di tengah lembah berkabut yang sakral.',
-    category: 'Budaya',
+    category: 'Heritage & Culture',
     type: 'destination',
     date: '15 Feb 2025',
     image: 'https://images.unsplash.com/photo-1650432602350-d1d86aafd55b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',

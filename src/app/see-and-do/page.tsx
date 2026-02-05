@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -34,9 +33,9 @@ const SeeAndDoPage = () => {
   const heroImage = (configHero && configHero.trim() !== "") ? configHero : placeholderHero;
 
   const categoryData = [
-    { id: 'nature', title: 'Nature & Adventure', categoryName: 'Alam', icon: <Sunrise className="h-5 w-5" />, description: 'Witness the iconic Golden Sunrise at Sikunir.' },
-    { id: 'culture', title: 'Heritage & Culture', categoryName: 'Budaya', icon: <Map className="h-5 w-5" />, description: 'Explore ancient Arjuna Temple and mystical rituals.' },
-    { id: 'eat', title: 'Food & Drink', categoryName: 'Kuliner', icon: <Utensils className="h-5 w-5" />, description: 'Taste the legendary Mie Ongklok and Carica.' }
+    { id: 'nature', title: 'Nature & Adventure', categoryName: 'Nature & Adventure', icon: <Sunrise className="h-5 w-5" />, description: 'Witness the iconic Golden Sunrise at Sikunir.' },
+    { id: 'culture', title: 'Heritage & Culture', categoryName: 'Heritage & Culture', icon: <Map className="h-5 w-5" />, description: 'Explore ancient Arjuna Temple and mystical rituals.' },
+    { id: 'eat', title: 'Food & Drink', categoryName: 'Food & Drink', icon: <Utensils className="h-5 w-5" />, description: 'Taste the legendary Mie Ongklok and Carica.' }
   ];
 
   const chunkIntoPairs = (arr: any[]) => {
@@ -70,7 +69,7 @@ const SeeAndDoPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
             {categoryData.map((cat) => {
               const catConfigImg = config?.categoryImages?.[cat.categoryName];
-              const catPlaceholder = PlaceHolderImages.find(img => img.id === (cat.categoryName === 'Alam' ? 'hero-sikunir' : cat.categoryName === 'Budaya' ? 'candi-arjuna' : 'mie-ongklok'))?.imageUrl;
+              const catPlaceholder = PlaceHolderImages.find(img => img.id === (cat.id === 'nature' ? 'hero-sikunir' : cat.id === 'culture' ? 'candi-arjuna' : 'mie-ongklok'))?.imageUrl;
               const catImg = (catConfigImg && catConfigImg.trim() !== "") ? catConfigImg : (catPlaceholder || `https://picsum.photos/seed/${cat.id}/800/1000`);
 
               return (

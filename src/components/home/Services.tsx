@@ -17,25 +17,25 @@ const Services = () => {
     {
       id: 'nature',
       title: 'Nature & Adventure',
-      categoryName: 'Alam',
+      categoryName: 'Nature & Adventure',
       description: 'Witness the iconic Golden Sunrise at Sikunir.',
-      image: config?.categoryImages?.['Alam'] || PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl,
+      image: config?.categoryImages?.['Nature & Adventure'] || PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl,
       icon: <Sunrise className="h-5 w-5" />
     },
     {
       id: 'culture',
       title: 'Heritage & Culture',
-      categoryName: 'Budaya',
+      categoryName: 'Heritage & Culture',
       description: 'Explore ancient Arjuna Temple and mystical rituals.',
-      image: config?.categoryImages?.['Budaya'] || PlaceHolderImages.find(img => img.id === 'candi-arjuna')?.imageUrl,
+      image: config?.categoryImages?.['Heritage & Culture'] || PlaceHolderImages.find(img => img.id === 'candi-arjuna')?.imageUrl,
       icon: <Map className="h-5 w-5" />
     },
     {
       id: 'eat',
       title: 'Food & Drink',
-      categoryName: 'Kuliner',
+      categoryName: 'Food & Drink',
       description: 'Taste the legendary Mie Ongklok and Carica.',
-      image: config?.categoryImages?.['Kuliner'] || PlaceHolderImages.find(img => img.id === 'mie-ongklok')?.imageUrl,
+      image: config?.categoryImages?.['Food & Drink'] || PlaceHolderImages.find(img => img.id === 'mie-ongklok')?.imageUrl,
       icon: <Utensils className="h-5 w-5" />
     }
   ];

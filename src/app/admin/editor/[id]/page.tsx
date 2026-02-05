@@ -47,7 +47,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     content: '',
     image: '',
     metaTitle: '',
-    category: queryType === 'destination' ? 'Alam' : 'Sejarah',
+    category: queryType === 'destination' ? 'Nature & Adventure' : 'Sejarah',
     type: queryType,
     date: '', 
     author: 'Admin Lokal',
@@ -77,7 +77,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         content: article.content || '',
         image: article.image || '',
         metaTitle: article.metaTitle || '',
-        category: article.category || 'Alam',
+        category: article.category || (article.type === 'destination' ? 'Nature & Adventure' : 'Sejarah'),
         type: article.type || 'destination',
         date: article.date || getTodayFormatted(),
         author: article.author || 'Admin Lokal',
@@ -289,12 +289,20 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                 <Select value={formData.category} onValueChange={v => setFormData({...formData, category: v})}>
                   <SelectTrigger className="h-8 text-[10px] rounded-none"><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Alam">Alam</SelectItem>
-                    <SelectItem value="Budaya">Budaya</SelectItem>
-                    <SelectItem value="Kuliner">Kuliner</SelectItem>
-                    <SelectItem value="Sejarah">Sejarah</SelectItem>
-                    <SelectItem value="Sosial">Sosial</SelectItem>
-                    <SelectItem value="Tips">Tips</SelectItem>
+                    {formData.type === 'destination' ? (
+                      <>
+                        <SelectItem value="Nature & Adventure">Nature & Adventure</SelectItem>
+                        <SelectItem value="Heritage & Culture">Heritage & Culture</SelectItem>
+                        <SelectItem value="Food & Drink">Food & Drink</SelectItem>
+                      </>
+                    ) : (
+                      <>
+                        <SelectItem value="Sejarah">Sejarah</SelectItem>
+                        <SelectItem value="Sosial">Sosial</SelectItem>
+                        <SelectItem value="Geografis">Geografis</SelectItem>
+                        <SelectItem value="Tips">Tips</SelectItem>
+                      </>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
