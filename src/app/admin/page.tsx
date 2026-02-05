@@ -503,15 +503,19 @@ const AdminDashboard = () => {
                       </div>
                     )}
                     
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none group-hover:pointer-events-auto">
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <Button 
                         type="button"
                         variant="destructive" 
                         size="icon"
-                        className="rounded-none h-12 w-12"
-                        onClick={(e) => handleDeleteGallery(e, item.id)}
+                        className="rounded-none h-12 w-12 z-30"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleDeleteGallery(e, item.id);
+                        }}
                       >
-                        <Trash2 className="h-6 w-6" />
+                        <Trash2 className="h-6 w-6 text-white" />
                       </Button>
                     </div>
                   </div>
