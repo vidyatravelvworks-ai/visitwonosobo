@@ -18,7 +18,7 @@ const Footer = () => {
   if (isExcludedPage) return null;
 
   return (
-    <footer className="bg-white border-t py-0 px-6">
+    <footer className="bg-white border-t py-24 px-6">
       <div className="container mx-auto px-0 md:px-8 lg:px-32">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-16 mb-20">
           {/* Kolom 1: 40% lebar (span 2 dari 5) */}
@@ -80,19 +80,10 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="pt-10 border-t flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-          <p>
-            &copy; {mounted ? new Date().getFullYear() : '2025'}{' '}
-            <Link href="/login" className="hover:text-primary transition-colors">
-              visitwonosobo
-            </Link>
-            . All Rights Reserved.
+        <div className="pt-10 border-t flex flex-col items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          <p className="text-center">
+            &copy; 2026 visitwonosobo. All Rights Reserved.
           </p>
-          <div className="flex gap-10">
-            <Link href="#" className="hover:text-black transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-black transition-colors">Terms of Use</Link>
-            <Link href="#" className="hover:text-black transition-colors">Cookie Policy</Link>
-          </div>
         </div>
       </div>
     </footer>
