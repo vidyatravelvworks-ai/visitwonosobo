@@ -1,29 +1,33 @@
-
 'use client';
 
 import React from 'react';
 import Hero from '@/components/home/Hero';
 import Services from '@/components/home/Services';
 import { staticPackages as staticTripPackages } from '@/data/packages';
+import { articles as staticArticles } from '@/data/articles';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy, limit } from 'firebase/firestore';
+import { collection, query, orderBy, limit, where } from 'firebase/firestore';
 import { 
   Activity, ShieldAlert, CarFront, 
   Clock, ThermometerSnowflake, CheckCircle2, XCircle, Loader2,
-  Footprints, MapPin, ArrowRight
+  Footprints, MapPin, ArrowRight, MessageCircle
 } from 'lucide-react';
+import ArticleCard from '@/components/article/ArticleCard';
 
 export default function Home() {
   const db = useFirestore();
 
   // Queries
   const packagesQ = useMemoFirebase(() => db ? query(collection(db, 'trip_packages'), orderBy('title', 'asc'), limit(3)) : null, [db]);
+  const storiesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story'), orderBy('date', 'desc'), limit(3)) : null, [db]);
 
   const { data: dbPackages, isLoading: isPkgsLoading } = useCollection(packagesQ);
+  const { data: dbStories, isLoading: isStoriesLoading } = useCollection(storiesQ);
 
   const tourPackages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticTripPackages.slice(0, 3);
+  const latestStories = (dbStories && dbStories.length > 0) ? dbStories : staticArticles.filter(a => a.type === 'story').slice(0, 3);
 
   const essentialPoints = [
     { 
@@ -62,6 +66,7 @@ export default function Home() {
     <div className="bg-white">
       <Hero />
       
+      {/* Essential Info Section */}
       <section className="py-32 bg-white border-b">
         <div className="container mx-auto px-12 md:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
@@ -84,6 +89,7 @@ export default function Home() {
             ))}
           </div>
 
+          {/* Paket Wisata Section */}
           <div className="pt-24 border-t">
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-16 gap-6">
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Paket Wisata</h2>
@@ -96,7 +102,7 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {tourPackages.map((pkg: any, idx: number) => (
                   <div 
-                    key={idx} 
+                    key={pkg.id || idx} 
                     className="bg-white border-2 border-black/5 shadow-lg p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:border-primary/50"
                   >
                     <div className="flex justify-between items-start mb-10">
@@ -170,7 +176,66 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Stories Section */}
+      <section className="py-32 bg-secondary/20">
+        <div className="container mx-auto px-12 md:px-32">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
+            <div className="max-w-2xl">
+              <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Discover More</h3>
+              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Travel Stories</h2>
+            </div>
+            <Button variant="link" className="text-black font-black uppercase text-[10px] tracking-widest p-0 flex items-center gap-2 group" asChild>
+              <Link href="/stories">
+                Lihat Semua Cerita <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+
+          {isStoriesLoading ? (
+            <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+              {latestStories.map((story: any) => (
+                <ArticleCard key={story.id || story.slug} article={story} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* See & Do Categories (Services) */}
       <Services />
+
+      {/* Final CTA Section */}
+      <section className="py-40 bg-black relative overflow-hidden">
+        <div className="absolute inset-0 opacity-30">
+          <img 
+            src="https://images.unsplash.com/photo-1595495745827-85bcc5c9a028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" 
+            alt="CTA Background" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="container mx-auto px-12 md:px-32 relative z-10 text-center">
+          <div className="max-w-4xl mx-auto space-y-12">
+            <h2 className="text-5xl md:text-8xl font-black text-white uppercase leading-none tracking-tighter">
+              Ready to <span className="text-primary">Explore</span> <br /> Wonosobo?
+            </h2>
+            <p className="text-white/60 text-lg md:text-xl font-medium max-w-2xl mx-auto uppercase tracking-wide">
+              Wujudkan perjalanan impian Anda dengan layanan guide dan rental lokal terbaik. Kami siap menyambut Anda di negeri di atas awan.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-6 pt-10">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-black uppercase px-16 py-10 rounded-none text-sm tracking-widest gap-3" asChild>
+                <a href="https://wa.me/6281234567890" target="_blank">
+                  <MessageCircle size={20} /> Konsultasi via WhatsApp
+                </a>
+              </Button>
+              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-black font-black uppercase px-16 py-10 rounded-none text-sm tracking-widest" asChild>
+                <Link href="/plan-your-trip">Lihat Semua Paket</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
