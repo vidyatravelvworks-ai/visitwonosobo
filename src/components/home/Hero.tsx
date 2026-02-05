@@ -1,53 +1,51 @@
 
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ChevronDown } from 'lucide-react';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 const Hero = () => {
-  const heroImage = PlaceHolderImages.find(img => img.id === 'hero-sikunir');
+  const db = useFirestore();
+  const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
+  const { data: config } = useDoc(configRef);
+
+  const heroImage = config?.heroImages?.home || PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl;
 
   return (
     <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden">
-      {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        {heroImage && (
-          <Image
-            src={heroImage.imageUrl}
-            alt={heroImage.description}
-            fill
-            className="object-cover"
-            priority
-            data-ai-hint={heroImage.imageHint}
-          />
-        )}
+        <Image
+          src={heroImage}
+          alt="Home Hero"
+          fill
+          className="object-cover"
+          priority
+        />
         <div className="absolute inset-0 bg-black/30 bg-gradient-to-b from-black/50 via-transparent to-black/60" />
       </div>
 
-      <div className="container mx-auto px-12 md:px-32 relative z-10 text-center pt-32 pb-20 md:pt-40 md:pb-24">
+      <div className="container mx-auto px-12 md:px-32 relative z-10 text-center pt-32">
         <div className="max-w-4xl mx-auto space-y-8">
-          <h2 className="text-white text-sm md:text-base font-bold uppercase tracking-[0.4em] animate-in fade-in slide-in-from-bottom-4 duration-700">
-            Welcome to Wonosobo
-          </h2>
-          <h1 className="text-5xl md:text-9xl font-black text-white font-headline uppercase leading-none tracking-tighter animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <h2 className="text-white text-sm font-bold uppercase tracking-[0.4em]">Welcome to Wonosobo</h2>
+          <h1 className="text-5xl md:text-9xl font-black text-white uppercase leading-none tracking-tighter">
             The Soul <br /> <span className="text-white underline decoration-primary decoration-[12px] underline-offset-[16px]">of Java</span>
           </h1>
-          <p className="text-sm font-medium tracking-wide text-white/90 max-w-2xl mx-auto pt-4 animate-in fade-in slide-in-from-bottom-10 duration-1000">
-            Experience the mystical Dieng Plateau and the warmth of Wonosobo culture with our expert local guides.
-          </p>
-          <div className="pt-10 flex flex-col sm:flex-row justify-center gap-6 animate-in fade-in slide-in-from-bottom-12 duration-1000">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest text-xs px-12 py-8 rounded-none" asChild>
+          <div className="pt-10 flex flex-col sm:flex-row justify-center gap-6">
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold uppercase px-12 py-8 rounded-none" asChild>
               <a href="#services">Explore Experiences</a>
             </Button>
-            <Button size="lg" variant="outline" className="text-primary border-white hover:bg-white hover:text-black font-bold uppercase tracking-widest text-xs px-12 py-8 rounded-none" asChild>
+            <Button size="lg" variant="outline" className="text-primary border-white hover:bg-white hover:text-black font-bold uppercase px-12 py-8 rounded-none" asChild>
               <a href="/stories">Travel Stories</a>
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white animate-bounce hidden md:block">
         <ChevronDown className="h-8 w-8 opacity-50" />
       </div>

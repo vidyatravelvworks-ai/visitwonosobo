@@ -1,60 +1,78 @@
+
 {
   "entities": {
     "Article": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Article",
       "type": "object",
       "description": "Represents a blog article on the website.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Article entity."
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "author": { "type": "string" },
+        "publicationDate": { "type": "string", "format": "date-time" },
+        "thumbnailUrl": { "type": "string", "format": "uri" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "type": { "type": "string", "enum": ["destination", "story"] },
+        "category": { "type": "string" },
+        "excerpt": { "type": "string" },
+        "image": { "type": "string" }
+      },
+      "required": ["id", "title", "content", "image", "type"]
+    },
+    "TripPackage": {
+      "title": "Trip Package",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "price": { "type": "string" },
+        "time": { "type": "string" },
+        "description": { "type": "string" },
+        "spots": { "type": "array", "items": { "type": "string" } },
+        "color": { "type": "string" },
+        "borderColor": { "type": "string" }
+      }
+    },
+    "WebsiteConfig": {
+      "title": "Website Configuration",
+      "type": "object",
+      "description": "Global settings for images and design.",
+      "properties": {
+        "heroImages": {
+          "type": "object",
+          "properties": {
+            "home": { "type": "string" },
+            "seeAndDo": { "type": "string" },
+            "stories": { "type": "string" }
+          }
         },
-        "title": {
-          "type": "string",
-          "description": "Title of the article."
+        "categoryImages": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
         },
-        "content": {
-          "type": "string",
-          "description": "The full content of the article, including HTML formatting."
-        },
-        "author": {
-          "type": "string",
-          "description": "The author of the article."
-        },
-        "publicationDate": {
-          "type": "string",
-          "description": "Date and time when the article was published.",
-          "format": "date-time"
-        },
-        "thumbnailUrl": {
-          "type": "string",
-          "description": "URL of the article's thumbnail image.",
-          "format": "uri"
-        },
-        "tags": {
-          "type": "array",
-          "description": "Tags associated with the article.",
-          "items": {
-            "type": "string"
+        "packageDesign": {
+          "type": "object",
+          "properties": {
+            "cardColor": { "type": "string" },
+            "cardBorder": { "type": "string" }
           }
         }
-      },
-      "required": [
-        "id",
-        "title",
-        "content",
-        "author",
-        "publicationDate",
-        "thumbnailUrl"
-      ]
+      }
+    },
+    "GalleryImage": {
+      "title": "Gallery Image",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "url": { "type": "string" },
+        "caption": { "type": "string" },
+        "order": { "type": "number" }
+      }
     }
   },
   "auth": {
-    "providers": [
-      "password",
-      "anonymous"
-    ]
+    "providers": ["password", "anonymous"]
   },
   "firestore": {
     "structure": [
@@ -62,35 +80,34 @@
         "path": "/articles/{articleId}",
         "definition": {
           "entityName": "Article",
-          "schema": {
-            "$ref": "#/backend/entities/Article"
-          },
-          "description": "Stores blog articles managed by administrators. Administrators can create, read, update, and delete articles. Includes fields for title, content, author, publication date, and thumbnail URL.",
-          "params": [
-            {
-              "name": "articleId",
-              "description": "Unique identifier for the article."
-            }
-          ]
+          "schema": { "$ref": "#/backend/entities/Article" },
+          "description": "Stores blog and destination articles."
         }
       },
       {
-        "path": "/roles_admin/{userId}",
+        "path": "/trip_packages/{packageId}",
         "definition": {
-          "entityName": "AdminRole",
-          "schema": {
-            "$ref": "#/backend/entities/AdminRole"
-          },
-          "description": "Collection to store administrator roles. The existence of a document with the user's UID indicates admin privileges.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The Firebase UID of the administrator."
-            }
-          ]
+          "entityName": "TripPackage",
+          "schema": { "$ref": "#/backend/entities/TripPackage" },
+          "description": "Stores tour packages."
+        }
+      },
+      {
+        "path": "/config/website",
+        "definition": {
+          "entityName": "WebsiteConfig",
+          "schema": { "$ref": "#/backend/entities/WebsiteConfig" },
+          "description": "Global website configuration for images and layout styles."
+        }
+      },
+      {
+        "path": "/gallery/{imageId}",
+        "definition": {
+          "entityName": "GalleryImage",
+          "schema": { "$ref": "#/backend/entities/GalleryImage" },
+          "description": "Images for the trip gallery."
         }
       }
-    ],
-    "reasoning": "Given the requirement for a static website with hardcoded data and no dynamic user-generated content (except potentially admin-managed articles), a Firestore database might seem unnecessary at first. However, based on the user's request to adjust content on each page via an admin panel, we will structure Firestore to manage articles. This will allow easy content updates without redeploying the entire static website. Given the very limited scope and authorization details, this design focuses on the Article management. Because there is only one role (administrator), we can utilize an existence check in a dedicated collection.\n\n**Authorization Independence**: The admin role is checked by existence in `/roles_admin/{uid}`. Article creation/updates are authorized by this check. Because the application is essentially static with limited dynamic content, there's no complex relationships between entities, so no data needs to be denormalized.\n\n**QAPs**: `list` operations are secured because there is a single `articles` collection, and only administrators can create/modify the articles. Since the application is static, read access will be granted to all in the security rules, and the collection is homogeneous (all documents have the same access control).\n\n**Limitations**: This solution assumes that the 'admin' user creation and initial authentication setup are handled out-of-band (e.g., using the Firebase CLI or Admin SDK). It does not cover other parts of the request, such as the design of the static site itself, the WA booking integration, or SEO best practices."
+    ]
   }
 }

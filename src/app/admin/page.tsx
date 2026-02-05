@@ -1,17 +1,22 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useUser, useFirestore, useCollection } from '@/firebase';
-import { collection, doc, deleteDoc, query, orderBy, setDoc, serverTimestamp } from 'firebase/firestore';
+import { useUser, useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
+import { collection, doc, deleteDoc, query, orderBy, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, Search, Map, BookOpen, MapPin, Globe, Clock, RefreshCw } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { 
+  Plus, Edit, Trash2, LogOut, Map, BookOpen, MapPin, Globe, 
+  Image as ImageIcon, Palette, Layout, Save, RefreshCw, Grid 
+} from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { useMemoFirebase } from '@/firebase';
 import { getAuth, signOut } from 'firebase/auth';
 import { cn } from '@/lib/utils';
 import { staticPackages } from '@/data/packages';
@@ -22,20 +27,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const AdminDashboard = () => {
   const { user, isUserLoading } = useUser();
   const db = useFirestore();
   const auth = getAuth();
   const router = useRouter();
-  const pathname = usePathname();
   const { toast } = useToast();
 
-  const [currentView, setCurrentView] = useState<'articles' | 'packages'>('articles');
-  const [filterType, setFilterType] = useState<'all' | 'destination' | 'story'>('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterCategory, setFilterCategory] = useState<string>('all');
+  const [currentView, setCurrentView] = useState<'see-and-do' | 'stories' | 'packages' | 'website-config' | 'gallery'>('see-and-do');
   const [isSyncing, setIsSyncing] = useState(false);
+  const [configData, setConfigData] = useState<any>(null);
+  const [isSavingConfig, setIsSavingConfig] = useState(false);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -43,18 +47,69 @@ const AdminDashboard = () => {
     }
   }, [user, isUserLoading, router]);
 
+  // Firestore Queries
   const articlesQuery = useMemoFirebase(() => {
     if (!db) return null;
+    const type = currentView === 'see-and-do' ? 'destination' : 'story';
     return query(collection(db, 'articles'), orderBy('updatedAt', 'desc'));
-  }, [db]);
+  }, [db, currentView]);
 
   const packagesQuery = useMemoFirebase(() => {
     if (!db) return null;
     return query(collection(db, 'trip_packages'), orderBy('title', 'asc'));
   }, [db]);
 
-  const { data: articles, isLoading: isArticlesLoading } = useCollection(articlesQuery);
+  const galleryQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'gallery'), orderBy('order', 'asc'));
+  }, [db]);
+
+  const { data: allArticles, isLoading: isArticlesLoading } = useCollection(articlesQuery);
   const { data: packages, isLoading: isPackagesLoading } = useCollection(packagesQuery);
+  const { data: galleryItems, isLoading: isGalleryLoading } = useCollection(galleryQuery);
+  
+  const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
+  const { data: dbConfig } = useDoc(configRef);
+
+  useEffect(() => {
+    if (dbConfig) setConfigData(dbConfig);
+  }, [dbConfig]);
+
+  const filteredArticles = allArticles?.filter(a => {
+    if (currentView === 'see-and-do') return a.type === 'destination';
+    if (currentView === 'stories') return a.type === 'story';
+    return false;
+  }) || [];
+
+  const handleSaveConfig = async () => {
+    if (!db || !configData) return;
+    setIsSavingConfig(true);
+    try {
+      await setDoc(doc(db, 'config', 'website'), configData, { merge: true });
+      toast({ title: 'Success', description: 'Website configuration saved.' });
+    } catch (error) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Failed to save config.' });
+    } finally {
+      setIsSavingConfig(false);
+    }
+  };
+
+  const handleAddGalleryImage = async () => {
+    if (!db) return;
+    const id = `img-${Date.now()}`;
+    const newImage = {
+      id,
+      url: '',
+      caption: 'New Trip Photo',
+      order: (galleryItems?.length || 0) + 1
+    };
+    await setDoc(doc(db, 'gallery', id), newImage);
+  };
+
+  const handleDeleteGallery = async (id: string) => {
+    if (!window.confirm('Hapus gambar galeri ini?')) return;
+    await deleteDoc(doc(db!, 'gallery', id));
+  };
 
   const handleDeleteArticle = async (id: string) => {
     if (!window.confirm('Hapus artikel ini?')) return;
@@ -63,34 +118,6 @@ const AdminDashboard = () => {
       toast({ title: 'Berhasil', description: 'Artikel telah dihapus.' });
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus.' });
-    }
-  };
-
-  const handleDeletePackage = async (id: string) => {
-    if (!window.confirm('Hapus paket trip ini?')) return;
-    try {
-      await deleteDoc(doc(db!, 'trip_packages', id));
-      toast({ title: 'Berhasil', description: 'Paket telah dihapus.' });
-    } catch (error) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus.' });
-    }
-  };
-
-  const handleSyncPackages = async () => {
-    if (!db || isSyncing) return;
-    setIsSyncing(true);
-    try {
-      for (const pkg of staticPackages) {
-        await setDoc(doc(db, 'trip_packages', pkg.id), {
-          ...pkg,
-          updatedAt: serverTimestamp()
-        });
-      }
-      toast({ title: 'Success', description: 'Static packages synced to cloud.' });
-    } catch (error) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Sync failed.' });
-    } finally {
-      setIsSyncing(false);
     }
   };
 
@@ -104,41 +131,12 @@ const AdminDashboard = () => {
   };
 
   if (isUserLoading || !user) {
-    return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs text-muted-foreground animate-pulse">Authenticating Admin...</div>;
+    return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Authenticating...</div>;
   }
-
-  const filteredArticles = articles?.filter(a => {
-    const matchesSearch = a.title?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = filterType === 'all' ? true : a.type === filterType;
-    const matchesCategory = filterCategory === 'all' ? true : a.category === filterCategory;
-    return matchesSearch && matchesType && matchesCategory;
-  }) || [];
-
-  const filteredPackages = packages?.filter(p => 
-    p.title?.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
-
-  const getNewLink = () => {
-    if (currentView === 'packages') return '/admin/plan-your-trip/editor/new';
-    return `/admin/editor/new?type=${filterType === 'all' ? 'destination' : filterType}`;
-  };
-
-  // Kategori yang dipisahkan
-  const destinationCategories = [
-    { value: "Alam", label: "Nature & Adventure" },
-    { value: "Budaya", label: "Heritage & Culture" },
-    { value: "Kuliner", label: "Food & Drink" },
-  ];
-
-  const storyCategories = [
-    { value: "Sejarah", label: "Sejarah & Warisan" },
-    { value: "Sosial", label: "Masyarakat & Budaya" },
-    { value: "Geografis", label: "Bentang Alam & Geografis" },
-    { value: "Tips", label: "Tips & Panduan" },
-  ];
 
   return (
     <div className="min-h-screen bg-secondary/20 flex">
+      {/* SIDEBAR */}
       <aside className="w-64 bg-black text-white flex flex-col p-8 fixed h-full z-20">
         <div className="mb-12">
           <span className="text-xl font-black uppercase tracking-tighter text-primary">Admin Panel</span>
@@ -146,260 +144,199 @@ const AdminDashboard = () => {
         </div>
         
         <nav className="flex-grow space-y-2">
-          <Button 
-            variant="ghost" 
-            onClick={() => {
-              setCurrentView('articles');
-              setFilterType('all');
-              setFilterCategory('all');
-            }}
-            className={cn(
-              "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
-              currentView === 'articles' && filterType === 'all' && "bg-primary"
-            )}
-          >
-            <LayoutDashboard size={18} />
-            <span className="text-[10px] font-bold uppercase tracking-widest">Dashboard</span>
+          <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mb-2">Content</p>
+          <Button variant="ghost" onClick={() => setCurrentView('see-and-do')} className={cn("w-full justify-start text-white hover:bg-primary rounded-none h-10 gap-3 px-4", currentView === 'see-and-do' && "bg-primary")}>
+            <Map size={16} /> <span className="text-[10px] font-bold uppercase tracking-widest">See & Do</span>
+          </Button>
+          <Button variant="ghost" onClick={() => setCurrentView('stories')} className={cn("w-full justify-start text-white hover:bg-primary rounded-none h-10 gap-3 px-4", currentView === 'stories' && "bg-primary")}>
+            <BookOpen size={16} /> <span className="text-[10px] font-bold uppercase tracking-widest">Stories</span>
+          </Button>
+
+          <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mt-6 mb-2">Appearance</p>
+          <Button variant="ghost" onClick={() => setCurrentView('website-config')} className={cn("w-full justify-start text-white hover:bg-primary rounded-none h-10 gap-3 px-4", currentView === 'website-config' && "bg-primary")}>
+            <Layout size={16} /> <span className="text-[10px] font-bold uppercase tracking-widest">Hero & Categories</span>
+          </Button>
+          <Button variant="ghost" onClick={() => setCurrentView('gallery')} className={cn("w-full justify-start text-white hover:bg-primary rounded-none h-10 gap-3 px-4", currentView === 'gallery' && "bg-primary")}>
+            <Grid size={16} /> <span className="text-[10px] font-bold uppercase tracking-widest">Trip Gallery</span>
           </Button>
           
-          <div className="pt-6 pb-2">
-            <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mb-2">Manage Content</p>
-          </div>
-
-          <Button 
-            variant="ghost" 
-            onClick={() => {
-              setCurrentView('articles');
-              setFilterType('destination');
-              setFilterCategory('all');
-            }}
-            className={cn(
-              "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
-              currentView === 'articles' && filterType === 'destination' && "bg-primary"
-            )}
-          >
-            <Map size={18} />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">See & Do Articles</span>
-          </Button>
-
-          <Button 
-            variant="ghost" 
-            onClick={() => {
-              setCurrentView('articles');
-              setFilterType('story');
-              setFilterCategory('all');
-            }}
-            className={cn(
-              "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
-              currentView === 'articles' && filterType === 'story' && "bg-primary"
-            )}
-          >
-            <BookOpen size={18} />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">Stories Articles</span>
-          </Button>
-
-          <div className="pt-6 pb-2">
-            <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mb-2">Adjust Experience</p>
-          </div>
-
-          <Button 
-            variant="ghost" 
-            onClick={() => setCurrentView('packages')}
-            className={cn(
-              "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
-              currentView === 'packages' && "bg-primary"
-            )}
-          >
-            <MapPin size={18} />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">Adjust Paket Trip</span>
-          </Button>
-
-          <Button 
-            variant="ghost" 
-            asChild
-            className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all"
-          >
-            <Link href="/" target="_blank">
-              <Globe size={18} />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">View Website</span>
-            </Link>
+          <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mt-6 mb-2">Offerings</p>
+          <Button variant="ghost" onClick={() => setCurrentView('packages')} className={cn("w-full justify-start text-white hover:bg-primary rounded-none h-10 gap-3 px-4", currentView === 'packages' && "bg-primary")}>
+            <MapPin size={16} /> <span className="text-[10px] font-bold uppercase tracking-widest">Paket Trip</span>
           </Button>
         </nav>
 
-        <div className="mt-auto pt-6 space-y-4">
-          <div className="bg-white/5 p-4 space-y-2">
-            <p className="text-[8px] font-bold uppercase tracking-widest text-white/40">Logged in as:</p>
-            <p className="text-[10px] font-black truncate">{user.email}</p>
-          </div>
-          <Button 
-            variant="destructive" 
-            onClick={handleSignOut} 
-            className="w-full rounded-none h-12 gap-3 shadow-lg bg-red-600 hover:bg-red-700 text-white"
-          >
-            <LogOut size={18} />
-            <span className="text-[10px] font-bold uppercase tracking-widest">Sign Out</span>
-          </Button>
-        </div>
+        <Button variant="destructive" onClick={handleSignOut} className="mt-auto w-full rounded-none h-12 gap-3 shadow-lg bg-red-600 hover:bg-red-700 text-white">
+          <LogOut size={18} /> <span className="text-[10px] font-bold uppercase tracking-widest">Sign Out</span>
+        </Button>
       </aside>
 
+      {/* MAIN CONTENT */}
       <main className="flex-grow ml-64 p-12">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+        <header className="flex justify-between items-end mb-12">
           <div>
             <h1 className="text-4xl font-black uppercase tracking-tighter">
-              {currentView === 'packages' ? 'Paket Wisata' : 
-               filterType === 'all' ? 'All Articles' : 
-               filterType === 'destination' ? 'See & Do Content' : 'Stories Content'}
+              {currentView.replace('-', ' ')}
             </h1>
-            <p className="text-sm font-medium text-muted-foreground mt-2">
-              Manage your {currentView === 'packages' ? 'trip packages' : 'articles'} in real-time.
-            </p>
+            <p className="text-sm font-medium text-muted-foreground mt-2">Adjust your website elements in real-time.</p>
           </div>
-          <div className="flex gap-4">
-            {currentView === 'packages' && packages && packages.length === 0 && (
-              <Button 
-                onClick={handleSyncPackages} 
-                disabled={isSyncing}
-                variant="outline"
-                className="border-2 border-primary text-primary rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]"
-              >
-                <RefreshCw className={cn("h-4 w-4", isSyncing && "animate-spin")} />
-                Sync Static Packages
-              </Button>
-            )}
-            <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
-              <Link href={getNewLink()}>
-                <Plus size={18} />
-                New {currentView === 'packages' ? 'Package' : 'Article'}
-              </Link>
+          {(currentView === 'see-and-do' || currentView === 'stories' || currentView === 'packages' || currentView === 'gallery') && (
+            <Button asChild onClick={currentView === 'gallery' ? handleAddGalleryImage : undefined} className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
+              {currentView === 'gallery' ? (
+                <span><Plus size={18} /> Add Photo</span>
+              ) : (
+                <Link href={currentView === 'packages' ? '/admin/plan-your-trip/editor/new' : `/admin/editor/new?type=${currentView === 'see-and-do' ? 'destination' : 'story'}`}>
+                  <Plus size={18} /> New {currentView === 'packages' ? 'Package' : 'Article'}
+                </Link>
+              )}
             </Button>
-          </div>
+          )}
         </header>
 
-        <Card className="rounded-none border-2 border-black/5 shadow-xl">
-          <CardHeader className="p-8 border-b">
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-              <div className="flex items-center gap-4">
-                <CardTitle className="text-xl font-black uppercase tracking-tight">Directory</CardTitle>
-                <Badge variant="secondary" className="rounded-none border-2 border-black/10 font-black text-[10px] uppercase tracking-widest px-3 py-1">
-                  {currentView === 'packages' ? 'TRIP PACKAGES' : filterType.toUpperCase()}
-                </Badge>
-              </div>
-
-              <div className="flex flex-col md:flex-row w-full lg:w-auto gap-4">
-                {currentView === 'articles' && (
-                  <div className="w-full md:w-56">
-                    <Select value={filterCategory} onValueChange={setFilterCategory}>
-                      <SelectTrigger className="rounded-none border-2 border-black/10 h-10 font-bold text-[10px] uppercase tracking-widest bg-white">
-                        <SelectValue placeholder="All Categories" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-none border-2">
-                        <SelectItem value="all">All Categories</SelectItem>
-                        {(filterType === 'all' || filterType === 'destination') && destinationCategories.map(cat => (
-                          <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
-                        ))}
-                        {(filterType === 'all' || filterType === 'story') && storyCategories.map(cat => (
-                          <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-
-                <div className="relative w-full md:w-64">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <input 
-                    placeholder="Search..." 
-                    className="pl-10 w-full rounded-none border-2 border-black/10 focus:border-primary h-10 font-bold text-[10px] uppercase tracking-widest outline-none bg-white"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="p-0">
+        {/* VIEW: ARTICLES & PACKAGES TABLE */}
+        {(currentView === 'see-and-do' || currentView === 'stories' || currentView === 'packages') && (
+          <Card className="rounded-none border-2 border-black/5 shadow-xl">
             <Table>
-              {currentView === 'articles' ? (
-                <>
-                  <TableHeader>
-                    <TableRow className="bg-secondary/50">
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-2 w-16">Preview</TableHead>
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4">Judul Artikel</TableHead>
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4">Kategori</TableHead>
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4 text-right">Action</TableHead>
+              <TableHeader className="bg-secondary/50">
+                <TableRow>
+                  <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4">Title / Info</TableHead>
+                  <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4">Category / Price</TableHead>
+                  <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4 text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {currentView === 'packages' ? (
+                  packages?.map(p => (
+                    <TableRow key={p.id} className="hover:bg-secondary/10">
+                      <TableCell className="py-2 px-4">
+                        <div className="font-bold uppercase text-xs">{p.title}</div>
+                        <div className="text-[8px] text-muted-foreground">{p.time}</div>
+                      </TableCell>
+                      <TableCell className="py-2 px-4"><Badge className="bg-primary rounded-none text-[9px] uppercase">{p.price}</Badge></TableCell>
+                      <TableCell className="py-2 px-4 text-right">
+                        <Button variant="ghost" size="icon" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={14}/></Link></Button>
+                        <Button variant="ghost" size="icon" className="text-red-600" onClick={() => deleteDoc(doc(db!, 'trip_packages', p.id))}><Trash2 size={14}/></Button>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {isArticlesLoading ? (
-                      <TableRow><TableCell colSpan={4} className="p-8 text-center text-xs font-bold uppercase text-muted-foreground animate-pulse">Loading Articles...</TableCell></TableRow>
-                    ) : filteredArticles.map(a => (
-                      <TableRow key={a.id} className="hover:bg-secondary/10">
-                        <TableCell className="p-1">
-                          <div className="w-12 h-8 bg-gray-200 border overflow-hidden">
-                            {a.image && <img src={a.image} alt="" className="w-full h-full object-cover" />}
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-1 px-4">
-                          <div className="font-bold uppercase text-[12px]">{a.title}</div>
-                          <div className="text-[8px] font-bold text-muted-foreground uppercase">Type: {a.type} | Slug: /{a.id}</div>
-                        </TableCell>
-                        <TableCell className="py-1 px-4">
-                          <Badge variant="outline" className="rounded-none border-2 font-black text-[7px] uppercase tracking-widest px-1 py-0">{a.category}</Badge>
-                        </TableCell>
-                        <TableCell className="py-1 px-4 text-right space-x-1">
-                          <Button variant="ghost" size="icon" className="h-7 w-7" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={14}/></Link></Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => handleDeleteArticle(a.id)}><Trash2 size={14}/></Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </>
-              ) : (
-                <>
-                  <TableHeader>
-                    <TableRow className="bg-secondary/50">
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4">Nama Paket</TableHead>
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4">Harga</TableHead>
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4">Durasi</TableHead>
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4 text-right">Action</TableHead>
+                  ))
+                ) : (
+                  filteredArticles.map(a => (
+                    <TableRow key={a.id} className="hover:bg-secondary/10">
+                      <TableCell className="py-1 px-4 flex items-center gap-3">
+                        <div className="w-10 h-8 bg-gray-200 border p-0.5"><img src={a.image} className="w-full h-full object-cover" /></div>
+                        <div>
+                          <div className="font-bold uppercase text-[11px] truncate max-w-[300px]">{a.title}</div>
+                          <div className="text-[8px] text-muted-foreground uppercase">{a.date}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-1 px-4"><Badge variant="outline" className="rounded-none text-[8px] uppercase">{a.category}</Badge></TableCell>
+                      <TableCell className="py-1 px-4 text-right">
+                        <Button variant="ghost" size="icon" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={14}/></Link></Button>
+                        <Button variant="ghost" size="icon" className="text-red-600" onClick={() => handleDeleteArticle(a.id)}><Trash2 size={14}/></Button>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {isPackagesLoading ? (
-                      <TableRow><TableCell colSpan={4} className="p-8 text-center text-xs font-bold uppercase text-muted-foreground animate-pulse">Loading Packages...</TableCell></TableRow>
-                    ) : filteredPackages.map(p => (
-                      <TableRow key={p.id} className="hover:bg-secondary/10">
-                        <TableCell className="py-1 px-4">
-                          <div className="font-bold uppercase text-[12px]">{p.title}</div>
-                          <div className="text-[8px] font-bold text-muted-foreground uppercase">{p.description}</div>
-                        </TableCell>
-                        <TableCell className="py-1 px-4">
-                          <Badge className="bg-primary text-white font-black text-[9px] uppercase rounded-none px-2 py-0">{p.price}</Badge>
-                        </TableCell>
-                        <TableCell className="py-1 px-4">
-                          <div className="flex items-center gap-2 text-[10px] font-bold">
-                            <Clock size={12} className="text-primary" /> {p.time}
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-1 px-4 text-right space-x-1">
-                          <Button variant="ghost" size="icon" className="h-7 w-7" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={14}/></Link></Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => handleDeletePackage(p.id)}><Trash2 size={14}/></Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    {!isPackagesLoading && filteredPackages.length === 0 && (
-                      <TableRow>
-                        <TableCell colSpan={4} className="p-12 text-center text-[10px] font-bold uppercase text-muted-foreground">
-                          Belum ada paket trip di database. Klik "Sync Static Packages" untuk memulai.
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </>
-              )}
+                  ))
+                )}
+              </TableBody>
             </Table>
-          </CardContent>
-        </Card>
+          </Card>
+        )}
+
+        {/* VIEW: WEBSITE CONFIG (HERO & CATEGORIES) */}
+        {currentView === 'website-config' && configData && (
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <Card className="rounded-none border-2 border-black/5 shadow-xl">
+                <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Hero Banner Images</CardTitle></CardHeader>
+                <CardContent className="p-6 space-y-4">
+                  {['home', 'seeAndDo', 'stories'].map(page => (
+                    <div key={page} className="space-y-1">
+                      <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{page} Page Hero URL</Label>
+                      <Input 
+                        value={configData.heroImages?.[page] || ''} 
+                        onChange={(e) => setConfigData({...configData, heroImages: {...configData.heroImages, [page]: e.target.value}})}
+                        className="rounded-none border-2 text-[10px] h-10"
+                      />
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              <Card className="rounded-none border-2 border-black/5 shadow-xl">
+                <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Trip Card Design</CardTitle></CardHeader>
+                <CardContent className="p-6 space-y-4">
+                  <div className="space-y-1">
+                    <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Global Card Background (Tailwind)</Label>
+                    <Input 
+                      value={configData.packageDesign?.cardColor || ''} 
+                      onChange={(e) => setConfigData({...configData, packageDesign: {...configData.packageDesign, cardColor: e.target.value}})}
+                      className="rounded-none border-2 text-[10px] h-10"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Global Card Border (Tailwind)</Label>
+                    <Input 
+                      value={configData.packageDesign?.cardBorder || ''} 
+                      onChange={(e) => setConfigData({...configData, packageDesign: {...configData.packageDesign, cardBorder: e.target.value}})}
+                      className="rounded-none border-2 text-[10px] h-10"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card className="rounded-none border-2 border-black/5 shadow-xl">
+              <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Category Images (See & Do / Stories Cards)</CardTitle></CardHeader>
+              <CardContent className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                {['Alam', 'Budaya', 'Kuliner', 'Sejarah', 'Sosial', 'Geografis', 'Tips'].map(cat => (
+                  <div key={cat} className="space-y-1">
+                    <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{cat} Category Image URL</Label>
+                    <Input 
+                      value={configData.categoryImages?.[cat] || ''} 
+                      onChange={(e) => setConfigData({...configData, categoryImages: {...configData.categoryImages, [cat]: e.target.value}})}
+                      className="rounded-none border-2 text-[10px] h-10"
+                    />
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            <Button onClick={handleSaveConfig} disabled={isSavingConfig} className="bg-black hover:bg-primary text-white rounded-none h-14 w-full gap-3 font-black uppercase tracking-widest text-[10px]">
+              <Save size={18} /> {isSavingConfig ? 'Saving...' : 'Save Website Configuration'}
+            </Button>
+          </div>
+        )}
+
+        {/* VIEW: GALLERY MANAGEMENT */}
+        {currentView === 'gallery' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {galleryItems?.map(item => (
+              <Card key={item.id} className="rounded-none border-2 border-black/5 shadow-xl overflow-hidden group">
+                <div className="aspect-video bg-gray-100 relative">
+                  {item.url ? <img src={item.url} className="w-full h-full object-cover" /> : <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-bold uppercase">No Image</div>}
+                </div>
+                <CardContent className="p-4 space-y-3">
+                  <Input 
+                    placeholder="Image URL" 
+                    value={item.url} 
+                    onChange={(e) => setDoc(doc(db!, 'gallery', item.id), { ...item, url: e.target.value })}
+                    className="rounded-none border-2 text-[9px] h-8"
+                  />
+                  <div className="flex gap-2">
+                    <Input 
+                      placeholder="Order" 
+                      type="number"
+                      value={item.order} 
+                      onChange={(e) => setDoc(doc(db!, 'gallery', item.id), { ...item, order: parseInt(e.target.value) })}
+                      className="rounded-none border-2 text-[9px] h-8 w-20"
+                    />
+                    <Button variant="ghost" className="text-red-600 h-8 px-2 ml-auto" onClick={() => handleDeleteGallery(item.id)}><Trash2 size={14}/></Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );
