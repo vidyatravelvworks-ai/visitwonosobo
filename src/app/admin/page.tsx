@@ -149,13 +149,20 @@ const AdminDashboard = () => {
   };
 
   /**
-   * Helper untuk konfirmasi keamanan sebelum menghapus data.
+   * Fungsi verifikasi hapus yang robust.
    */
-  const confirmDeleteAction = (itemType: string) => {
-    const input = window.prompt(`Ketik "hapus" untuk mengonfirmasi penghapusan ${itemType} ini:`);
-    if (input === 'hapus') return true;
-    if (input !== null) {
-      toast({ variant: 'destructive', title: 'Gagal', description: 'Kata kunci konfirmasi salah.' });
+  const requestDeleteConfirmation = (itemType: string): boolean => {
+    const message = `Ketik "hapus" untuk mengonfirmasi penghapusan ${itemType} ini:`;
+    const input = window.prompt(message);
+    
+    if (input === 'hapus') {
+      return true;
+    } else if (input !== null) {
+      toast({ 
+        variant: 'destructive', 
+        title: 'Konfirmasi Gagal', 
+        description: 'Kata kunci yang dimasukkan salah.' 
+      });
     }
     return false;
   };
@@ -164,7 +171,7 @@ const AdminDashboard = () => {
     e.preventDefault();
     e.stopPropagation();
     
-    if (!confirmDeleteAction('gambar galeri')) return;
+    if (!requestDeleteConfirmation('gambar galeri')) return;
     if (!db) return;
 
     const docRef = doc(db, 'gallery', id);
@@ -181,7 +188,7 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteArticle = (id: string) => {
-    if (!confirmDeleteAction('artikel')) return;
+    if (!requestDeleteConfirmation('artikel')) return;
     if (!db) return;
     const docRef = doc(db, 'articles', id);
     deleteDoc(docRef)
@@ -197,7 +204,7 @@ const AdminDashboard = () => {
   };
 
   const handleDeletePackage = (id: string) => {
-    if (!confirmDeleteAction('paket trip')) return;
+    if (!requestDeleteConfirmation('paket trip')) return;
     if (!db) return;
     const docRef = doc(db, 'trip_packages', id);
     deleteDoc(docRef)
@@ -508,11 +515,7 @@ const AdminDashboard = () => {
                         variant="destructive" 
                         size="icon"
                         className="rounded-none h-12 w-12 z-30"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleDeleteGallery(e, item.id);
-                        }}
+                        onClick={(e) => handleDeleteGallery(e, item.id)}
                       >
                         <Trash2 className="h-6 w-6 text-white" />
                       </Button>
