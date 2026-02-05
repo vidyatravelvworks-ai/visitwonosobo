@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, use } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import { useUser, useFirestore, useDoc } from '@/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
@@ -10,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save, Globe, FileText, Layout, ArrowLeft, Link as LinkIcon, Sparkles, Loader2, Search } from 'lucide-react';
+import { Save, Globe, FileText, ArrowLeft, Link as LinkIcon, Sparkles, Loader2, Search, Tag, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import Link from 'next/link';
@@ -168,46 +169,86 @@ const ArticleEditorPage = ({ params }: PageProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-secondary/20 p-8 md:p-12">
-      <div className="max-w-6xl mx-auto space-y-8">
-        <div className="flex justify-between items-center">
-          <Button variant="ghost" asChild className="rounded-none hover:bg-transparent pl-0 h-auto group">
-            <Link href="/admin" className="flex items-center gap-2 font-black uppercase tracking-widest text-[10px]">
-              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              Kembali ke Dashboard
-            </Link>
-          </Button>
+    <div className="min-h-screen bg-secondary/10 flex flex-col">
+      {/* Action Bar */}
+      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b px-8 py-4 flex justify-between items-center">
+        <Button variant="ghost" asChild className="rounded-none hover:bg-transparent pl-0 h-auto group">
+          <Link href="/admin" className="flex items-center gap-2 font-black uppercase tracking-widest text-[10px]">
+            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+            Kembali ke Dashboard
+          </Link>
+        </Button>
+        <div className="flex gap-4">
           <Button 
             onClick={handleSave} 
             disabled={isSaving}
-            className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-10 gap-3 font-black uppercase tracking-widest text-[10px]"
+            className="bg-primary hover:bg-primary/90 text-white rounded-none h-12 px-10 gap-3 font-black uppercase tracking-widest text-[10px]"
           >
-            <Save size={18} />
+            <Save size={16} />
             {isSaving ? 'Saving...' : 'Publish Article'}
           </Button>
         </div>
+      </div>
 
+      {/* Hero Preview Section (Fixed at top half) */}
+      <section className="relative h-[50vh] w-full flex items-center justify-center overflow-hidden bg-black">
+        {formData.image && (
+          <div className="absolute inset-0 z-0">
+            <img
+              src={formData.image}
+              alt="Hero Preview"
+              className="w-full h-full object-cover opacity-60"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+          </div>
+        )}
+        <div className="container mx-auto px-12 relative z-10 text-center space-y-4 max-w-4xl">
+          <div className="flex items-center justify-center gap-4 text-[10px] font-bold text-white/70 uppercase tracking-[0.3em]">
+            <span className="flex items-center gap-2">
+              <Tag className="h-3 w-3 text-primary" />
+              {formData.category}
+            </span>
+            <span className="h-1 w-1 rounded-full bg-white/40" />
+            <span className="flex items-center gap-2">
+              <Calendar className="h-3 w-3 text-primary" />
+              {formData.date}
+            </span>
+          </div>
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tighter leading-tight">
+            {formData.title || "Judul Artikel Anda"}
+          </h1>
+          <p className="text-[10px] font-bold text-white/50 uppercase tracking-[0.2em] italic">
+            Visual Preview (Sama dengan Tampilan Blog)
+          </p>
+        </div>
+      </section>
+
+      {/* Main Content Area */}
+      <div className="max-w-6xl mx-auto w-full p-8 md:p-12 -mt-20 relative z-20 space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            <Card className="rounded-none border-2 border-black/5 shadow-xl">
-              <CardHeader className="border-b p-8 bg-white">
+            <Card className="rounded-none border-2 border-black/5 shadow-2xl bg-white">
+              <CardHeader className="border-b p-8">
                 <CardTitle className="text-xl font-black uppercase tracking-tight flex items-center gap-3">
                   <FileText className="text-primary" size={20} />
                   Main Content
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-8 space-y-6">
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Featured Image URL</Label>
-                  <div className="relative">
-                    <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                      value={formData.image}
-                      onChange={(e) => setFormData({...formData, image: e.target.value})}
-                      placeholder="https://images.unsplash.com/..."
-                      className="pl-10 rounded-none border-2 border-black/10 focus:border-primary h-12 text-[11px] font-bold"
-                    />
-                  </div>
+              <CardContent className="p-8 space-y-8">
+                {/* Image URL Input Moved Here */}
+                <div className="space-y-2 p-6 bg-secondary/20 border-l-4 border-primary">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                    <LinkIcon size={12} /> Featured Image URL
+                  </Label>
+                  <Input 
+                    value={formData.image}
+                    onChange={(e) => setFormData({...formData, image: e.target.value})}
+                    placeholder="Masukkan URL gambar dari Unsplash/Picsum..."
+                    className="rounded-none border-2 border-black/10 focus:border-primary h-12 text-[11px] font-bold"
+                  />
+                  <p className="text-[9px] font-medium text-muted-foreground italic mt-1">
+                    *Gambar akan langsung muncul sebagai latar belakang di atas secara real-time.
+                  </p>
                 </div>
 
                 <div className="space-y-2">
@@ -218,17 +259,17 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     placeholder="E.g. Keajaiban Pagi di Bukit Sikunir"
                     className="rounded-none border-2 border-black/10 focus:border-primary h-14 text-xl font-black uppercase tracking-tight"
                   />
-                  <div className="pt-2">
+                  <div className="pt-4">
                     <Button
                       type="button"
                       onClick={handleGenerateAI}
                       disabled={isGenerating}
-                      className="bg-black text-white hover:bg-primary rounded-none h-12 px-6 gap-3 font-bold uppercase tracking-widest text-[10px]"
+                      className="bg-black text-white hover:bg-primary rounded-none h-12 px-8 gap-3 font-bold uppercase tracking-widest text-[10px] shadow-lg transition-all"
                     >
                       {isGenerating ? (
                         <>
                           <Loader2 className="animate-spin h-4 w-4" />
-                          Generating Artikel & Meta Tags...
+                          Menulis Artikel...
                         </>
                       ) : (
                         <>
@@ -238,7 +279,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                       )}
                     </Button>
                     <p className="text-[9px] font-medium text-muted-foreground italic mt-2">
-                      *AI akan menghasilkan konten ~1000 kata dan Meta Tags otomatis berdasarkan judul di atas.
+                      *AI akan menulis narasi ilmiah ~1000 kata dan Meta Tags otomatis.
                     </p>
                   </div>
                 </div>
@@ -249,7 +290,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     value={formData.content}
                     onChange={(e) => setFormData({...formData, content: e.target.value})}
                     placeholder="Tuliskan narasi mendalam di sini atau gunakan tombol AI di atas..."
-                    className="rounded-none border-2 border-black/10 focus:border-primary min-h-[500px] font-medium leading-relaxed"
+                    className="rounded-none border-2 border-black/10 focus:border-primary min-h-[600px] font-medium leading-loose p-8 text-sm"
                   />
                 </div>
               </CardContent>
@@ -257,7 +298,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
           </div>
 
           <div className="space-y-8">
-            <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white">
+            <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white sticky top-28">
               <CardHeader className="border-b p-6">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
                   <Globe className="text-primary" size={16} />
@@ -275,59 +316,40 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Content Type</Label>
-                  <div className="h-10 border-2 px-3 flex items-center text-xs font-bold bg-muted/20 uppercase">{formData.type}</div>
-                </div>
-
-                <div className="space-y-2">
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Category</Label>
                   <Select value={formData.category} onValueChange={(val) => setFormData({...formData, category: val})}>
                     <SelectTrigger className="rounded-none border-2 text-xs font-bold"><SelectValue /></SelectTrigger>
                     <SelectContent>{currentCategories.map(cat => <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>)}</SelectContent>
                   </Select>
                 </div>
-              </CardContent>
-            </Card>
 
-            <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white overflow-hidden">
-              <CardHeader className="border-b p-6 bg-primary/5">
-                <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
-                  <Search className="text-primary" size={16} />
-                  SEO & Meta Tags
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6 space-y-4">
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Meta Title</Label>
-                  <Input 
-                    value={formData.metaTitle}
-                    onChange={(e) => setFormData({...formData, metaTitle: e.target.value})}
-                    placeholder="Judul untuk hasil pencarian Google"
-                    className="rounded-none border-2 border-black/10 h-10 text-[10px] font-bold"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Meta Description / Excerpt</Label>
-                  <Textarea 
-                    value={formData.excerpt}
-                    onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
-                    placeholder="Ringkasan singkat untuk hasil pencarian Google"
-                    className="rounded-none border-2 border-black/10 h-24 text-[10px] font-bold"
-                  />
+                <div className="h-px bg-black/5 w-full my-6" />
+
+                <div className="space-y-4">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                    <Search size={14} /> SEO & Meta Tags
+                  </Label>
+                  <div className="space-y-4 p-4 bg-secondary/20">
+                    <div className="space-y-1">
+                      <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Meta Title</Label>
+                      <Input 
+                        value={formData.metaTitle}
+                        onChange={(e) => setFormData({...formData, metaTitle: e.target.value})}
+                        className="rounded-none border-2 text-[10px] h-9 font-bold"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Meta Description / Excerpt</Label>
+                      <Textarea 
+                        value={formData.excerpt}
+                        onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
+                        className="rounded-none border-2 text-[10px] h-24 font-medium leading-relaxed"
+                      />
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
-
-            {formData.image && (
-              <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white overflow-hidden">
-                <CardHeader className="border-b p-4 bg-secondary/10">
-                  <CardTitle className="text-[9px] font-black uppercase tracking-widest">Image Preview</CardTitle>
-                </CardHeader>
-                <div className="aspect-video relative bg-muted">
-                  <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
-                </div>
-              </Card>
-            )}
           </div>
         </div>
       </div>
