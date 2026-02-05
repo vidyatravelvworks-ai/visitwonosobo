@@ -3,7 +3,7 @@
 import React, { use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Calendar, Tag, ChevronLeft, Loader2 } from 'lucide-react';
+import { Calendar, Tag, ChevronLeft, Loader2, User } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
@@ -24,9 +24,7 @@ const ArticleDetailPage = ({ params }: PageProps) => {
   }, [db, slug]);
 
   const { data: dbArticle, isLoading } = useDoc(docRef);
-  
   const staticArticle = staticArticles.find((a) => a.slug === slug);
-  // Gunakan data dari DB jika ada, jika tidak fallback ke statis
   const article = dbArticle || staticArticle;
 
   if (isLoading) {
@@ -64,16 +62,21 @@ const ArticleDetailPage = ({ params }: PageProps) => {
         
         <div className="container mx-auto px-6 md:px-32 relative z-10">
           <div className="max-w-4xl mx-auto space-y-6">
-            <div className="flex items-center gap-4 text-xs font-bold text-white/80 uppercase tracking-[0.3em]">
+            <div className="flex flex-wrap items-center gap-6 text-[10px] font-black text-white/90 uppercase tracking-[0.3em]">
               <span className="flex items-center gap-2">
                 <Tag className="h-4 w-4 text-primary" />
                 {article.category}
               </span>
-              <span className="h-1 w-1 rounded-full bg-white/40" />
               <span className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-primary" />
                 {article.date}
               </span>
+              {article.author && (
+                <span className="flex items-center gap-2">
+                  <User className="h-4 w-4 text-primary" />
+                  {article.author}
+                </span>
+              )}
             </div>
             <h1 className="text-4xl md:text-7xl font-black text-white leading-tight uppercase tracking-tighter">
               {article.title}
@@ -83,16 +86,16 @@ const ArticleDetailPage = ({ params }: PageProps) => {
       </section>
 
       <div className="container mx-auto px-6 md:px-32 -mt-10 relative z-20">
-        <div className="max-w-4xl mx-auto bg-white p-8 md:p-16 shadow-2xl">
+        <div className="max-w-4xl mx-auto bg-white p-8 md:p-16 shadow-2xl border-2 border-black/5">
           <Button variant="ghost" asChild className="mb-10 group pl-0 h-auto hover:bg-transparent">
-            <Link href="/" className="flex items-center gap-2 font-bold text-xs uppercase tracking-widest text-primary">
+            <Link href="/" className="flex items-center gap-2 font-black text-[10px] uppercase tracking-widest text-primary">
               <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              Kembali
+              Kembali Ke Eksplorasi
             </Link>
           </Button>
 
           <div className="mb-12">
-            <p className="text-lg md:text-xl text-foreground/70 leading-relaxed italic border-l-4 border-primary pl-8 font-medium">
+            <p className="text-lg md:text-xl text-foreground/80 leading-relaxed italic border-l-4 border-primary pl-8 font-bold uppercase tracking-tight">
               {article.excerpt}
             </p>
           </div>
@@ -108,7 +111,7 @@ const ArticleDetailPage = ({ params }: PageProps) => {
                 ul: ({ children }) => <ul className="list-disc list-inside mb-8 space-y-4 pl-4">{children}</ul>,
                 ol: ({ children }) => <ol className="list-decimal list-inside mb-8 space-y-4 pl-4">{children}</ol>,
                 li: ({ children }) => <li className="text-sm md:text-base font-medium">{children}</li>,
-                blockquote: ({ children }) => <blockquote className="border-l-4 border-primary bg-secondary/30 p-8 my-10 italic font-medium text-lg">{children}</blockquote>,
+                blockquote: ({ children }) => <blockquote className="border-l-4 border-primary bg-secondary/30 p-8 my-10 italic font-medium text-lg text-black">{children}</blockquote>,
               }}
             >
               {article.content}
