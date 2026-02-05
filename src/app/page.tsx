@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -80,7 +81,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-y-16 gap-x-12 mb-32">
             {essentialPoints.map((point, idx) => (
-              <div key={idx} className="group space-y-4 border-l-2 border-primary/20 pl-6 hover:border-primary transition-all">
+              <div key={idx} className="group space-y-4 border-l border-primary/20 pl-6 hover:border-primary transition-all">
                 <div className="p-3 bg-secondary w-fit text-primary group-hover:bg-primary group-hover:text-white transition-colors">{point.icon}</div>
                 <h4 className="font-bold uppercase text-xs tracking-widest">{point.title}</h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">{point.content}</p>
