@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -427,8 +426,8 @@ const AdminDashboard = () => {
 
         {currentView === 'gallery' && (
           <div className="space-y-12">
-            {/* New Unified Input Panel for Gallery */}
-            <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white max-w-2xl">
+            {/* New Unified Input Panel for Gallery - Updated to w-full */}
+            <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white w-full">
               <CardHeader className="border-b bg-secondary/10">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
                   <ImageIcon size={14} className="text-primary" /> Tambah Foto Galeri Baru
