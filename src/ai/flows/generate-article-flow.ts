@@ -1,6 +1,6 @@
 'use server';
 /**
- * @fileOverview Flow untuk menghasilkan artikel ilmiah panjang dengan Meta Tags SEO.
+ * @fileOverview Flow untuk menghasilkan artikel ilmiah populer dengan standar SEO Senior.
  */
 
 import { ai } from '@/ai/genkit';
@@ -12,9 +12,10 @@ const GenerateArticleInputSchema = z.object({
 export type GenerateArticleInput = z.infer<typeof GenerateArticleInputSchema>;
 
 const GenerateArticleOutputSchema = z.object({
-  content: z.string().describe('Konten artikel utama (~1000-1100 kata) dalam format Markdown'),
+  content: z.string().describe('Konten artikel utama (1000-1100 kata) dalam format Markdown'),
   metaTitle: z.string().describe('Judul untuk SEO (Meta Title)'),
-  metaDescription: z.string().describe('Deskripsi singkat untuk SEO (Meta Description/Excerpt)'),
+  metaDescription: z.string().describe('Deskripsi singkat untuk SEO (Meta Description) max 150 karakter'),
+  internalLinks: z.string().describe('Rekomendasi internal link untuk artikel terkait'),
 });
 export type GenerateArticleOutput = z.infer<typeof GenerateArticleOutputSchema>;
 
@@ -26,24 +27,35 @@ const prompt = ai.definePrompt({
   name: 'generateArticlePrompt',
   input: { schema: GenerateArticleInputSchema },
   output: { schema: GenerateArticleOutputSchema },
-  prompt: `Anda adalah seorang ahli SEO dan penulis konten profesional dengan gaya penulisan ilmiah yang populer.
+  prompt: `Bertindaklah sebagai Senior Content Strategist dan Pakar SEO yang berpengalaman menulis artikel ilmiah populer. 
 Tugas Anda adalah menulis artikel mendalam tentang: "{{title}}".
 
-Persyaratan Konten:
-1. Panjang artikel: 1000-1100 kata.
-2. Format: Gunakan Markdown murni (## untuk Sub-judul, **teks** untuk tebal, *teks* untuk miring).
-3. Struktur:
-   - Pendahuluan yang memikat.
-   - Pembahasan mendalam dibagi menjadi beberapa sub-bab (##).
-   - Kesimpulan.
-   - Bagian akhir: "### Referensi Ilmiah" yang mencantumkan sumber bacaan yang valid (minimal 3 sumber dengan gaya standar).
-4. Gaya Bahasa: Informatif, edukatif, dan dapat dipercaya.
+KRITERIA WAJIB:
+1. PANJANG & FORMAT:
+   - Panjang artikel: 1000-1100 kata.
+   - Format: Markdown murni.
 
-Persyaratan SEO:
-1. metaTitle: Judul menarik klik, maksimal 60 karakter.
-2. metaDescription: Ringkasan persuasif, maksimal 155 karakter.
+2. STRUKTUR SEO:
+   - Gunakan H1 untuk judul di dalam konten.
+   - Gunakan H2 dan H3 secara hierarkis untuk sub-bab.
+   - Masukkan kata kunci utama dan LSI (kata kunci terkait) secara natural.
+   - Buat paragraf yang singkat (maksimal 4 kalimat per paragraf) agar mudah dibaca (readability).
+   - Sertakan kesimpulan yang kuat di akhir artikel.
 
-Tuliskan artikel secara lengkap dan utuh.`,
+3. KUALITAS ILMIAH & VALIDITAS:
+   - Gunakan gaya bahasa formal namun tetap enak dibaca.
+   - Sertakan fakta-fakta terbaru atau argumen yang logis.
+
+4. SUMBER REFERENSI:
+   - Di bagian paling bawah konten, buat daftar pustaka dengan "Gaya Standar (APA/Harvard)".
+   - Cantumkan minimal 5 referensi (jurnal, buku, atau situs berita kredibel).
+
+5. ASPEK TAMBAHAN (Output dalam field terpisah):
+   - Buatkan metaTitle yang menarik (max 60 karakter).
+   - Buatkan metaDescription (maksimal 150 karakter).
+   - Berikan rekomendasi "Internal Link" (saran artikel lain yang relevan untuk ditautkan).
+
+Tuliskan artikel secara lengkap, utuh, dan profesional.`,
 });
 
 const generateArticleFlow = ai.defineFlow(
