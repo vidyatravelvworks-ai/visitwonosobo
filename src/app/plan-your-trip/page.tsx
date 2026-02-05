@@ -307,7 +307,7 @@ const PlanYourTripPage = () => {
                     <Settings2 size={24} />
                   </div>
                   <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none">Custom Your Trip</h3>
-                  <p className="text-white/60 text-xs font-bold uppercase tracking-widest leading-relaxed max-w-sm group-hover:text-white/80 transition-colors">
+                  <p className="text-white/60 text-[11px] font-medium leading-relaxed max-w-sm group-hover:text-white/80 transition-colors">
                     Punya rencana sendiri? Buat itinerary sesukamu. Konsultasikan rute impianmu dengan tim lokal kami yang ahli.
                   </p>
                 </div>
@@ -324,7 +324,7 @@ const PlanYourTripPage = () => {
                     <HomeIcon size={24} />
                   </div>
                   <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none text-black">Cari Penginapan</h3>
-                  <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest leading-relaxed max-w-sm">
+                  <p className="text-muted-foreground text-[11px] font-medium leading-relaxed max-w-sm">
                     Belum punya tempat menginap? Kami bantu carikan homestay atau hotel terbaik yang sesuai dengan budget dan rute wisatamu.
                   </p>
                 </div>
