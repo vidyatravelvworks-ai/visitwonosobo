@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -10,6 +9,7 @@ import { Clock, MapPin, CheckCircle2, MessageCircle, Loader2, Grid } from 'lucid
 import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { staticPackages } from '@/data/packages';
+import { cn } from '@/lib/utils';
 
 const PlanYourTripPage = () => {
   const db = useFirestore();
@@ -129,7 +129,11 @@ const PlanYourTripPage = () => {
                   ];
                   return (
                     <div key={item.id} className={cn("relative overflow-hidden group", spans[idx % spans.length])}>
-                      <img src={item.url || 'https://picsum.photos/seed/wonosobo/800/800'} alt={item.caption} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                      <img 
+                        src={item.url || 'https://picsum.photos/seed/wonosobo/800/800'} 
+                        alt={item.caption} 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                      />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
                         <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
                       </div>
