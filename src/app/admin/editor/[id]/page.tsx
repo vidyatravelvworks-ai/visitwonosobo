@@ -10,10 +10,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save, Globe, FileText, Layout, ArrowLeft, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';
+import { Save, Globe, FileText, Layout, ArrowLeft, Link as LinkIcon, Sparkles, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import Link from 'next/link';
+import { generateArticle } from '@/ai/flows/generate-article-flow';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -28,6 +29,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
   const router = useRouter();
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const queryType = searchParams.get('type') as 'destination' | 'story' || 'destination';
 
@@ -78,6 +80,39 @@ const ArticleEditorPage = ({ params }: PageProps) => {
       router.push('/login');
     }
   }, [user, isUserLoading, router]);
+
+  const handleGenerateAI = async () => {
+    if (!formData.title) {
+      toast({
+        variant: 'destructive',
+        title: 'Judul Kosong',
+        description: 'Silakan isi judul artikel terlebih dahulu sebelum generate konten.',
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const result = await generateArticle({ title: formData.title });
+      setFormData(prev => ({
+        ...prev,
+        content: result.content
+      }));
+      toast({
+        title: 'Berhasil',
+        description: 'Artikel telah dihasilkan oleh AI.',
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Gagal',
+        description: 'Terjadi kesalahan saat membuat artikel otomatis.',
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -169,7 +204,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                       className="pl-10 rounded-none border-2 border-black/10 focus:border-primary h-12 text-[11px] font-bold"
                     />
                   </div>
-                  <p className="text-[9px] font-medium text-muted-foreground italic">Gunakan URL dari Unsplash, Picsum, atau Cloudinary untuk hasil terbaik.</p>
                 </div>
 
                 <div className="space-y-2">
@@ -180,6 +214,29 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     placeholder="E.g. Keajaiban Pagi di Bukit Sikunir"
                     className="rounded-none border-2 border-black/10 focus:border-primary h-14 text-xl font-black uppercase tracking-tight"
                   />
+                  <div className="pt-2">
+                    <Button
+                      type="button"
+                      onClick={handleGenerateAI}
+                      disabled={isGenerating}
+                      className="bg-black text-white hover:bg-primary rounded-none h-12 px-6 gap-3 font-bold uppercase tracking-widest text-[10px]"
+                    >
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="animate-spin h-4 w-4" />
+                          Generating Artikel...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="h-4 w-4" />
+                          Buat Artikel Instan
+                        </>
+                      )}
+                    </Button>
+                    <p className="text-[9px] font-medium text-muted-foreground italic mt-2">
+                      *AI akan menghasilkan konten ~1000 kata berdasarkan judul di atas lengkap dengan referensi.
+                    </p>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -187,7 +244,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                   <Textarea 
                     value={formData.content}
                     onChange={(e) => setFormData({...formData, content: e.target.value})}
-                    placeholder="Tuliskan narasi mendalam di sini..."
+                    placeholder="Tuliskan narasi mendalam di sini atau gunakan tombol AI di atas..."
                     className="rounded-none border-2 border-black/10 focus:border-primary min-h-[500px] font-medium leading-relaxed"
                   />
                 </div>
