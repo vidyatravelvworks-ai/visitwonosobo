@@ -35,7 +35,7 @@ const ArticleEditorPage = () => {
     excerpt: '',
     content: '',
     image: '',
-    category: 'Alam',
+    category: queryType === 'destination' ? 'Alam' : 'Sejarah',
     type: queryType,
     date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
   });
@@ -55,7 +55,7 @@ const ArticleEditorPage = () => {
         excerpt: article.excerpt || '',
         content: article.content || '',
         image: article.image || '',
-        category: article.category || 'Alam',
+        category: article.category || (article.type === 'destination' ? 'Alam' : 'Sejarah'),
         type: article.type || 'destination',
         date: article.date || formData.date
       });
@@ -101,9 +101,30 @@ const ArticleEditorPage = () => {
     }
   };
 
+  const handleTypeChange = (val: 'destination' | 'story') => {
+    // Reset kategori ke default tipe baru saat tipe diubah
+    const defaultCategory = val === 'destination' ? 'Alam' : 'Sejarah';
+    setFormData({ ...formData, type: val, category: defaultCategory });
+  };
+
   if (isUserLoading || (isLoading && !isNew)) {
     return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Loading Editor...</div>;
   }
+
+  const destinationCategories = [
+    { value: "Alam", label: "Nature & Adventure" },
+    { value: "Budaya", label: "Heritage & Culture" },
+    { value: "Kuliner", label: "Food & Drink" },
+  ];
+
+  const storyCategories = [
+    { value: "Sejarah", label: "Sejarah & Warisan" },
+    { value: "Sosial", label: "Masyarakat & Budaya" },
+    { value: "Geografis", label: "Bentang Alam & Geografis" },
+    { value: "Tips", label: "Tips & Panduan" },
+  ];
+
+  const currentCategories = formData.type === 'destination' ? destinationCategories : storyCategories;
 
   return (
     <div className="min-h-screen bg-secondary/20 p-8 md:p-12">
@@ -222,6 +243,22 @@ const ArticleEditorPage = () => {
                 </div>
 
                 <div className="space-y-2">
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Content Type</Label>
+                  <Select 
+                    value={formData.type} 
+                    onValueChange={handleTypeChange}
+                  >
+                    <SelectTrigger className="rounded-none border-2 border-black/10 h-10 font-bold text-xs">
+                      <SelectValue placeholder="Pilih Tipe" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-none border-2">
+                      <SelectItem value="destination">Destination (See &amp; Do)</SelectItem>
+                      <SelectItem value="story">Story (Blog)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Category</Label>
                   <Select 
                     value={formData.category} 
@@ -231,29 +268,9 @@ const ArticleEditorPage = () => {
                       <SelectValue placeholder="Pilih Kategori" />
                     </SelectTrigger>
                     <SelectContent className="rounded-none border-2">
-                      <SelectItem value="Alam">Nature &amp; Adventure</SelectItem>
-                      <SelectItem value="Budaya">Heritage &amp; Culture</SelectItem>
-                      <SelectItem value="Kuliner">Food &amp; Drink</SelectItem>
-                      <SelectItem value="Sejarah">Sejarah &amp; Warisan</SelectItem>
-                      <SelectItem value="Sosial">Masyarakat &amp; Budaya</SelectItem>
-                      <SelectItem value="Geografis">Bentang Alam &amp; Geografis</SelectItem>
-                      <SelectItem value="Tips">Tips &amp; Panduan</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Content Type</Label>
-                  <Select 
-                    value={formData.type} 
-                    onValueChange={(val: any) => setFormData({...formData, type: val})}
-                  >
-                    <SelectTrigger className="rounded-none border-2 border-black/10 h-10 font-bold text-xs">
-                      <SelectValue placeholder="Pilih Tipe" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-none border-2">
-                      <SelectItem value="destination">Destination (See &amp; Do)</SelectItem>
-                      <SelectItem value="story">Story (Blog)</SelectItem>
+                      {currentCategories.map(cat => (
+                        <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>

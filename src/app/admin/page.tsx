@@ -123,6 +123,20 @@ const AdminDashboard = () => {
     return `/admin/editor/new?type=${filterType === 'all' ? 'destination' : filterType}`;
   };
 
+  // Kategori yang dipisahkan
+  const destinationCategories = [
+    { value: "Alam", label: "Nature & Adventure" },
+    { value: "Budaya", label: "Heritage & Culture" },
+    { value: "Kuliner", label: "Food & Drink" },
+  ];
+
+  const storyCategories = [
+    { value: "Sejarah", label: "Sejarah & Warisan" },
+    { value: "Sosial", label: "Masyarakat & Budaya" },
+    { value: "Geografis", label: "Bentang Alam & Geografis" },
+    { value: "Tips", label: "Tips & Panduan" },
+  ];
+
   return (
     <div className="min-h-screen bg-secondary/20 flex">
       <aside className="w-64 bg-black text-white flex flex-col p-8 fixed h-full z-20">
@@ -137,10 +151,11 @@ const AdminDashboard = () => {
             onClick={() => {
               setCurrentView('articles');
               setFilterType('all');
+              setFilterCategory('all');
             }}
             className={cn(
               "w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4 transition-all",
-              pathname === '/admin' && currentView === 'articles' && filterType === 'all' && "bg-primary"
+              currentView === 'articles' && filterType === 'all' && "bg-primary"
             )}
           >
             <LayoutDashboard size={18} />
@@ -279,13 +294,12 @@ const AdminDashboard = () => {
                       </SelectTrigger>
                       <SelectContent className="rounded-none border-2">
                         <SelectItem value="all">All Categories</SelectItem>
-                        <SelectItem value="Alam">Nature & Adventure</SelectItem>
-                        <SelectItem value="Budaya">Heritage & Culture</SelectItem>
-                        <SelectItem value="Kuliner">Food & Drink</SelectItem>
-                        <SelectItem value="Sejarah">Sejarah & Warisan</SelectItem>
-                        <SelectItem value="Sosial">Masyarakat & Budaya</SelectItem>
-                        <SelectItem value="Geografis">Bentang Alam & Geografis</SelectItem>
-                        <SelectItem value="Tips">Tips & Panduan</SelectItem>
+                        {(filterType === 'all' || filterType === 'destination') && destinationCategories.map(cat => (
+                          <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                        ))}
+                        {(filterType === 'all' || filterType === 'story') && storyCategories.map(cat => (
+                          <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
