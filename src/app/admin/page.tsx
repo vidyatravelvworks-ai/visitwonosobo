@@ -151,12 +151,19 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteGallery = (id: string) => {
-    if (!window.confirm('Hapus gambar galeri ini?')) return;
+    const confirmation = window.prompt('Ketik "hapus" untuk mengonfirmasi penghapusan gambar galeri ini:');
+    if (confirmation !== 'hapus') {
+      if (confirmation !== null) {
+        toast({ variant: 'destructive', title: 'Gagal', description: 'Konfirmasi salah. Gambar tidak dihapus.' });
+      }
+      return;
+    }
+
     if (!db) return;
     const docRef = doc(db, 'gallery', id);
     deleteDoc(docRef)
       .then(() => {
-        toast({ title: 'Berhasil', description: 'Gambar dihapus.' });
+        toast({ title: 'Berhasil', description: 'Gambar dihapus dari galeri.' });
       })
       .catch((err) => {
         errorEmitter.emit('permission-error', new FirestorePermissionError({
@@ -486,50 +493,28 @@ const AdminDashboard = () => {
               {isGalleryLoading ? (
                 <div className="col-span-full flex justify-center p-20"><Loader2 className="animate-spin h-10 w-10" /></div>
               ) : galleryItems?.map(item => (
-                <Card key={item.id} className="rounded-none border-2 border-black/5 shadow-xl overflow-hidden group">
+                <Card key={item.id} className="rounded-none border-2 border-black/5 shadow-xl overflow-hidden group relative">
                   <div className="aspect-video bg-gray-100 relative">
-                    {item.url ? <img src={item.url} className="w-full h-full object-cover" /> : <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-bold uppercase">No Image</div>}
-                  </div>
-                  <CardContent className="p-4 space-y-3">
-                    <Input 
-                      placeholder="Image URL" 
-                      value={item.url} 
-                      onChange={(e) => {
-                        const newUrl = e.target.value;
-                        const docRef = doc(db!, 'gallery', item.id);
-                        setDoc(docRef, { ...item, url: newUrl }, { merge: true })
-                          .catch(err => {
-                            errorEmitter.emit('permission-error', new FirestorePermissionError({
-                              path: docRef.path,
-                              operation: 'update',
-                              requestResourceData: { ...item, url: newUrl }
-                            }));
-                          });
-                      }}
-                      className="rounded-none border-2 text-[9px] h-8"
-                    />
-                    <div className="flex gap-2">
-                      <Input 
-                        placeholder="Order" 
-                        type="number"
-                        value={item.order} 
-                        onChange={(e) => {
-                          const newOrder = parseInt(e.target.value) || 0;
-                          const docRef = doc(db!, 'gallery', item.id);
-                          setDoc(docRef, { ...item, order: newOrder }, { merge: true })
-                            .catch(err => {
-                              errorEmitter.emit('permission-error', new FirestorePermissionError({
-                                path: docRef.path,
-                                operation: 'update',
-                                requestResourceData: { ...item, order: newOrder }
-                              }));
-                            });
-                        }}
-                        className="rounded-none border-2 text-[9px] h-8 w-20"
-                      />
-                      <Button variant="ghost" className="text-red-600 h-8 px-2 ml-auto" onClick={() => handleDeleteGallery(item.id)}><Trash2 size={14}/></Button>
+                    {item.url ? (
+                      <img src={item.url} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-bold uppercase">
+                        No Image
+                      </div>
+                    )}
+                    
+                    {/* Centered Trash Icon Overlay */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Button 
+                        variant="destructive" 
+                        size="icon" 
+                        className="rounded-full w-12 h-12 shadow-2xl scale-90 group-hover:scale-100 transition-transform duration-300"
+                        onClick={() => handleDeleteGallery(item.id)}
+                      >
+                        <Trash2 size={24} />
+                      </Button>
                     </div>
-                  </CardContent>
+                  </div>
                 </Card>
               ))}
             </div>
