@@ -52,6 +52,7 @@ const Footer = () => {
               <li><Link href="/see-and-do#nature" className="hover:text-primary transition-colors">Nature & Adventure</Link></li>
               <li><Link href="/see-and-do#culture" className="hover:text-primary transition-colors">Heritage & Culture</Link></li>
               <li><Link href="/see-and-do#eat" className="hover:text-primary transition-colors">Food & Drink</Link></li>
+              <li><Link href="/stories" className="hover:text-primary transition-colors">Stories (blog)</Link></li>
             </ul>
           </div>
 
