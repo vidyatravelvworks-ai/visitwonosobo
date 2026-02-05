@@ -32,15 +32,16 @@ const PlanYourTripPage = () => {
 
   const packages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticPackages;
 
-  // Fallback data for gallery if Firestore is empty
+  // Generate 20 dummy items to ensure the grid is always full
   const defaultGalleryItems = Array.from({ length: 20 }).map((_, i) => ({
     id: `dummy-${i}`,
     url: `https://picsum.photos/seed/trip-${i + 20}/800/800`,
     caption: `Experience Wonosobo ${i + 1}`,
-    order: i
+    order: i + 100 // Ensure they come after DB items if sorted by order
   }));
 
-  const galleryItems = (dbGalleryItems && dbGalleryItems.length > 0) ? dbGalleryItems : defaultGalleryItems;
+  // Merge DB items with dummy items, ensuring exactly 20 items for a rich grid
+  const galleryItems = [...(dbGalleryItems || []), ...defaultGalleryItems].slice(0, 20);
 
   const essentialPoints = [
     { 
@@ -188,6 +189,7 @@ const PlanYourTripPage = () => {
             </div>
           )}
 
+          {/* GALLERY SECTION */}
           <div className="mt-32">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
               <div className="flex items-center gap-4">
@@ -195,7 +197,7 @@ const PlanYourTripPage = () => {
                 <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Trip Gallery</h2>
               </div>
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-primary pl-4 max-w-xs">
-                Momen-momen terbaik dalam format dua baris yang estetik.
+                Momen terbaik dalam format 2 baris yang luas.
               </p>
             </div>
             
@@ -203,17 +205,17 @@ const PlanYourTripPage = () => {
               <div className="flex justify-center p-20"><Loader2 className="animate-spin h-10 w-10 text-primary" /></div>
             ) : (
               <div className="relative">
-                <div className="flex overflow-x-auto pb-6 gap-2 no-scrollbar snap-x snap-mandatory">
-                  <div className="grid grid-rows-2 grid-flow-col gap-2 h-[500px] md:h-[600px]">
+                <div className="flex overflow-x-auto pb-8 gap-4 no-scrollbar snap-x snap-mandatory">
+                  <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px]">
                     {galleryItems.map((item, idx) => {
-                      // Pola berulang untuk 2 baris yang bagus
+                      // Pattern for dynamic grid in 2 fixed rows
                       const patterns = [
                         "row-span-2 col-span-2 w-[400px] md:w-[500px]", // Big Square
-                        "row-span-1 col-span-1 w-[200px] md:w-[250px]", // Small SQ Top
-                        "row-span-1 col-span-1 w-[200px] md:w-[250px]", // Small SQ Bottom
-                        "row-span-1 col-span-2 w-[400px] md:w-[500px]", // Landscape Top
-                        "row-span-1 col-span-2 w-[400px] md:w-[500px]", // Landscape Bottom
-                        "row-span-2 col-span-1 w-[200px] md:w-[250px]", // Tall Vertical (Alternative SQ)
+                        "row-span-1 col-span-1 w-[200px] md:w-[250px]", // Small Square
+                        "row-span-1 col-span-1 w-[200px] md:w-[250px]", // Small Square
+                        "row-span-1 col-span-2 w-[400px] md:w-[500px]", // Landscape
+                        "row-span-1 col-span-2 w-[400px] md:w-[500px]", // Landscape
+                        "row-span-2 col-span-1 w-[300px] md:w-[350px]", // Tall Vertical
                       ];
                       const patternClass = patterns[idx % patterns.length];
                       const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/trip-${idx + 40}/800/800`;
@@ -222,7 +224,7 @@ const PlanYourTripPage = () => {
                         <div 
                           key={item.id} 
                           className={cn(
-                            "relative overflow-hidden group border-2 border-black/5 snap-start",
+                            "relative overflow-hidden group border-2 border-black/5 snap-start shadow-md",
                             patternClass
                           )}
                         >
