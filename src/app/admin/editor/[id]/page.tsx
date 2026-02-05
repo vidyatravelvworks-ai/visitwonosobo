@@ -14,13 +14,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { 
   Save, Globe, FileText, ArrowLeft, Sparkles, Loader2, 
   Search, Tag, Calendar, Layers, Activity, CheckCircle2, AlertCircle, Clock,
-  Image as ImageIcon, ExternalLink, MousePointer2, Info, User as UserIcon
+  Image as ImageIcon, ExternalLink, User as UserIcon
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { generateArticle } from '@/ai/flows/generate-article-flow';
-import { articles as staticArticles } from '@/data/articles';
-import { cn } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 interface PageProps {
@@ -90,17 +88,22 @@ const ArticleEditorPage = ({ params }: PageProps) => {
 
   const handleGenerateAI = async () => {
     if (!formData.title) {
-      toast({ variant: 'destructive', title: 'Judul Kosong' });
+      toast({ variant: 'destructive', title: 'Judul Kosong', description: 'Masukkan judul terlebih dahulu.' });
       return;
     }
     setIsGenerating(true);
     try {
-      const result = await generateArticle({ title: formData.title, focusKeyword: formData.focusKeyword });
+      const result = await generateArticle({ 
+        title: formData.title, 
+        focusKeyword: formData.focusKeyword 
+      });
+      
       let suggestedImage = formData.image;
       if (result.suggestedImageId) {
         const found = PlaceHolderImages.find(img => img.id === result.suggestedImageId);
         if (found) suggestedImage = found.imageUrl;
       }
+
       setFormData(prev => ({
         ...prev,
         content: result.content,
@@ -112,7 +115,8 @@ const ArticleEditorPage = ({ params }: PageProps) => {
       }));
       toast({ title: 'Berhasil', description: 'Artikel SEO 100% telah dibuat.' });
     } catch (error) {
-      toast({ variant: 'destructive', title: 'Gagal', description: 'Terjadi kesalahan AI.' });
+      console.error(error);
+      toast({ variant: 'destructive', title: 'Gagal', description: 'Terjadi kesalahan pada AI Write.' });
     } finally {
       setIsGenerating(false);
     }
@@ -138,12 +142,12 @@ const ArticleEditorPage = ({ params }: PageProps) => {
   };
 
   const getSEO = () => {
-    const words = formData.content.trim().split(/\s+/).length;
+    const words = formData.content.trim().split(/\s+/).filter(w => w.length > 0).length;
     const content = formData.content.toLowerCase();
     const keyword = formData.focusKeyword.toLowerCase();
     const checks = [
       { id: 1, label: 'Keyword in Content', pass: keyword && content.includes(keyword) },
-      { id: 2, label: 'Meta Desc (140-160)', pass: formData.excerpt.length >= 140 && formData.excerpt.length <= 160 },
+      { id: 2, label: 'Meta Desc (140-160)', pass: formData.excerpt.length >= 140 && formData.excerpt.length <= 165 },
       { id: 3, label: 'Length (>1100 words)', pass: words >= 1100 },
       { id: 4, label: 'Meta Title (50-60)', pass: formData.metaTitle.length >= 50 && formData.metaTitle.length <= 65 },
       { id: 5, label: 'Keyword in Start', pass: keyword && content.split('\n')[0]?.includes(keyword) },
@@ -153,6 +157,8 @@ const ArticleEditorPage = ({ params }: PageProps) => {
   };
 
   const seo = getSEO();
+
+  if (isUserLoading || (isLoading && !isNew)) return <div className="h-screen flex items-center justify-center font-black uppercase text-xs">Loading...</div>;
 
   return (
     <div className="min-h-screen bg-secondary/10 flex flex-col pb-20">
@@ -203,23 +209,23 @@ const ArticleEditorPage = ({ params }: PageProps) => {
 
               <div className="space-y-2">
                 <Label className="text-[10px] font-black uppercase">Article Title</Label>
-                <Input value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="rounded-none h-12 text-lg font-black uppercase" />
+                <Input value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="rounded-none h-12 text-lg font-black uppercase w-full" />
               </div>
 
               <div className="grid grid-cols-10 gap-4 items-end">
                 <div className="col-span-6 space-y-2">
                   <Label className="text-[10px] font-black uppercase text-primary">Focus Keyword</Label>
-                  <Input value={formData.focusKeyword} onChange={e => setFormData({...formData, focusKeyword: e.target.value})} className="rounded-none h-10 text-xs border-primary/30" />
+                  <Input value={formData.focusKeyword} onChange={e => setFormData({...formData, focusKeyword: e.target.value})} className="rounded-none h-12 text-xs border-primary/30" placeholder="e.g. Wisata Dieng" />
                 </div>
                 <div className="col-span-4">
-                  <Button onClick={handleGenerateAI} disabled={isGenerating} className="w-full bg-black text-white h-10 rounded-none text-[10px] font-black uppercase gap-2">
-                    {isGenerating ? <Loader2 className="animate-spin" /> : <Sparkles size={14} />} AI Write
+                  <Button onClick={handleGenerateAI} disabled={isGenerating} className="w-full bg-black text-white h-12 rounded-none text-[10px] font-black uppercase gap-2">
+                    {isGenerating ? <Loader2 className="animate-spin h-4 w-4" /> : <Sparkles size={14} />} Buat Artikel Instan
                   </Button>
                 </div>
               </div>
 
               <div className="space-y-2 pt-2">
-                <Textarea value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} className="min-h-[600px] rounded-none p-6 text-sm leading-loose focus-visible:ring-0" placeholder="Content..." />
+                <Textarea value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} className="min-h-[600px] rounded-none p-6 text-sm leading-loose focus-visible:ring-0" placeholder="Content Markdown..." />
               </div>
             </CardContent>
           </Card>
@@ -235,22 +241,18 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                   {c.pass ? <CheckCircle2 size={12} className="text-green-500" /> : <AlertCircle size={12} className="text-gray-300" />}
                 </div>
               ))}
+              <div className="pt-2 border-t mt-2 text-[9px] font-bold uppercase flex justify-between">
+                <span>Total Words</span>
+                <span className={seo.words >= 1100 ? "text-green-500" : "text-muted-foreground"}>{seo.words}</span>
+              </div>
             </CardContent>
           </Card>
 
           <Card className="rounded-none border-2">
             <CardHeader className="p-4 border-b"><CardTitle className="text-[10px] font-black uppercase">Metadata</CardTitle></CardHeader>
-            <CardContent className="p-4 space-y-4">
+            <CardContent className="p-4 space-y-3">
               <div className="space-y-1">
-                <Label className="text-[9px] font-black uppercase">Date</Label>
-                <Input value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="h-8 text-[10px] rounded-none" />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-[9px] font-black uppercase">Author</Label>
-                <Input value={formData.author} onChange={e => setFormData({...formData, author: e.target.value})} className="h-8 text-[10px] rounded-none" />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-[9px] font-black uppercase">Slug</Label>
+                <Label className="text-[9px] font-black uppercase">URL Slug</Label>
                 <Input value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="h-8 text-[10px] rounded-none" />
               </div>
               <div className="space-y-1">
@@ -262,6 +264,14 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                 <Textarea value={formData.excerpt} onChange={e => setFormData({...formData, excerpt: e.target.value})} className="h-20 text-[10px] rounded-none" />
               </div>
               <div className="space-y-1">
+                <Label className="text-[9px] font-black uppercase">Tanggal</Label>
+                <Input value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="h-8 text-[10px] rounded-none" />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-[9px] font-black uppercase">Penulis</Label>
+                <Input value={formData.author} onChange={e => setFormData({...formData, author: e.target.value})} className="h-8 text-[10px] rounded-none" />
+              </div>
+              <div className="space-y-1">
                 <Label className="text-[9px] font-black uppercase">Category</Label>
                 <Select value={formData.category} onValueChange={v => setFormData({...formData, category: v})}>
                   <SelectTrigger className="h-8 text-[10px] rounded-none"><SelectValue /></SelectTrigger>
@@ -270,6 +280,8 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     <SelectItem value="Budaya">Budaya</SelectItem>
                     <SelectItem value="Kuliner">Kuliner</SelectItem>
                     <SelectItem value="Sejarah">Sejarah</SelectItem>
+                    <SelectItem value="Sosial">Sosial</SelectItem>
+                    <SelectItem value="Tips">Tips</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

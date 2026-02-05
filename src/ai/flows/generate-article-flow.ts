@@ -34,16 +34,16 @@ const prompt = ai.definePrompt({
 Tugas Anda adalah menulis artikel mendalam tentang: "{{title}}".
 
 KRITERIA WAJIB UNTUK SKOR SEO 100%:
-1. PANJANG KONTEN: Minimal 1150 kata. Jangan mengulang kalimat, berikan informasi unik dan mendalam.
+1. PANJANG KONTEN: Minimal 1150 kata. Berikan informasi unik, mendalam, dan bermanfaat.
 2. PENEMPATAN KEYWORD: 
-   - Masukkan kata kunci fokus ({{focusKeyword}}) di KALIMAT PERTAMA pada paragraf pertama.
+   - Masukkan kata kunci fokus ({{focusKeyword}}) secara eksplisit di KALIMAT PERTAMA pada paragraf pertama.
    - Gunakan kata kunci secara natural di beberapa sub-judul (H2/H3).
 3. METADATA:
-   - metaTitle: 50-60 karakter, harus mengandung kata kunci.
-   - metaDescription: 145-155 karakter, persuasif, mengandung kata kunci.
-4. STRUKTUR: Gunakan H1, H2, H3, bullet points, dan daftar referensi di akhir.
+   - metaTitle: Buat 50-60 karakter, harus mengandung kata kunci.
+   - metaDescription: Buat 145-155 karakter, persuasif, mengandung kata kunci.
+4. STRUKTUR: Gunakan format Markdown lengkap (H1, H2, H3, bullet points, dan daftar referensi di akhir).
 
-Pilih satu ID gambar paling relevan: hero-sikunir, candi-arjuna, mie-ongklok, telaga-warna, kawah-sikidang, kebun-teh, waterfall, carica, coffee, cave, mountain-prau.
+Pilih satu ID gambar paling relevan dari daftar: hero-sikunir, candi-arjuna, mie-ongklok, telaga-warna, kawah-sikidang, kebun-teh, waterfall, carica, coffee, cave, mountain-prau.
 
 Tulis dalam Bahasa Indonesia yang profesional dan mengalir.`,
 });
