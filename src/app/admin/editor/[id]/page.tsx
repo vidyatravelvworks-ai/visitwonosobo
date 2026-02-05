@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save, Globe, FileText, ArrowLeft, Link as LinkIcon, Sparkles, Loader2, Search, Tag, Calendar } from 'lucide-react';
+import { Save, Globe, FileText, ArrowLeft, Link as LinkIcon, Sparkles, Loader2, Search, Tag, Calendar, Layers } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import Link from 'next/link';
@@ -225,6 +225,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     placeholder="https://images.unsplash.com/..."
                     className="rounded-none border-2 border-black/10 h-12 text-[11px] font-bold"
                   />
+                  <p className="text-[9px] font-bold text-muted-foreground uppercase mt-1">Gunakan URL dari Unsplash, Picsum, atau Cloudinary untuk hasil terbaik.</p>
                 </div>
 
                 <div className="space-y-4">
@@ -263,22 +264,73 @@ const ArticleEditorPage = ({ params }: PageProps) => {
             <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white sticky top-28">
               <CardHeader className="border-b p-6">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
-                  <Globe className="text-primary" size={16} /> SEO Settings
+                  <Globe className="text-primary" size={16} /> Settings & SEO
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
+                <div className="space-y-4 pb-6 border-b">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                    <Layers size={14} /> Classification
+                  </Label>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-[9px] font-bold uppercase">Tipe Konten</Label>
+                    <Select 
+                      value={formData.type} 
+                      onValueChange={(val: any) => setFormData({...formData, type: val, category: val === 'destination' ? 'Alam' : 'Sejarah'})}
+                    >
+                      <SelectTrigger className="rounded-none border-2 text-[10px] h-10 font-bold">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="destination">See & Do</SelectItem>
+                        <SelectItem value="story">Stories (Blog)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[9px] font-bold uppercase">Kategori</Label>
+                    <Select 
+                      value={formData.category} 
+                      onValueChange={(val) => setFormData({...formData, category: val})}
+                    >
+                      <SelectTrigger className="rounded-none border-2 text-[10px] h-10 font-bold">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {formData.type === 'destination' ? (
+                          <>
+                            <SelectItem value="Alam">Alam</SelectItem>
+                            <SelectItem value="Budaya">Budaya</SelectItem>
+                            <SelectItem value="Kuliner">Kuliner</SelectItem>
+                          </>
+                        ) : (
+                          <>
+                            <SelectItem value="Sejarah">Sejarah</SelectItem>
+                            <SelectItem value="Sosial">Sosial</SelectItem>
+                            <SelectItem value="Geografis">Geografis</SelectItem>
+                            <SelectItem value="Tips">Tips</SelectItem>
+                          </>
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Slug URL</Label>
                   <Input 
                     value={formData.slug}
                     onChange={(e) => setFormData({...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-')})}
                     className="rounded-none border-2 text-[11px] font-bold h-10"
+                    placeholder="judul-artikel-anda"
                   />
                 </div>
 
                 <div className="space-y-4 pt-6 border-t">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                    <Search size={14} /> Meta Tags
+                    <Search size={14} /> SEO Meta Tags
                   </Label>
                   <div className="space-y-4">
                     <div className="space-y-1">
