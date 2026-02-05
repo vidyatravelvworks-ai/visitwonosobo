@@ -238,8 +238,21 @@ const AdminDashboard = () => {
                 <h3 className="text-lg font-black uppercase tracking-tight">Gallery Quick Add</h3>
                 <p className="text-[10px] font-bold uppercase text-muted-foreground">Add new photos to the trip gallery instantly.</p>
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="space-y-4">
+              <div className="flex flex-col lg:flex-row gap-8">
+                <div className="space-y-2 shrink-0">
+                  <Label className="text-[10px] font-black uppercase">Live Preview</Label>
+                  <div className="w-32 aspect-square bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden">
+                    {galleryForm.url ? (
+                      <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
+                    ) : (
+                      <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2">
+                        <ImageIcon size={32} className="opacity-20" />
+                        No Image URL provided
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-4 flex-grow">
                   <div className="space-y-1">
                     <Label className="text-[10px] font-black uppercase">Image URL</Label>
                     <Input 
@@ -273,19 +286,6 @@ const AdminDashboard = () => {
                         <Save size={14} /> Save Image
                       </Button>
                     </div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase">Live Preview</Label>
-                  <div className="w-32 aspect-square bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden">
-                    {galleryForm.url ? (
-                      <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
-                    ) : (
-                      <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2">
-                        <ImageIcon size={32} className="opacity-20" />
-                        No Image URL provided
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
