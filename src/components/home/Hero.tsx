@@ -5,7 +5,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { ChevronDown, Loader2 } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 
@@ -14,39 +14,29 @@ interface HeroProps {
   isLoading?: boolean;
 }
 
-const Hero = ({ config: externalConfig, isLoading: externalLoading }: HeroProps) => {
+const Hero = ({ config: externalConfig }: HeroProps) => {
   const db = useFirestore();
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
-  const { data: internalConfig, isLoading: internalLoading } = useDoc(configRef);
+  const { data: internalConfig } = useDoc(configRef);
 
   const config = externalConfig !== undefined ? externalConfig : internalConfig;
-  const isLoading = externalLoading !== undefined ? externalLoading : internalLoading;
 
   const configHomeHero = config?.heroImages?.home;
   const placeholderHomeHero = PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl || 'https://picsum.photos/seed/wonosobo-home/1200/800';
   
-  // Jika sedang loading, jangan gunakan placeholder dulu agar tidak "flash"
-  const heroImage = isLoading ? null : ((configHomeHero && configHomeHero.trim() !== "") ? configHomeHero : placeholderHomeHero);
+  const heroImage = (configHomeHero && configHomeHero.trim() !== "") ? configHomeHero : placeholderHomeHero;
 
   return (
     <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black">
-      <div className="absolute inset-0 z-0 transition-opacity duration-1000">
-        {heroImage ? (
-          <>
-            <Image
-              src={heroImage}
-              alt="Home Hero"
-              fill
-              className="object-cover animate-in fade-in duration-1000"
-              priority
-            />
-            <div className="absolute inset-0 bg-black/30 bg-gradient-to-b from-black/50 via-transparent to-black/60" />
-          </>
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Loader2 className="h-10 w-10 text-primary animate-spin" />
-          </div>
-        )}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src={heroImage}
+          alt="Home Hero"
+          fill
+          className="object-cover animate-in fade-in duration-1000"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/30 bg-gradient-to-b from-black/50 via-transparent to-black/60" />
       </div>
 
       <div className="container mx-auto px-2 md:px-8 lg:px-32 relative z-10 text-center pt-32">
