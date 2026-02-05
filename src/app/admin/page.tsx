@@ -151,9 +151,8 @@ const AdminDashboard = () => {
 
   /**
    * Helper untuk konfirmasi keamanan sebelum menghapus data.
-   * Meminta user mengetik kata "hapus".
    */
-  const confirmWithHapus = (itemType: string) => {
+  const confirmDeleteAction = (itemType: string) => {
     const input = window.prompt(`Ketik "hapus" untuk mengonfirmasi penghapusan ${itemType} ini:`);
     if (input === 'hapus') return true;
     if (input !== null) {
@@ -162,9 +161,13 @@ const AdminDashboard = () => {
     return false;
   };
 
-  const handleDeleteGallery = (id: string) => {
-    if (!confirmWithHapus('gambar galeri')) return;
+  const handleDeleteGallery = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!confirmDeleteAction('gambar galeri')) return;
     if (!db) return;
+
     const docRef = doc(db, 'gallery', id);
     deleteDoc(docRef)
       .then(() => {
@@ -179,7 +182,7 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteArticle = (id: string) => {
-    if (!confirmWithHapus('artikel')) return;
+    if (!confirmDeleteAction('artikel')) return;
     if (!db) return;
     const docRef = doc(db, 'articles', id);
     deleteDoc(docRef)
@@ -195,7 +198,7 @@ const AdminDashboard = () => {
   };
 
   const handleDeletePackage = (id: string) => {
-    if (!confirmWithHapus('paket trip')) return;
+    if (!confirmDeleteAction('paket trip')) return;
     if (!db) return;
     const docRef = doc(db, 'trip_packages', id);
     deleteDoc(docRef)
@@ -434,25 +437,25 @@ const AdminDashboard = () => {
         {currentView === 'gallery' && (
           <div className="space-y-8">
             <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white w-full">
-              <CardHeader className="border-b bg-secondary/10 p-3">
+              <CardHeader className="border-b bg-secondary/10 p-2">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
                   <ImageIcon size={14} className="text-primary" /> Tambah Foto Galeri Baru
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-3">
+              <CardContent className="p-2">
                 <div className="flex gap-3 items-stretch">
-                  <div className="w-32 bg-gray-100 border-2 border-dashed border-black/10 shrink-0 overflow-hidden flex items-center justify-center relative min-h-[100px]">
+                  <div className="w-32 bg-gray-100 border-2 border-dashed border-black/10 shrink-0 overflow-hidden flex items-center justify-center relative min-h-[90px]">
                     {newGalleryItem.url ? (
                       <img src={newGalleryItem.url} className="w-full h-full object-cover" alt="Preview" />
                     ) : (
-                      <div className="flex flex-col items-center gap-1 text-muted-foreground p-2">
+                      <div className="flex flex-col items-center gap-1 text-muted-foreground p-2 text-center">
                         <ImageIcon size={16} className="opacity-20" />
-                        <span className="text-[7px] font-black uppercase tracking-widest">Preview</span>
+                        <span className="text-[7px] font-black uppercase tracking-widest">Image Preview</span>
                       </div>
                     )}
                   </div>
                   
-                  <div className="flex-grow flex flex-col justify-between space-y-2">
+                  <div className="flex-grow flex flex-col justify-between space-y-1">
                     <div className="space-y-1">
                       <div className="space-y-0.5">
                         <Label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">URL Gambar</Label>
@@ -476,7 +479,7 @@ const AdminDashboard = () => {
                     <Button 
                       onClick={handleSaveNewGalleryItem} 
                       disabled={isAddingPhoto || !newGalleryItem.url}
-                      className="w-full bg-primary hover:bg-black text-white rounded-none h-8 gap-2 font-black uppercase tracking-widest text-[9px] shadow-md transition-all active:scale-[0.98]"
+                      className="w-full bg-primary hover:bg-black text-white rounded-none h-8 gap-2 font-black uppercase tracking-widest text-[9px] shadow-md"
                     >
                       {isAddingPhoto ? <Loader2 className="animate-spin h-3 w-3" /> : <Plus size={14} />}
                       {isAddingPhoto ? 'Menyimpan...' : 'Add Photo to Gallery'}
@@ -500,12 +503,13 @@ const AdminDashboard = () => {
                       </div>
                     )}
                     
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none group-hover:pointer-events-auto">
                       <Button 
+                        type="button"
                         variant="destructive" 
                         size="icon"
                         className="rounded-none h-12 w-12"
-                        onClick={() => handleDeleteGallery(item.id)}
+                        onClick={(e) => handleDeleteGallery(e, item.id)}
                       >
                         <Trash2 className="h-6 w-6" />
                       </Button>
