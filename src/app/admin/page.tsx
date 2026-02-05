@@ -104,22 +104,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleDelete = async (e: React.MouseEvent, col: string, id: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!db) return;
-    
-    const confirmed = window.prompt(`Ketik "hapus" untuk mengonfirmasi penghapusan:`);
-    if (confirmed === 'hapus') {
-      try {
-        await deleteDoc(doc(db, col, id));
-        toast({ title: 'Dihapus', description: 'Data telah dihapus secara permanen.' });
-      } catch (err) {
-        toast({ variant: 'destructive', title: 'Gagal Menghapus' });
-      }
-    }
-  };
-
   if (isUserLoading || !user) return <div className="h-screen flex items-center justify-center font-black uppercase text-xs tracking-widest">Authenticating...</div>;
 
   const filteredArticles = allArticles?.filter(a => {
@@ -285,7 +269,6 @@ const AdminDashboard = () => {
                         <TableCell className="py-2 px-4 text-right">
                           <div className="flex justify-end gap-2">
                             <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={14}/></Link></Button>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600 hover:bg-red-50 relative z-50" onClick={(e) => handleDelete(e, 'articles', a.id)}><Trash2 size={14}/></Button>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -307,7 +290,6 @@ const AdminDashboard = () => {
                         <TableCell className="py-2 px-4 text-right">
                           <div className="flex justify-end gap-2">
                             <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={14}/></Link></Button>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600 hover:bg-red-50 relative z-50" onClick={(e) => handleDelete(e, 'trip_packages', p.id)}><Trash2 size={14}/></Button>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -326,7 +308,7 @@ const AdminDashboard = () => {
                         </TableCell>
                         <TableCell className="py-2 px-4"><span className="text-[10px] font-bold uppercase">{g.caption}</span></TableCell>
                         <TableCell className="py-2 px-4 text-right">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600 hover:bg-red-50 relative z-50" onClick={(e) => handleDelete(e, 'gallery', g.id)}><Trash2 size={14}/></Button>
+                          {/* Tombol hapus dihapus */}
                         </TableCell>
                       </TableRow>
                     ))
