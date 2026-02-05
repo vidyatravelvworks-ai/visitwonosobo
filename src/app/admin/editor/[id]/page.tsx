@@ -289,23 +289,23 @@ const ArticleEditorPage = ({ params }: PageProps) => {
             <CardContent className="p-4 space-y-2">
               <div className="space-y-1">
                 <Label className="text-[8px] font-black uppercase">URL Slug</Label>
-                <Input value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="h-8 text-[8px] rounded-none" />
+                <Input value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="h-8 text-xs rounded-none" />
               </div>
               <div className="space-y-1">
                 <Label className="text-[8px] font-black uppercase">Meta SEO Title</Label>
-                <Input value={formData.metaTitle} onChange={e => setFormData({...formData, metaTitle: e.target.value})} className="h-8 text-[8px] rounded-none" />
+                <Input value={formData.metaTitle} onChange={e => setFormData({...formData, metaTitle: e.target.value})} className="h-8 text-xs rounded-none" />
               </div>
               <div className="space-y-1">
                 <Label className="text-[8px] font-black uppercase">Meta Description (Excerpt)</Label>
-                <Textarea value={formData.excerpt} onChange={e => setFormData({...formData, excerpt: e.target.value})} className="h-20 text-[8px] rounded-none" />
+                <Textarea value={formData.excerpt} onChange={e => setFormData({...formData, excerpt: e.target.value})} className="h-20 text-xs rounded-none" />
               </div>
               <div className="space-y-1">
                 <Label className="text-[8px] font-black uppercase">Publish Date</Label>
-                <Input value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="h-8 text-[8px] rounded-none" />
+                <Input value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="h-8 text-xs rounded-none" />
               </div>
               <div className="space-y-1">
                 <Label className="text-[8px] font-black uppercase">Author Name</Label>
-                <Input value={formData.author} onChange={e => setFormData({...formData, author: e.target.value})} className="h-8 text-[8px] rounded-none" />
+                <Input value={formData.author} onChange={e => setFormData({...formData, author: e.target.value})} className="h-8 text-xs rounded-none" />
               </div>
               <div className="space-y-1">
                 <Label className="text-[8px] font-black uppercase">Category</Label>
