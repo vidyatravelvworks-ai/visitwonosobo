@@ -122,7 +122,8 @@ const AdminDashboard = () => {
 
   const filteredArticles = allArticles?.filter(a => {
     const matchesSearch = a.title?.toLowerCase().includes(tableSearch.toLowerCase()) || 
-                         a.category?.toLowerCase().includes(tableSearch.toLowerCase());
+                         a.category?.toLowerCase().includes(tableSearch.toLowerCase()) ||
+                         getCategoryLabel(a.category)?.toLowerCase().includes(tableSearch.toLowerCase());
     if (currentView === 'see-and-do') return a.type === 'destination' && matchesSearch;
     if (currentView === 'stories') return a.type === 'story' && matchesSearch;
     return false;
@@ -237,7 +238,7 @@ const AdminDashboard = () => {
                 <h3 className="text-lg font-black uppercase tracking-tight">Gallery Quick Add</h3>
                 <p className="text-[10px] font-bold uppercase text-muted-foreground">Add new photos to the trip gallery instantly.</p>
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-4">
                   <div className="space-y-1">
                     <Label className="text-[10px] font-black uppercase">Image URL</Label>
@@ -274,9 +275,9 @@ const AdminDashboard = () => {
                     </div>
                   </div>
                 </div>
-                <div className="lg:col-span-2 space-y-2">
+                <div className="space-y-2">
                   <Label className="text-[10px] font-black uppercase">Live Preview</Label>
-                  <div className="aspect-[21/9] bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden">
+                  <div className="aspect-square bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden">
                     {galleryForm.url ? (
                       <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
                     ) : (
