@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, use } from 'react';
@@ -11,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save, Globe, FileText, Layout, ArrowLeft, Link as LinkIcon } from 'lucide-react';
+import { Save, Globe, FileText, Layout, ArrowLeft, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import Link from 'next/link';
@@ -160,6 +159,20 @@ const ArticleEditorPage = ({ params }: PageProps) => {
               </CardHeader>
               <CardContent className="p-8 space-y-6">
                 <div className="space-y-2">
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Featured Image URL</Label>
+                  <div className="relative">
+                    <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      value={formData.image}
+                      onChange={(e) => setFormData({...formData, image: e.target.value})}
+                      placeholder="https://images.unsplash.com/..."
+                      className="pl-10 rounded-none border-2 border-black/10 focus:border-primary h-12 text-[11px] font-bold"
+                    />
+                  </div>
+                  <p className="text-[9px] font-medium text-muted-foreground italic">Gunakan URL dari Unsplash, Picsum, atau Cloudinary untuk hasil terbaik.</p>
+                </div>
+
+                <div className="space-y-2">
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Article Title</Label>
                   <Input 
                     value={formData.title}
@@ -212,13 +225,19 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     <SelectContent>{currentCategories.map(cat => <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>)}</SelectContent>
                   </Select>
                 </div>
-
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Image URL</Label>
-                  <div className="relative"><LinkIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" /><Input value={formData.image} onChange={(e) => setFormData({...formData, image: e.target.value})} className="pl-10 rounded-none border-2 h-10 text-[11px]" /></div>
-                </div>
               </CardContent>
             </Card>
+
+            {formData.image && (
+              <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white overflow-hidden">
+                <CardHeader className="border-b p-4 bg-secondary/10">
+                  <CardTitle className="text-[9px] font-black uppercase tracking-widest">Image Preview</CardTitle>
+                </CardHeader>
+                <div className="aspect-video relative bg-muted">
+                  <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
+                </div>
+              </Card>
+            )}
           </div>
         </div>
       </div>
