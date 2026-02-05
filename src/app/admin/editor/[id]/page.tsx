@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { 
   Save, Globe, FileText, ArrowLeft, Sparkles, Loader2, 
   Search, Tag, Calendar, Layers, Activity, CheckCircle2, AlertCircle, Clock,
-  Image as ImageIcon, ExternalLink, User as UserIcon
+  Image as ImageIcon, ExternalLink, User as UserIcon, Link as LinkIcon
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -142,6 +142,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
       await setDoc(doc(db, 'articles', articleId), {
         ...formData,
         id: articleId,
+        slug: articleId,
         updatedAt: serverTimestamp(),
       }, { merge: true });
       toast({ title: 'Saved Successfully' });
@@ -157,13 +158,26 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     const words = formData.content.trim().split(/\s+/).filter(w => w.length > 0).length;
     const content = formData.content.toLowerCase();
     const keyword = formData.focusKeyword.toLowerCase();
+    const title = formData.title.toLowerCase();
+    const slug = formData.slug.toLowerCase();
+    const excerpt = formData.excerpt.toLowerCase();
+    const firstParagraph = content.split('\n').find(p => p.trim().length > 0) || '';
+
     const checks = [
-      { id: 1, label: 'Keyword in Content', pass: keyword && content.includes(keyword) },
-      { id: 2, label: 'Meta Desc (140-160)', pass: formData.excerpt.length >= 140 && formData.excerpt.length <= 165 },
-      { id: 3, label: 'Length (>1100 words)', pass: words >= 1100 },
-      { id: 4, label: 'Meta Title (50-60)', pass: formData.metaTitle.length >= 50 && formData.metaTitle.length <= 65 },
-      { id: 5, label: 'Keyword in Start', pass: keyword && content.split('\n')[0]?.includes(keyword) },
+      { id: 1, label: 'Keyword in Title', pass: keyword && title.includes(keyword) },
+      { id: 2, label: 'Keyword in Slug', pass: keyword && slug.includes(keyword) },
+      { id: 3, label: 'Keyword in First Paragraph', pass: keyword && firstParagraph.includes(keyword) },
+      { id: 4, label: 'Keyword in Meta Description', pass: keyword && excerpt.includes(keyword) },
+      { id: 5, label: 'Keyword in Content Body', pass: keyword && content.includes(keyword) },
+      { id: 6, label: 'Keyword Density (>3 times)', pass: keyword && (content.split(keyword).length - 1) >= 3 },
+      { id: 7, label: 'Subheadings (H2/H3) used', pass: content.includes('## ') || content.includes('### ') },
+      { id: 8, label: 'Content Length (>1150 words)', pass: words >= 1150 },
+      { id: 9, label: 'Meta Title (50-60 chars)', pass: formData.metaTitle.length >= 50 && formData.metaTitle.length <= 65 },
+      { id: 10, label: 'Meta Desc (145-155 chars)', pass: formData.excerpt.length >= 145 && formData.excerpt.length <= 160 },
+      { id: 11, label: 'Featured Image present', pass: formData.image.trim().length > 0 },
+      { id: 12, label: 'Links (Internal/External)', pass: content.includes('](') }
     ];
+    
     const score = Math.round((checks.filter(c => c.pass).length / checks.length) * 100);
     return { checks, score, words };
   };
@@ -245,17 +259,17 @@ const ArticleEditorPage = ({ params }: PageProps) => {
 
         <div className="space-y-4">
           <Card className="rounded-none border-2 bg-secondary/10 shadow-sm">
-            <CardHeader className="p-4 border-b"><CardTitle className="text-[10px] font-black uppercase tracking-widest">SEO Live Checklist</CardTitle></CardHeader>
+            <CardHeader className="p-4 border-b"><CardTitle className="text-[10px] font-black uppercase tracking-widest">SEO Detail Checklist</CardTitle></CardHeader>
             <CardContent className="p-4 space-y-2">
               {seo.checks.map(c => (
-                <div key={c.id} className="flex items-center justify-between text-[9px] font-bold uppercase">
-                  <span>{c.label}</span>
-                  {c.pass ? <CheckCircle2 size={12} className="text-green-500" /> : <AlertCircle size={12} className="text-gray-300" />}
+                <div key={c.id} className="flex items-center justify-between text-[9px] font-bold uppercase gap-2">
+                  <span className={cn(c.pass ? "text-foreground" : "text-muted-foreground")}>{c.label}</span>
+                  {c.pass ? <CheckCircle2 size={12} className="text-green-500 shrink-0" /> : <AlertCircle size={12} className="text-gray-300 shrink-0" />}
                 </div>
               ))}
               <div className="pt-2 border-t mt-2 text-[9px] font-bold uppercase flex justify-between">
                 <span>Total Words Count</span>
-                <span className={seo.words >= 1100 ? "text-green-500" : "text-muted-foreground"}>{seo.words}</span>
+                <span className={seo.words >= 1150 ? "text-green-500" : "text-muted-foreground"}>{seo.words}</span>
               </div>
             </CardContent>
           </Card>
