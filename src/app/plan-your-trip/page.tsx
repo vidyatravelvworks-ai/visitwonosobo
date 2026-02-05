@@ -37,7 +37,7 @@ const PlanYourTripPage = () => {
     id: `dummy-${i}`,
     url: `https://picsum.photos/seed/trip-${i + 20}/800/800`,
     caption: `Experience Wonosobo ${i + 1}`,
-    order: i + 100 // Ensure they come after DB items if sorted by order
+    order: i + 100 
   }));
 
   // Merge DB items with dummy items, ensuring exactly 20 items for a rich grid
@@ -189,7 +189,7 @@ const PlanYourTripPage = () => {
             </div>
           )}
 
-          {/* GALLERY SECTION */}
+          {/* GALLERY SECTION WITH MARQUEE */}
           <div className="mt-32">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
               <div className="flex items-center gap-4">
@@ -197,49 +197,86 @@ const PlanYourTripPage = () => {
                 <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Trip Gallery</h2>
               </div>
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-primary pl-4 max-w-xs">
-                Momen terbaik dalam format 2 baris yang luas.
+                Momen terbaik dalam format marquee 2 baris yang luas.
               </p>
             </div>
             
             {isGalleryLoading ? (
               <div className="flex justify-center p-20"><Loader2 className="animate-spin h-10 w-10 text-primary" /></div>
             ) : (
-              <div className="relative">
-                <div className="flex overflow-x-auto pb-8 gap-4 no-scrollbar snap-x snap-mandatory">
-                  <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px]">
-                    {galleryItems.map((item, idx) => {
-                      // Pattern for dynamic grid in 2 fixed rows
-                      const patterns = [
-                        "row-span-2 col-span-2 w-[400px] md:w-[500px]", // Big Square
-                        "row-span-1 col-span-1 w-[200px] md:w-[250px]", // Small Square
-                        "row-span-1 col-span-1 w-[200px] md:w-[250px]", // Small Square
-                        "row-span-1 col-span-2 w-[400px] md:w-[500px]", // Landscape
-                        "row-span-1 col-span-2 w-[400px] md:w-[500px]", // Landscape
-                        "row-span-2 col-span-1 w-[300px] md:w-[350px]", // Tall Vertical
-                      ];
-                      const patternClass = patterns[idx % patterns.length];
-                      const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/trip-${idx + 40}/800/800`;
-                      
-                      return (
-                        <div 
-                          key={item.id} 
-                          className={cn(
-                            "relative overflow-hidden group border-2 border-black/5 snap-start shadow-md",
-                            patternClass
-                          )}
-                        >
-                          <Image 
-                            src={galleryImg} 
-                            alt={item.caption || "Trip Photo"} 
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-110" 
-                          />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                            <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
+              <div className="relative overflow-hidden">
+                <div className="flex overflow-x-auto pb-8 no-scrollbar scroll-smooth cursor-grab active:cursor-grabbing">
+                  <div className="flex animate-marquee hover:[animation-play-state:paused] whitespace-nowrap">
+                    {/* First set of images */}
+                    <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px] shrink-0 pr-4">
+                      {galleryItems.map((item, idx) => {
+                        const patterns = [
+                          "row-span-2 col-span-2 w-[400px] md:w-[500px]", 
+                          "row-span-1 col-span-1 w-[200px] md:w-[250px]", 
+                          "row-span-1 col-span-1 w-[200px] md:w-[250px]", 
+                          "row-span-1 col-span-2 w-[400px] md:w-[500px]", 
+                          "row-span-1 col-span-2 w-[400px] md:w-[500px]", 
+                          "row-span-2 col-span-1 w-[300px] md:w-[350px]", 
+                        ];
+                        const patternClass = patterns[idx % patterns.length];
+                        const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/trip-${idx + 40}/800/800`;
+                        
+                        return (
+                          <div 
+                            key={`set1-${item.id}`} 
+                            className={cn(
+                              "relative overflow-hidden group border-2 border-black/5 shadow-md",
+                              patternClass
+                            )}
+                          >
+                            <Image 
+                              src={galleryImg} 
+                              alt={item.caption || "Trip Photo"} 
+                              fill
+                              className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                            />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                              <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
+                    {/* Duplicated set for seamless loop */}
+                    <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px] shrink-0 pr-4">
+                      {galleryItems.map((item, idx) => {
+                        const patterns = [
+                          "row-span-2 col-span-2 w-[400px] md:w-[500px]", 
+                          "row-span-1 col-span-1 w-[200px] md:w-[250px]", 
+                          "row-span-1 col-span-1 w-[200px] md:w-[250px]", 
+                          "row-span-1 col-span-2 w-[400px] md:w-[500px]", 
+                          "row-span-1 col-span-2 w-[400px] md:w-[500px]", 
+                          "row-span-2 col-span-1 w-[300px] md:w-[350px]", 
+                        ];
+                        const patternClass = patterns[idx % patterns.length];
+                        const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/trip-${idx + 40}/800/800`;
+                        
+                        return (
+                          <div 
+                            key={`set2-${item.id}`} 
+                            className={cn(
+                              "relative overflow-hidden group border-2 border-black/5 shadow-md",
+                              patternClass
+                            )}
+                          >
+                            <Image 
+                              src={galleryImg} 
+                              alt={item.caption || "Trip Photo"} 
+                              fill
+                              className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                            />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                              <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>
