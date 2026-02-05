@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save, Globe, FileText, Layout, ArrowLeft, Link as LinkIcon, Sparkles, Loader2 } from 'lucide-react';
+import { Save, Globe, FileText, Layout, ArrowLeft, Link as LinkIcon, Sparkles, Loader2, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import Link from 'next/link';
@@ -39,6 +39,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     excerpt: '',
     content: '',
     image: '',
+    metaTitle: '',
     category: queryType === 'destination' ? 'Alam' : 'Sejarah',
     type: queryType,
     date: ''
@@ -68,6 +69,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         excerpt: article.excerpt || '',
         content: article.content || '',
         image: article.image || '',
+        metaTitle: article.metaTitle || '',
         category: article.category || (article.type === 'destination' ? 'Alam' : 'Sejarah'),
         type: article.type || 'destination',
         date: article.date || formData.date
@@ -96,11 +98,13 @@ const ArticleEditorPage = ({ params }: PageProps) => {
       const result = await generateArticle({ title: formData.title });
       setFormData(prev => ({
         ...prev,
-        content: result.content
+        content: result.content,
+        metaTitle: result.metaTitle,
+        excerpt: result.metaDescription
       }));
       toast({
         title: 'Berhasil',
-        description: 'Artikel telah dihasilkan oleh AI.',
+        description: 'Artikel dan Meta Tags telah dihasilkan oleh AI.',
       });
     } catch (error) {
       console.error(error);
@@ -165,7 +169,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
 
   return (
     <div className="min-h-screen bg-secondary/20 p-8 md:p-12">
-      <div className="max-w-5xl mx-auto space-y-8">
+      <div className="max-w-6xl mx-auto space-y-8">
         <div className="flex justify-between items-center">
           <Button variant="ghost" asChild className="rounded-none hover:bg-transparent pl-0 h-auto group">
             <Link href="/admin" className="flex items-center gap-2 font-black uppercase tracking-widest text-[10px]">
@@ -224,7 +228,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                       {isGenerating ? (
                         <>
                           <Loader2 className="animate-spin h-4 w-4" />
-                          Generating Artikel...
+                          Generating Artikel & Meta Tags...
                         </>
                       ) : (
                         <>
@@ -234,13 +238,13 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                       )}
                     </Button>
                     <p className="text-[9px] font-medium text-muted-foreground italic mt-2">
-                      *AI akan menghasilkan konten ~1000 kata berdasarkan judul di atas lengkap dengan referensi.
+                      *AI akan menghasilkan konten ~1000 kata dan Meta Tags otomatis berdasarkan judul di atas.
                     </p>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Article Content</Label>
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Article Content (Markdown Support)</Label>
                   <Textarea 
                     value={formData.content}
                     onChange={(e) => setFormData({...formData, content: e.target.value})}
@@ -281,6 +285,35 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     <SelectTrigger className="rounded-none border-2 text-xs font-bold"><SelectValue /></SelectTrigger>
                     <SelectContent>{currentCategories.map(cat => <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>)}</SelectContent>
                   </Select>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white overflow-hidden">
+              <CardHeader className="border-b p-6 bg-primary/5">
+                <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
+                  <Search className="text-primary" size={16} />
+                  SEO & Meta Tags
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Meta Title</Label>
+                  <Input 
+                    value={formData.metaTitle}
+                    onChange={(e) => setFormData({...formData, metaTitle: e.target.value})}
+                    placeholder="Judul untuk hasil pencarian Google"
+                    className="rounded-none border-2 border-black/10 h-10 text-[10px] font-bold"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Meta Description / Excerpt</Label>
+                  <Textarea 
+                    value={formData.excerpt}
+                    onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
+                    placeholder="Ringkasan singkat untuk hasil pencarian Google"
+                    className="rounded-none border-2 border-black/10 h-24 text-[10px] font-bold"
+                  />
                 </div>
               </CardContent>
             </Card>
