@@ -272,20 +272,17 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         </div>
 
         <div className="space-y-4">
-          <Card className="rounded-none border-2 bg-secondary/10 shadow-sm">
-            <CardHeader className="p-4 border-b"><CardTitle className="text-[10px] font-black uppercase tracking-widest">SEO Detail Checklist</CardTitle></CardHeader>
-            <CardContent className="p-4 space-y-2">
-              {seo.checks.map(c => (
-                <div key={c.id} className="flex items-center justify-between text-[9px] font-bold uppercase gap-2">
-                  <span className={cn(c.pass ? "text-foreground" : "text-muted-foreground")}>{c.label}</span>
-                  {c.pass ? <CheckCircle2 size={12} className="text-green-500 shrink-0" /> : <AlertCircle size={12} className="text-gray-300 shrink-0" />}
-                </div>
-              ))}
-              <div className="pt-2 border-t mt-2 text-[9px] font-bold uppercase flex justify-between">
-                <span>Total Words Count</span>
-                <span className={seo.words >= 1150 ? "text-green-500" : "text-muted-foreground"}>{seo.words}</span>
-              </div>
-            </CardContent>
+          <Card className="rounded-none border-2 bg-white shadow-sm overflow-hidden">
+            <CardHeader className="p-4 border-b">
+              <CardTitle className="text-[10px] font-black uppercase tracking-widest">Featured Image Preview</CardTitle>
+            </CardHeader>
+            <div className="aspect-video bg-secondary/20 relative">
+              {formData.image ? (
+                <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-muted-foreground uppercase">No Image Selected</div>
+              )}
+            </div>
           </Card>
 
           <Card className="rounded-none border-2 bg-white shadow-sm">
@@ -332,6 +329,22 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     )}
                   </SelectContent>
                 </Select>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-none border-2 bg-secondary/10 shadow-sm">
+            <CardHeader className="p-4 border-b"><CardTitle className="text-[10px] font-black uppercase tracking-widest">SEO Detail Checklist</CardTitle></CardHeader>
+            <CardContent className="p-4 space-y-2">
+              {seo.checks.map(c => (
+                <div key={c.id} className="flex items-center justify-between text-[9px] font-bold uppercase gap-2">
+                  <span className={cn(c.pass ? "text-foreground" : "text-muted-foreground")}>{c.label}</span>
+                  {c.pass ? <CheckCircle2 size={12} className="text-green-500 shrink-0" /> : <AlertCircle size={12} className="text-gray-300 shrink-0" />}
+                </div>
+              ))}
+              <div className="pt-2 border-t mt-2 text-[9px] font-bold uppercase flex justify-between">
+                <span>Total Words Count</span>
+                <span className={seo.words >= 1150 ? "text-green-500" : "text-muted-foreground"}>{seo.words}</span>
               </div>
             </CardContent>
           </Card>
