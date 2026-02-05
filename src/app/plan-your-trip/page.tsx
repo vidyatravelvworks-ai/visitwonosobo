@@ -1,5 +1,4 @@
-
-'use client';
+"use client";
 
 import React from 'react';
 import Image from 'next/image';
@@ -32,7 +31,6 @@ const PlanYourTripPage = () => {
 
   const packages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticPackages;
 
-  // Generate 20 dummy items to ensure the grid is always full
   const defaultGalleryItems = Array.from({ length: 20 }).map((_, i) => ({
     id: `dummy-${i}`,
     url: `https://picsum.photos/seed/trip-${i + 20}/800/800`,
@@ -40,7 +38,6 @@ const PlanYourTripPage = () => {
     order: i + 100 
   }));
 
-  // Merge DB items with dummy items, ensuring exactly 20 items for a rich grid
   const galleryItems = [...(dbGalleryItems || []), ...defaultGalleryItems].slice(0, 20);
 
   const essentialPoints = [
@@ -89,7 +86,7 @@ const PlanYourTripPage = () => {
           />
           <div className="absolute inset-0 bg-black/50" />
         </div>
-        <div className="container mx-auto px-12 md:px-32 relative z-10 text-center">
+        <div className="container mx-auto px-2 md:px-32 relative z-10 text-center">
           <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-4">
             Plan Your <span className="text-primary">Journey</span>
           </h1>
@@ -100,7 +97,7 @@ const PlanYourTripPage = () => {
       </section>
 
       <section className="relative pt-24 pb-24 overflow-hidden">
-        <div className="container mx-auto px-12 md:px-32 relative z-10">
+        <div className="container mx-auto px-2 md:px-32 relative z-10">
           <div className="text-center mb-20 max-w-3xl mx-auto space-y-4">
             <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-primary">Paket Wisata Lokal</h2>
             <p className="text-muted-foreground font-medium text-sm">Nikmati perjalanan tanpa hambatan dengan pemandu lokal berpengalaman.</p>
@@ -189,7 +186,6 @@ const PlanYourTripPage = () => {
             </div>
           )}
 
-          {/* GALLERY SECTION WITH MARQUEE */}
           <div className="mt-32">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
               <div className="flex items-center gap-4">
@@ -207,7 +203,6 @@ const PlanYourTripPage = () => {
               <div className="relative overflow-hidden">
                 <div className="flex overflow-x-auto pb-8 no-scrollbar scroll-smooth cursor-grab active:cursor-grabbing">
                   <div className="flex animate-marquee hover:[animation-play-state:paused] whitespace-nowrap">
-                    {/* First set of images */}
                     <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px] shrink-0 pr-4">
                       {galleryItems.map((item, idx) => {
                         const patterns = [
@@ -242,7 +237,7 @@ const PlanYourTripPage = () => {
                         );
                       })}
                     </div>
-                    {/* Duplicated set for seamless loop */}
+                    {/* Duplicate for seamless loop */}
                     <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px] shrink-0 pr-4">
                       {galleryItems.map((item, idx) => {
                         const patterns = [

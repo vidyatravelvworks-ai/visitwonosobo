@@ -1,5 +1,4 @@
-
-'use client';
+"use client";
 
 import React from 'react';
 import Image from 'next/image';
@@ -60,13 +59,13 @@ const SeeAndDoPage = () => {
           <Image src={heroImage} alt="Hero" fill className="object-cover" priority />
           <div className="absolute inset-0 bg-black/40" />
         </div>
-        <div className="container mx-auto px-12 md:px-32 relative z-10 text-center">
+        <div className="container mx-auto px-2 md:px-32 relative z-10 text-center">
           <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white">See & Do</h1>
         </div>
       </section>
 
       <section className="pt-1 pb-24 md:pt-2 md:pb-32">
-        <div className="container mx-auto px-12 md:px-32">
+        <div className="container mx-auto px-2 md:px-32">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
             {categoryData.map((cat) => {
               const catConfigImg = config?.categoryImages?.[cat.categoryName];
@@ -95,7 +94,7 @@ const SeeAndDoPage = () => {
         </div>
       </section>
 
-      <div className="pb-32 container mx-auto px-12 md:px-32 space-y-32">
+      <div className="pb-32 container mx-auto px-2 md:px-32 space-y-32">
         {categoryData.map((cat) => {
           const filtered = destinations.filter(d => d.category === cat.categoryName);
           if (filtered.length === 0) return null;

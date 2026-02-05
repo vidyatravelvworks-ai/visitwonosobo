@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -23,7 +22,6 @@ const ArticleDetailPage = () => {
 
   const { data: dbArticle, isLoading } = useDoc(docRef);
   
-  // Fallback ke data statis jika sedang loading atau tidak ada di DB
   const staticArticle = staticArticles.find((a) => a.slug === slug);
   const article = dbArticle || staticArticle;
 
@@ -48,7 +46,6 @@ const ArticleDetailPage = () => {
 
   return (
     <article className="bg-background pb-24">
-      {/* Hero Section */}
       <section className="relative h-[70vh] w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
@@ -61,7 +58,7 @@ const ArticleDetailPage = () => {
           <div className="absolute inset-0 bg-black/40 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
         </div>
         
-        <div className="container mx-auto px-12 md:px-32 relative z-10">
+        <div className="container mx-auto px-4 md:px-32 relative z-10">
           <div className="max-w-4xl mx-auto space-y-6">
             <div className="flex items-center gap-4 text-xs font-bold text-white/80 uppercase tracking-[0.3em]">
               <span className="flex items-center gap-2">
@@ -81,9 +78,8 @@ const ArticleDetailPage = () => {
         </div>
       </section>
 
-      <div className="container mx-auto px-12 md:px-32 -mt-10 relative z-20">
+      <div className="container mx-auto px-4 md:px-32 -mt-10 relative z-20">
         <div className="max-w-4xl mx-auto bg-white p-8 md:p-16 shadow-2xl">
-          {/* Back Link */}
           <Button variant="ghost" asChild className="mb-10 group pl-0 h-auto hover:bg-transparent">
             <Link href="/" className="flex items-center gap-2 font-bold text-xs uppercase tracking-widest text-primary">
               <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
@@ -91,14 +87,12 @@ const ArticleDetailPage = () => {
             </Link>
           </Button>
 
-          {/* Excerpt */}
           <div className="mb-12">
             <p className="text-lg md:text-xl text-foreground/70 leading-relaxed italic border-l-4 border-primary pl-8 font-medium">
               {article.excerpt}
             </p>
           </div>
 
-          {/* Content */}
           <div className="max-w-none text-foreground/80 leading-loose space-y-8 font-body">
             {article.content.split('\n').filter((p: string) => p.trim()).map((paragraph: string, idx: number) => (
               <p key={idx} className="text-sm font-medium tracking-wide">
@@ -107,7 +101,6 @@ const ArticleDetailPage = () => {
             ))}
           </div>
 
-          {/* Footer Action */}
           <div className="mt-20 pt-16 border-t border-border flex flex-col items-center text-center space-y-8">
             <div className="space-y-4">
               <h3 className="text-3xl font-black font-headline text-primary uppercase tracking-tight">Siap Menjelajah?</h3>

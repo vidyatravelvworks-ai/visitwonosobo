@@ -1,5 +1,4 @@
-
-'use client';
+"use client";
 
 import React from 'react';
 import Image from 'next/image';
@@ -31,7 +30,7 @@ const Hero = () => {
         <div className="absolute inset-0 bg-black/30 bg-gradient-to-b from-black/50 via-transparent to-black/60" />
       </div>
 
-      <div className="container mx-auto px-12 md:px-32 relative z-10 text-center pt-32">
+      <div className="container mx-auto px-2 md:px-32 relative z-10 text-center pt-32">
         <div className="max-w-4xl mx-auto space-y-8">
           <h2 className="text-white text-sm font-bold uppercase tracking-[0.4em]">Welcome to Wonosobo</h2>
           <h1 className="text-5xl md:text-9xl font-black text-white uppercase leading-none tracking-tighter">

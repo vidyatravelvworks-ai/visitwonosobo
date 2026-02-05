@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from 'react';
 import Hero from '@/components/home/Hero';
@@ -20,14 +20,12 @@ import { cn } from '@/lib/utils';
 export default function Home() {
   const db = useFirestore();
 
-  // Queries - Mengambil data terbaru dari Firestore jika tersedia
   const packagesQ = useMemoFirebase(() => db ? query(collection(db, 'trip_packages'), orderBy('title', 'asc'), limit(3)) : null, [db]);
   const storiesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story'), limit(3)) : null, [db]);
 
   const { data: dbPackages, isLoading: isPkgsLoading } = useCollection(packagesQ);
   const { data: dbStories, isLoading: isStoriesLoading } = useCollection(storiesQ);
 
-  // Fallback ke data statis jika Firestore masih kosong atau loading
   const tourPackages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticTripPackages.slice(0, 3);
   const latestStories = (dbStories && dbStories.length > 0) ? dbStories : staticArticles.filter(a => a.type === 'story').slice(0, 3);
 
@@ -68,9 +66,8 @@ export default function Home() {
     <div className="bg-white">
       <Hero />
       
-      {/* Essential Info Section */}
       <section className="py-32 bg-white border-b">
-        <div className="container mx-auto px-12 md:px-32">
+        <div className="container mx-auto px-2 md:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
             <div className="max-w-2xl">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Plan Your Trip</h3>
@@ -91,7 +88,6 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Paket Wisata Section */}
           <div className="pt-24 border-t">
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-16 gap-6">
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Paket Wisata</h2>
@@ -184,9 +180,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stories Section */}
       <section className="py-32 bg-secondary/20">
-        <div className="container mx-auto px-12 md:px-32">
+        <div className="container mx-auto px-2 md:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
             <div className="max-w-2xl">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Discover More</h3>
@@ -211,10 +206,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* See & Do Categories (Services) */}
       <Services />
 
-      {/* Final CTA Section */}
       <section className="py-40 bg-black relative overflow-hidden">
         <div className="absolute inset-0 opacity-30">
           <img 
@@ -223,7 +216,7 @@ export default function Home() {
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="container mx-auto px-12 md:px-32 relative z-10 text-center">
+        <div className="container mx-auto px-2 md:px-32 relative z-10 text-center">
           <div className="max-w-4xl mx-auto space-y-12">
             <h2 className="text-5xl md:text-8xl font-black text-white uppercase leading-none tracking-tighter">
               Ready to <span className="text-primary">Explore</span> <br /> Wonosobo?

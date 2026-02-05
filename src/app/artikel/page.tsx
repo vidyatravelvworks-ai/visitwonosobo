@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ArticleCard from '@/components/article/ArticleCard';
 import { articles } from '@/data/articles';
@@ -11,7 +10,7 @@ export const metadata = {
 const ArtikelPage = () => {
   return (
     <div className="py-16 md:py-32">
-      <div className="container mx-auto px-10 md:px-20">
+      <div className="container mx-auto px-4 md:px-20">
         <div className="text-center mb-16 max-w-2xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold font-headline mb-6 text-primary">Blog Wisata</h1>
           <p className="text-muted-foreground text-lg">

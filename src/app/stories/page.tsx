@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from 'react';
 import Image from 'next/image';
@@ -62,12 +62,12 @@ const StoriesPage = () => {
           )}
           <div className="absolute inset-0 bg-black/50" />
         </div>
-        <div className="container mx-auto px-12 md:px-32 relative z-10 text-center">
+        <div className="container mx-auto px-2 md:px-32 relative z-10 text-center">
           <h1 className="text-4xl md:text-8xl font-black uppercase tracking-tighter text-white">Stories</h1>
         </div>
       </section>
 
-      <section className="pt-2 pb-24 md:pb-32 container mx-auto px-12 md:px-32">
+      <section className="pt-2 pb-24 md:pb-32 container mx-auto px-2 md:px-32">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
           {categoryData.map((cat) => {
             const catConfigImg = config?.categoryImages?.[cat.categoryName];
@@ -97,7 +97,7 @@ const StoriesPage = () => {
         </div>
       </section>
 
-      <div className="pb-32 container mx-auto px-12 md:px-32 space-y-32">
+      <div className="pb-32 container mx-auto px-2 md:px-32 space-y-32">
         {categoryData.map((cat) => {
           const filtered = stories.filter(s => s.category === cat.categoryName);
           if (filtered.length === 0) return null;

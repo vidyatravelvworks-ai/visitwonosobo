@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -9,23 +8,19 @@ import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 const Footer = () => {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
-  const [year, setYear] = useState<string>('2025');
 
   useEffect(() => {
     setMounted(true);
-    setYear(new Date().getFullYear().toString());
   }, []);
 
-  // Sembunyikan Footer di halaman Login dan Admin
   const isExcludedPage = pathname === '/login' || pathname.startsWith('/admin');
   if (isExcludedPage) return null;
 
   return (
     <footer className="bg-white border-t py-20">
-      <div className="container mx-auto px-12 md:px-32">
-        {/* Grid 5 kolom: Kolom pertama 40% (span 2), sisanya masing-masing 20% (span 1) */}
+      <div className="container mx-auto px-2 md:px-32">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-16 mb-20">
-          {/* Kolom 1: Branding & Deskripsi (40%) */}
+          {/* Kolom 1: 40% lebar pada desktop */}
           <div className="col-span-1 md:col-span-2 space-y-6">
             <span className="text-2xl font-black font-headline tracking-tighter uppercase text-primary">
               visitwonosobo
@@ -49,7 +44,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Kolom 2: Experiences (20%) */}
+          {/* Kolom 2: 20% */}
           <div className="col-span-1 md:col-span-1">
             <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Experiences</h4>
             <ul className="space-y-4 text-sm font-medium">
@@ -59,7 +54,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Kolom 3: Plan Your Trip (20%) */}
+          {/* Kolom 3: 20% */}
           <div className="col-span-1 md:col-span-1">
             <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Plan Your Trip</h4>
             <ul className="space-y-4 text-sm font-medium">
@@ -70,7 +65,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Kolom 4: Contact (20%) */}
+          {/* Kolom 4: 20% */}
           <div className="col-span-1 md:col-span-1">
             <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Contact</h4>
             <ul className="space-y-4 text-sm font-medium">
@@ -84,7 +79,7 @@ const Footer = () => {
         
         <div className="pt-10 border-t flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
           <p>
-            &copy; <span suppressHydrationWarning>{mounted ? year : '2025'}</span>{' '}
+            &copy; {mounted ? new Date().getFullYear() : '2025'}{' '}
             <Link href="/login" className="hover:text-primary transition-colors">
               visitwonosobo
             </Link>

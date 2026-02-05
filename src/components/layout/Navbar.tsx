@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -23,7 +22,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Hide Navbar on Login and Admin pages
   const isExcludedPage = pathname === '/login' || pathname.startsWith('/admin');
   if (isExcludedPage) return null;
 
@@ -39,7 +37,7 @@ const Navbar = () => {
         "fixed top-0 w-full z-50 transition-all duration-300 border-b",
         scrolled ? "bg-white py-3 shadow-sm border-border" : "bg-transparent py-5 border-transparent text-white"
       )}>
-        <div className="container mx-auto px-12 md:px-32 flex items-center justify-between">
+        <div className="container mx-auto px-2 md:px-32 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <span className={cn(
               "text-2xl font-black font-headline tracking-tighter uppercase",
@@ -49,7 +47,6 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* Desktop Menu */}
           <div className="hidden lg:flex items-center gap-10">
             {navLinks.map((link) => (
               <Link
@@ -80,7 +77,6 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Mobile Hamburger */}
           <div className="flex lg:hidden">
             <button
               className="p-2"
@@ -91,7 +87,6 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {isOpen && (
           <div className="lg:hidden fixed inset-0 bg-white text-black z-[60] flex flex-col p-12">
             <div className="flex justify-end mb-10">

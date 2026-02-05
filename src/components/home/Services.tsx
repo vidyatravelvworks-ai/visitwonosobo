@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -43,7 +42,7 @@ const Services = () => {
 
   return (
     <section id="services" className="py-32 bg-white">
-      <div className="container mx-auto px-12 md:px-32">
+      <div className="container mx-auto px-4 md:px-32">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
           <div className="max-w-2xl">
             <h3 className="text-primary font-bold uppercase tracking-widest mb-4">See & Do</h3>
