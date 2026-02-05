@@ -69,8 +69,7 @@ const AdminDashboard = () => {
         categoryImages: {
           'Alam': '', 'Budaya': '', 'Kuliner': '', 
           'Sejarah': '', 'Sosial': '', 'Geografis': '', 'Tips': ''
-        },
-        packageDesign: { cardColor: 'bg-primary/5', cardBorder: 'border-primary/20' }
+        }
       });
     }
   }, [dbConfig, isConfigLoading]);
@@ -268,7 +267,7 @@ const AdminDashboard = () => {
               <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
             ) : configData && (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
                   <Card className="rounded-none border-2 border-black/5 shadow-xl">
                     <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Hero Banner Images</CardTitle></CardHeader>
                     <CardContent className="p-6 space-y-4">
@@ -282,28 +281,6 @@ const AdminDashboard = () => {
                           />
                         </div>
                       ))}
-                    </CardContent>
-                  </Card>
-
-                  <Card className="rounded-none border-2 border-black/5 shadow-xl">
-                    <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Trip Card Design</CardTitle></CardHeader>
-                    <CardContent className="p-6 space-y-4">
-                      <div className="space-y-1">
-                        <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Card Background (Tailwind Class)</Label>
-                        <Input 
-                          value={configData.packageDesign?.cardColor || ''} 
-                          onChange={(e) => setConfigData({...configData, packageDesign: {...configData.packageDesign, cardColor: e.target.value}})}
-                          className="rounded-none border-2 text-[10px] h-10"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Card Border (Tailwind Class)</Label>
-                        <Input 
-                          value={configData.packageDesign?.cardBorder || ''} 
-                          onChange={(e) => setConfigData({...configData, packageDesign: {...configData.packageDesign, cardBorder: e.target.value}})}
-                          className="rounded-none border-2 text-[10px] h-10"
-                        />
-                      </div>
                     </CardContent>
                   </Card>
                 </div>
