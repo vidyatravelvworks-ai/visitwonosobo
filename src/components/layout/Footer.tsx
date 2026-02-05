@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -18,8 +17,8 @@ const Footer = () => {
   if (isExcludedPage) return null;
 
   return (
-    <footer className="bg-white border-t py-20">
-      <div className="container mx-auto px-6 md:px-8 lg:px-32">
+    <footer className="bg-white border-t py-20 px-6">
+      <div className="container mx-auto px-0 md:px-8 lg:px-32">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-16 mb-20">
           {/* Kolom 1: 40% lebar (span 2 dari 5) */}
           <div className="col-span-1 md:col-span-2 space-y-6">
@@ -47,7 +46,7 @@ const Footer = () => {
 
           {/* Kolom 2: 20% */}
           <div className="col-span-1 md:col-span-1">
-            <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Experiences</h4>
+            <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Destinations & Blogs</h4>
             <ul className="space-y-4 text-sm font-medium">
               <li><Link href="/see-and-do#nature" className="hover:text-primary transition-colors">Nature & Adventure</Link></li>
               <li><Link href="/see-and-do#culture" className="hover:text-primary transition-colors">Heritage & Culture</Link></li>
