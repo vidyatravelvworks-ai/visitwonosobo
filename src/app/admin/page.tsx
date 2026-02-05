@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { 
   Plus, Edit, Trash2, LogOut, Map, BookOpen, MapPin, 
-  Layout, Save, Grid, Loader2, CheckCircle 
+  Layout, Save, Grid, Loader2, CheckCircle, Image as ImageIcon
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -32,6 +32,10 @@ const AdminDashboard = () => {
   const [currentView, setCurrentView] = useState<'see-and-do' | 'stories' | 'packages' | 'website-config' | 'gallery'>('see-and-do');
   const [configData, setConfigData] = useState<any>(null);
   const [isSavingConfig, setIsSavingConfig] = useState(false);
+  
+  // New State for Gallery Input
+  const [newGalleryItem, setNewGalleryItem] = useState({ url: '', caption: '' });
+  const [isAddingPhoto, setIsAddingPhoto] = useState(false);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -113,22 +117,35 @@ const AdminDashboard = () => {
       });
   };
 
-  const handleAddGalleryImage = () => {
-    if (!db) return;
+  const handleSaveNewGalleryItem = () => {
+    if (!db || !newGalleryItem.url) {
+      toast({ variant: 'destructive', title: 'Error', description: 'URL Gambar wajib diisi.' });
+      return;
+    }
+    
+    setIsAddingPhoto(true);
     const id = `img-${Date.now()}`;
-    const newImage = {
+    const newItem = {
       id,
-      url: '',
-      caption: 'New Trip Photo',
-      order: (galleryItems?.length || 0) + 1
+      url: newGalleryItem.url,
+      caption: newGalleryItem.caption || 'Trip Photo',
+      order: (galleryItems?.length || 0) + 1,
+      createdAt: serverTimestamp()
     };
+    
     const docRef = doc(db, 'gallery', id);
-    setDoc(docRef, newImage)
+    setDoc(docRef, newItem)
+      .then(() => {
+        setNewGalleryItem({ url: '', caption: '' });
+        toast({ title: 'Berhasil', description: 'Foto telah ditambahkan ke galeri.' });
+        setIsAddingPhoto(false);
+      })
       .catch((err) => {
+        setIsAddingPhoto(false);
         errorEmitter.emit('permission-error', new FirestorePermissionError({
           path: docRef.path,
           operation: 'create',
-          requestResourceData: newImage
+          requestResourceData: newItem
         }));
       });
   };
@@ -244,15 +261,11 @@ const AdminDashboard = () => {
             </h1>
             <p className="text-sm font-medium text-muted-foreground mt-2">Atur tampilan dan konten website secara real-time.</p>
           </div>
-          {(currentView === 'see-and-do' || currentView === 'stories' || currentView === 'packages' || currentView === 'gallery') && (
-            <Button onClick={currentView === 'gallery' ? handleAddGalleryImage : undefined} asChild={currentView !== 'gallery'} className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
-              {currentView === 'gallery' ? (
-                <span className="flex items-center gap-3 cursor-pointer"><Plus size={18} /> Add Photo</span>
-              ) : (
-                <Link href={currentView === 'packages' ? '/admin/plan-your-trip/editor/new' : `/admin/editor/new?type=${currentView === 'see-and-do' ? 'destination' : 'story'}`}>
-                  <Plus size={18} /> New {currentView === 'packages' ? 'Package' : 'Article'}
-                </Link>
-              )}
+          {(currentView === 'see-and-do' || currentView === 'stories' || currentView === 'packages') && (
+            <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
+              <Link href={currentView === 'packages' ? '/admin/plan-your-trip/editor/new' : `/admin/editor/new?type=${currentView === 'see-and-do' ? 'destination' : 'story'}`}>
+                <Plus size={18} /> New {currentView === 'packages' ? 'Package' : 'Article'}
+              </Link>
             </Button>
           )}
         </header>
@@ -413,56 +426,113 @@ const AdminDashboard = () => {
         )}
 
         {currentView === 'gallery' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {isGalleryLoading ? (
-              <div className="col-span-full flex justify-center p-20"><Loader2 className="animate-spin h-10 w-10" /></div>
-            ) : galleryItems?.map(item => (
-              <Card key={item.id} className="rounded-none border-2 border-black/5 shadow-xl overflow-hidden group">
-                <div className="aspect-video bg-gray-100 relative">
-                  {item.url ? <img src={item.url} className="w-full h-full object-cover" /> : <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-bold uppercase">No Image</div>}
+          <div className="space-y-12">
+            {/* New Unified Input Panel for Gallery */}
+            <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white max-w-2xl">
+              <CardHeader className="border-b bg-secondary/10">
+                <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
+                  <ImageIcon size={14} className="text-primary" /> Tambah Foto Galeri Baru
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="flex gap-6 items-start">
+                  {/* Preview Image on the Left */}
+                  <div className="w-44 h-36 bg-gray-100 border-2 border-dashed border-black/10 shrink-0 overflow-hidden flex items-center justify-center relative">
+                    {newGalleryItem.url ? (
+                      <img src={newGalleryItem.url} className="w-full h-full object-cover" alt="Preview" />
+                    ) : (
+                      <div className="flex flex-col items-center gap-2 text-muted-foreground p-4">
+                        <ImageIcon size={20} className="opacity-20" />
+                        <span className="text-[8px] font-black uppercase tracking-widest">Image Preview</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Inputs and Button on the Right */}
+                  <div className="flex-grow space-y-4">
+                    <div className="space-y-1">
+                      <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">URL Gambar</Label>
+                      <Input 
+                        placeholder="https://images.unsplash.com/..." 
+                        value={newGalleryItem.url} 
+                        onChange={(e) => setNewGalleryItem({...newGalleryItem, url: e.target.value})}
+                        className="rounded-none border-2 text-[10px] h-10 font-bold focus:border-primary"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Keterangan Foto</Label>
+                      <Input 
+                        placeholder="Momen sunrise di Sikunir..." 
+                        value={newGalleryItem.caption} 
+                        onChange={(e) => setNewGalleryItem({...newGalleryItem, caption: e.target.value})}
+                        className="rounded-none border-2 text-[10px] h-10 font-bold focus:border-primary"
+                      />
+                    </div>
+                    <Button 
+                      onClick={handleSaveNewGalleryItem} 
+                      disabled={isAddingPhoto || !newGalleryItem.url}
+                      className="w-full bg-primary hover:bg-black text-white rounded-none h-12 gap-3 font-black uppercase tracking-widest text-[10px] shadow-md transition-all active:scale-[0.98]"
+                    >
+                      {isAddingPhoto ? <Loader2 className="animate-spin h-4 w-4" /> : <Plus size={16} />}
+                      {isAddingPhoto ? 'Menyimpan...' : 'Add Photo to Gallery'}
+                    </Button>
+                  </div>
                 </div>
-                <CardContent className="p-4 space-y-3">
-                  <Input 
-                    placeholder="Image URL" 
-                    value={item.url} 
-                    onChange={(e) => {
-                      const newUrl = e.target.value;
-                      const docRef = doc(db!, 'gallery', item.id);
-                      setDoc(docRef, { ...item, url: newUrl }, { merge: true })
-                        .catch(err => {
-                          errorEmitter.emit('permission-error', new FirestorePermissionError({
-                            path: docRef.path,
-                            operation: 'update',
-                            requestResourceData: { ...item, url: newUrl }
-                          }));
-                        });
-                    }}
-                    className="rounded-none border-2 text-[9px] h-8"
-                  />
-                  <div className="flex gap-2">
+              </CardContent>
+            </Card>
+
+            {/* List of Existing Photos Below */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {isGalleryLoading ? (
+                <div className="col-span-full flex justify-center p-20"><Loader2 className="animate-spin h-10 w-10" /></div>
+              ) : galleryItems?.map(item => (
+                <Card key={item.id} className="rounded-none border-2 border-black/5 shadow-xl overflow-hidden group">
+                  <div className="aspect-video bg-gray-100 relative">
+                    {item.url ? <img src={item.url} className="w-full h-full object-cover" /> : <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-bold uppercase">No Image</div>}
+                  </div>
+                  <CardContent className="p-4 space-y-3">
                     <Input 
-                      placeholder="Order" 
-                      type="number"
-                      value={item.order} 
+                      placeholder="Image URL" 
+                      value={item.url} 
                       onChange={(e) => {
-                        const newOrder = parseInt(e.target.value) || 0;
+                        const newUrl = e.target.value;
                         const docRef = doc(db!, 'gallery', item.id);
-                        setDoc(docRef, { ...item, order: newOrder }, { merge: true })
+                        setDoc(docRef, { ...item, url: newUrl }, { merge: true })
                           .catch(err => {
                             errorEmitter.emit('permission-error', new FirestorePermissionError({
                               path: docRef.path,
                               operation: 'update',
-                              requestResourceData: { ...item, order: newOrder }
+                              requestResourceData: { ...item, url: newUrl }
                             }));
                           });
                       }}
-                      className="rounded-none border-2 text-[9px] h-8 w-20"
+                      className="rounded-none border-2 text-[9px] h-8"
                     />
-                    <Button variant="ghost" className="text-red-600 h-8 px-2 ml-auto" onClick={() => handleDeleteGallery(item.id)}><Trash2 size={14}/></Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <div className="flex gap-2">
+                      <Input 
+                        placeholder="Order" 
+                        type="number"
+                        value={item.order} 
+                        onChange={(e) => {
+                          const newOrder = parseInt(e.target.value) || 0;
+                          const docRef = doc(db!, 'gallery', item.id);
+                          setDoc(docRef, { ...item, order: newOrder }, { merge: true })
+                            .catch(err => {
+                              errorEmitter.emit('permission-error', new FirestorePermissionError({
+                                path: docRef.path,
+                                operation: 'update',
+                                requestResourceData: { ...item, order: newOrder }
+                              }));
+                            });
+                        }}
+                        className="rounded-none border-2 text-[9px] h-8 w-20"
+                      />
+                      <Button variant="ghost" className="text-red-600 h-8 px-2 ml-auto" onClick={() => handleDeleteGallery(item.id)}><Trash2 size={14}/></Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         )}
       </main>
