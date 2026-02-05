@@ -181,6 +181,8 @@ export default function Home() {
         </div>
       </section>
 
+      <Services />
+
       <section className="py-16 bg-secondary/20 px-6">
         <div className="container mx-auto px-0 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-10">
@@ -206,8 +208,6 @@ export default function Home() {
           )}
         </div>
       </section>
-
-      <Services />
 
       <section className="py-24 bg-black relative overflow-hidden px-6">
         <div className="absolute inset-0 opacity-30">
