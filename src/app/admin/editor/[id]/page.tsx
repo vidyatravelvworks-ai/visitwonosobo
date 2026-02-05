@@ -274,6 +274,16 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                   </Label>
                   
                   <div className="space-y-2">
+                    <Label className="text-[9px] font-bold uppercase">Tanggal Publikasi</Label>
+                    <Input 
+                      value={formData.date}
+                      onChange={(e) => setFormData({...formData, date: e.target.value})}
+                      placeholder="Contoh: 12 Feb 2025"
+                      className="rounded-none border-2 text-[10px] h-10 font-bold"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
                     <Label className="text-[9px] font-bold uppercase">Tipe Konten</Label>
                     <Select 
                       value={formData.type} 
