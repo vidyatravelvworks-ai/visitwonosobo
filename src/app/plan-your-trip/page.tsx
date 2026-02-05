@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -176,7 +177,7 @@ const PlanYourTripPage = () => {
                   </div>
 
                   <Button className="w-full bg-primary text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-2 group/btn mt-10" asChild>
-                    <a href={`https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20pesan%20${encodeURIComponent(pkg.title)}`} target="_blank">
+                    <a href={`https://wa.me/6281230939128?text=Halo%20saya%20tertarik%20pesan%20${encodeURIComponent(pkg.title)}`} target="_blank">
                       Pesan Sekarang
                       <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                     </a>
@@ -281,7 +282,7 @@ const PlanYourTripPage = () => {
           <div className="mt-32 pt-24 border-t">
             <div className="max-w-2xl mb-16">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Travel Essentials</h3>
-              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Essential Info</h2>
+              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Essential Information</h2>
               <p className="text-muted-foreground mt-4 text-sm font-medium">Pastikan Anda mengetahui aspek-aspek penting ini sebelum memulai perjalanan di Wonosobo.</p>
             </div>
 

@@ -73,7 +73,7 @@ const Navbar = () => {
                 "font-bold uppercase text-[10px] tracking-widest px-6 rounded-none",
                 scrolled ? "bg-primary text-white" : "bg-white text-black hover:bg-gray-200"
               )}>
-                <a href="https://wa.me/6281234567890" target="_blank">Book Now</a>
+                <a href="https://wa.me/6281230939128" target="_blank">Book Now</a>
               </Button>
             </div>
           </div>
@@ -123,7 +123,7 @@ const Navbar = () => {
                 </Link>
               ))}
               <Button asChild size="lg" className="w-full bg-primary text-white font-bold uppercase mt-10 rounded-none">
-                <a href="https://wa.me/6281234567890" target="_blank">Book Now</a>
+                <a href="https://wa.me/6281230939128" target="_blank">Book Now</a>
               </Button>
             </div>
           </div>

@@ -110,7 +110,7 @@ const ArticleDetailPage = () => {
               </p>
             </div>
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest px-12 py-8 text-xs rounded-none" asChild>
-              <a href={`https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20setelah%20membaca%20artikel%20${encodeURIComponent(article.title)}`} target="_blank">
+              <a href={`https://wa.me/6281230939128?text=Halo%20saya%20tertarik%20setelah%20membaca%20artikel%20${encodeURIComponent(article.title)}`} target="_blank">
                 Tanya via WhatsApp
               </a>
             </Button>

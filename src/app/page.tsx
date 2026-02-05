@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -167,7 +168,7 @@ export default function Home() {
                     </div>
 
                     <Button className="w-full bg-black hover:bg-primary text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-2 group/btn mt-8" asChild>
-                      <a href={`https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20paket%20${encodeURIComponent(pkg.title)}`} target="_blank">
+                      <a href={`https://wa.me/6281230939128?text=Halo%20saya%20mau%20pesan%20paket%20${encodeURIComponent(pkg.title)}`} target="_blank">
                         Booking Sekarang
                         <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                       </a>
@@ -226,7 +227,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6 pt-6">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-black uppercase px-16 py-10 rounded-none text-sm tracking-widest gap-3" asChild>
-                <a href="https://wa.me/6281234567890" target="_blank">
+                <a href="https://wa.me/6281230939128" target="_blank">
                   <MessageCircle size={20} /> Konsultasi via WhatsApp
                 </a>
               </Button>
