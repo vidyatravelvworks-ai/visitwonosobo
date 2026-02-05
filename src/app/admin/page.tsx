@@ -317,46 +317,73 @@ const AdminDashboard = () => {
               <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
             ) : configData && (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
-                  <Card className="rounded-none border-2 border-black/5 shadow-xl">
-                    <CardHeader className="border-b bg-white"><CardTitle className="text-xs font-black uppercase tracking-widest">Gambar Banner Utama (Hero)</CardTitle></CardHeader>
-                    <CardContent className="p-6 space-y-6 bg-white">
-                      {['home', 'seeAndDo', 'stories'].map(page => (
-                        <div key={page} className="space-y-1">
-                          <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{heroLabels[page] || page} URL</Label>
-                          <div className="flex gap-4 items-center">
-                             <div className="w-20 h-12 bg-gray-100 border shrink-0 overflow-hidden flex items-center justify-center">
-                                {configData.heroImages?.[page] ? (
-                                   <img src={configData.heroImages[page]} className="w-full h-full object-cover" />
-                                ) : (
-                                   <div className="text-[8px] font-bold text-muted-foreground uppercase text-center leading-tight">No Preview</div>
-                                )}
-                             </div>
-                             <Input 
-                               value={configData.heroImages?.[page] || ''} 
-                               onChange={(e) => setConfigData({...configData, heroImages: {...configData.heroImages, [page]: e.target.value}})}
-                               className="rounded-none border-2 text-[10px] h-10 focus:border-primary flex-grow"
-                               placeholder="https://example.com/image.jpg"
-                             />
-                          </div>
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
-                </div>
-
+                {/* Banner Utama */}
                 <Card className="rounded-none border-2 border-black/5 shadow-xl">
-                  <CardHeader className="border-b bg-white"><CardTitle className="text-xs font-black uppercase tracking-widest">Gambar Per Kategori</CardTitle></CardHeader>
-                  <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 bg-white">
-                    {['Alam', 'Budaya', 'Kuliner', 'Sejarah', 'Sosial', 'Geografis', 'Tips'].map(cat => (
+                  <CardHeader className="border-b bg-white"><CardTitle className="text-xs font-black uppercase tracking-widest">Gambar Banner Utama (Hero)</CardTitle></CardHeader>
+                  <CardContent className="p-6 space-y-6 bg-white">
+                    {['home', 'seeAndDo', 'stories'].map(page => (
+                      <div key={page} className="space-y-1">
+                        <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{heroLabels[page] || page} URL</Label>
+                        <div className="flex gap-4 items-center">
+                           <div className="w-20 h-12 bg-gray-100 border shrink-0 overflow-hidden flex items-center justify-center">
+                              {configData.heroImages?.[page] ? (
+                                 <img src={configData.heroImages[page]} className="w-full h-full object-cover" />
+                              ) : (
+                                 <div className="text-[8px] font-bold text-muted-foreground uppercase text-center leading-tight">No Preview</div>
+                              )}
+                           </div>
+                           <Input 
+                             value={configData.heroImages?.[page] || ''} 
+                             onChange={(e) => setConfigData({...configData, heroImages: {...configData.heroImages, [page]: e.target.value}})}
+                             className="rounded-none border-2 text-[10px] h-10 focus:border-primary flex-grow"
+                             placeholder="https://example.com/image.jpg"
+                           />
+                        </div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+
+                {/* Kategori See and Do */}
+                <Card className="rounded-none border-2 border-black/5 shadow-xl">
+                  <CardHeader className="border-b bg-white"><CardTitle className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2"><Map size={14}/> Kategori See &amp; Do</CardTitle></CardHeader>
+                  <CardContent className="p-6 space-y-6 bg-white">
+                    {['Alam', 'Budaya', 'Kuliner'].map(cat => (
                       <div key={cat} className="space-y-1">
                         <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{cat} URL</Label>
-                        <div className="flex gap-3 items-center">
-                           <div className="w-14 h-9 bg-gray-100 border shrink-0 overflow-hidden flex items-center justify-center">
+                        <div className="flex gap-4 items-center">
+                           <div className="w-20 h-12 bg-gray-100 border shrink-0 overflow-hidden flex items-center justify-center">
                               {configData.categoryImages?.[cat] ? (
                                  <img src={configData.categoryImages[cat]} className="w-full h-full object-cover" />
                               ) : (
-                                 <div className="text-[7px] font-bold text-muted-foreground uppercase text-center">No Img</div>
+                                 <div className="text-[8px] font-bold text-muted-foreground uppercase text-center leading-tight">No Preview</div>
+                              )}
+                           </div>
+                           <Input 
+                             value={configData.categoryImages?.[cat] || ''} 
+                             onChange={(e) => setConfigData({...configData, categoryImages: {...configData.categoryImages, [cat]: e.target.value}})}
+                             className="rounded-none border-2 text-[10px] h-10 focus:border-primary flex-grow"
+                             placeholder="https://example.com/image.jpg"
+                           />
+                        </div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+
+                {/* Kategori Stories */}
+                <Card className="rounded-none border-2 border-black/5 shadow-xl">
+                  <CardHeader className="border-b bg-white"><CardTitle className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2"><BookOpen size={14}/> Kategori Stories</CardTitle></CardHeader>
+                  <CardContent className="p-6 space-y-6 bg-white">
+                    {['Sejarah', 'Sosial', 'Geografis', 'Tips'].map(cat => (
+                      <div key={cat} className="space-y-1">
+                        <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{cat} URL</Label>
+                        <div className="flex gap-4 items-center">
+                           <div className="w-20 h-12 bg-gray-100 border shrink-0 overflow-hidden flex items-center justify-center">
+                              {configData.categoryImages?.[cat] ? (
+                                 <img src={configData.categoryImages[cat]} className="w-full h-full object-cover" />
+                              ) : (
+                                 <div className="text-[8px] font-bold text-muted-foreground uppercase text-center leading-tight">No Preview</div>
                               )}
                            </div>
                            <Input 
