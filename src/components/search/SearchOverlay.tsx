@@ -2,10 +2,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Search, X } from 'lucide-react';
+import { Search, X, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { articles, Article } from '@/data/articles';
+import { articles as staticArticles, Article } from '@/data/articles';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
 import Link from 'next/link';
 
 interface SearchOverlayProps {
@@ -14,26 +16,36 @@ interface SearchOverlayProps {
 }
 
 const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
-  const [query, setQuery] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState<Article[]>([]);
+  const db = useFirestore();
+
+  // Fetch all articles from Firestore to search locally for better performance
+  const articlesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), orderBy('updatedAt', 'desc')) : null, [db]);
+  const { data: dbArticles, isLoading } = useCollection(articlesQ);
 
   useEffect(() => {
-    if (query.trim() === '') {
+    if (searchTerm.trim() === '') {
       setResults([]);
       return;
     }
 
-    const filtered = articles.filter(article =>
-      article.title.toLowerCase().includes(query.toLowerCase()) ||
-      article.excerpt.toLowerCase().includes(query.toLowerCase()) ||
-      article.category.toLowerCase().includes(query.toLowerCase())
-    ).slice(0, 5);
+    // Combine Static + DB Articles
+    const allArticles = dbArticles ? [...dbArticles, ...staticArticles] : staticArticles;
+    
+    // Simple filter logic
+    const filtered = allArticles.filter(article =>
+      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      article.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      article.category.toLowerCase().includes(searchTerm.toLowerCase())
+    ).slice(0, 8);
+    
     setResults(filtered);
-  }, [query]);
+  }, [searchTerm, dbArticles]);
 
   useEffect(() => {
     if (!isOpen) {
-      setQuery('');
+      setSearchTerm('');
     }
   }, [isOpen]);
 
@@ -50,26 +62,26 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
 
         <DialogHeader className="p-6">
           <div className="flex items-center gap-4">
-            <Search className="h-5 w-5 text-primary shrink-0" />
+            {isLoading ? <Loader2 className="h-5 w-5 animate-spin text-primary" /> : <Search className="h-5 w-5 text-primary shrink-0" />}
             <Input
               placeholder="Cari destinasi..."
               className="text-xl font-bold uppercase tracking-tight border-none focus-visible:ring-0 p-0 h-auto placeholder:text-gray-300 bg-transparent"
               autoFocus
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </DialogHeader>
 
         <div className="px-6 pb-6 bg-[#F8F9FA] max-h-[60vh] overflow-y-auto">
-          {query.trim() === '' ? (
+          {searchTerm.trim() === '' ? (
             <div className="pt-4 space-y-4">
               <h4 className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Populer</h4>
               <div className="flex flex-wrap gap-2">
-                {['Sikunir', 'Dieng', 'Mie Ongklok'].map((tag) => (
+                {['Sikunir', 'Dieng', 'Mie Ongklok', 'Arjuna'].map((tag) => (
                   <button
                     key={tag}
-                    onClick={() => setQuery(tag)}
+                    onClick={() => setSearchTerm(tag)}
                     className="px-4 py-2 bg-white border border-gray-100 text-[9px] font-bold uppercase tracking-widest hover:border-primary hover:text-primary transition-all"
                   >
                     {tag}
@@ -82,8 +94,8 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
               {results.length > 0 ? (
                 results.map((article) => (
                   <Link
-                    key={article.slug}
-                    href={`/artikel/${article.slug}`}
+                    key={article.slug || article.id}
+                    href={`/artikel/${article.slug || article.id}`}
                     onClick={onClose}
                     className="group block"
                   >
