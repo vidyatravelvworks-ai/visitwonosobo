@@ -29,7 +29,11 @@ const SeeAndDoPage = () => {
   const { data: config } = useDoc(configRef);
   
   const destinations = (dbDestinations && dbDestinations.length > 0) ? dbDestinations : staticArticles.filter(a => a.type === 'destination');
-  const heroImage = config?.heroImages?.seeAndDo || PlaceHolderImages.find(img => img.id === 'candi-arjuna')?.imageUrl;
+  
+  // Hero Image Fallback logic
+  const configHero = config?.heroImages?.seeAndDo;
+  const placeholderHero = PlaceHolderImages.find(img => img.id === 'candi-arjuna')?.imageUrl || 'https://picsum.photos/seed/wonosobo-hero/1200/600';
+  const heroImage = (configHero && configHero.trim() !== "") ? configHero : placeholderHero;
 
   const categoryData = [
     { id: 'nature', title: 'Nature & Adventure', categoryName: 'Alam', icon: <Sunrise className="h-5 w-5" />, description: 'Witness the iconic Golden Sunrise at Sikunir.' },
@@ -60,23 +64,29 @@ const SeeAndDoPage = () => {
       <section className="pt-1 pb-24 md:pt-2 md:pb-32">
         <div className="container mx-auto px-12 md:px-32">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
-            {categoryData.map((cat) => (
-              <div key={cat.id} className="group relative aspect-[4/5] overflow-hidden bg-black">
-                <Image
-                  src={config?.categoryImages?.[cat.categoryName] || PlaceHolderImages.find(img => img.id === `hero-${cat.id}`)?.imageUrl || 'https://picsum.photos/seed/cat/800/1000'}
-                  alt={cat.title}
-                  fill
-                  className="object-cover opacity-80 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-60"
-                />
-                <div className="absolute inset-0 p-10 flex flex-col justify-end text-white">
-                  <div className="mb-4 p-2 bg-primary w-fit">{cat.icon}</div>
-                  <h3 className="text-3xl font-black uppercase mb-2 tracking-tight">{cat.title}</h3>
-                  <Button variant="link" className="text-white p-0 w-fit font-bold uppercase tracking-widest text-xs hover:text-primary" asChild>
-                    <a href={`#${cat.id}`}>Explore Now <ArrowRight className="ml-2 h-4 w-4" /></a>
-                  </Button>
+            {categoryData.map((cat) => {
+              const catConfigImg = config?.categoryImages?.[cat.categoryName];
+              const catPlaceholder = PlaceHolderImages.find(img => img.id === (cat.categoryName === 'Alam' ? 'hero-sikunir' : cat.categoryName === 'Budaya' ? 'candi-arjuna' : 'mie-ongklok'))?.imageUrl;
+              const catImg = (catConfigImg && catConfigImg.trim() !== "") ? catConfigImg : (catPlaceholder || `https://picsum.photos/seed/${cat.id}/800/1000`);
+
+              return (
+                <div key={cat.id} className="group relative aspect-[4/5] overflow-hidden bg-black">
+                  <Image
+                    src={catImg}
+                    alt={cat.title}
+                    fill
+                    className="object-cover opacity-80 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-60"
+                  />
+                  <div className="absolute inset-0 p-10 flex flex-col justify-end text-white">
+                    <div className="mb-4 p-2 bg-primary w-fit">{cat.icon}</div>
+                    <h3 className="text-3xl font-black uppercase mb-2 tracking-tight">{cat.title}</h3>
+                    <Button variant="link" className="text-white p-0 w-fit font-bold uppercase tracking-widest text-xs hover:text-primary" asChild>
+                      <a href={`#${cat.id}`}>Explore Now <ArrowRight className="ml-2 h-4 w-4" /></a>
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

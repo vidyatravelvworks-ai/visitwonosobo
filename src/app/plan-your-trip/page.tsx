@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -23,7 +24,11 @@ const PlanYourTripPage = () => {
   const { data: galleryItems, isLoading: isGalleryLoading } = useCollection(galleryQ);
   const { data: config } = useDoc(configRef);
 
-  const heroImage = config?.heroImages?.stories || PlaceHolderImages.find(img => img.id === 'car-rental')?.imageUrl;
+  // Ensure hero image is never an empty string
+  const storiesHero = config?.heroImages?.stories;
+  const fallbackHero = PlaceHolderImages.find(img => img.id === 'mountain-prau')?.imageUrl || 'https://picsum.photos/seed/wonosobo/1200/800';
+  const heroImage = (storiesHero && storiesHero.trim() !== "") ? storiesHero : fallbackHero;
+
   const packages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticPackages;
 
   return (
@@ -130,7 +135,7 @@ const PlanYourTripPage = () => {
                   return (
                     <div key={item.id} className={cn("relative overflow-hidden group", spans[idx % spans.length])}>
                       <img 
-                        src={item.url || 'https://picsum.photos/seed/wonosobo/800/800'} 
+                        src={item.url && item.url.trim() !== "" ? item.url : `https://picsum.photos/seed/${item.id}/800/800`} 
                         alt={item.caption} 
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                       />

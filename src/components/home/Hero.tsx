@@ -14,7 +14,9 @@ const Hero = () => {
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
   const { data: config } = useDoc(configRef);
 
-  const heroImage = config?.heroImages?.home || PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl;
+  const configHomeHero = config?.heroImages?.home;
+  const placeholderHomeHero = PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl || 'https://picsum.photos/seed/wonosobo-home/1200/800';
+  const heroImage = (configHomeHero && configHomeHero.trim() !== "") ? configHomeHero : placeholderHomeHero;
 
   return (
     <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden">
