@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -30,13 +31,13 @@ const Hero = () => {
         <div className="absolute inset-0 bg-black/30 bg-gradient-to-b from-black/50 via-transparent to-black/60" />
       </div>
 
-      <div className="container mx-auto px-2 md:px-32 relative z-10 text-center pt-32">
+      <div className="container mx-auto px-2 md:px-8 lg:px-32 relative z-10 text-center pt-32">
         <div className="max-w-4xl mx-auto space-y-8">
           <h2 className="text-white text-sm font-bold uppercase tracking-[0.4em]">Welcome to Wonosobo</h2>
           <h1 className="text-5xl md:text-9xl font-black text-white uppercase leading-none tracking-tighter">
             The Soul <br /> <span className="text-white underline decoration-primary decoration-[12px] underline-offset-[16px]">of Java</span>
           </h1>
-          <div className="pt-10 flex flex-col sm:flex-row justify-center gap-6">
+          <div className="pt-10 flex flex-col sm:flex-row justify-center gap-6 max-w-[280px] sm:max-w-none mx-auto">
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold uppercase px-12 py-8 rounded-none" asChild>
               <a href="#services">Explore Experiences</a>
             </Button>
