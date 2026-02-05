@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { use } from 'react';
@@ -27,11 +26,12 @@ const ArticleDetailPage = ({ params }: PageProps) => {
   const { data: dbArticle, isLoading } = useDoc(docRef);
   
   const staticArticle = staticArticles.find((a) => a.slug === slug);
+  // Gunakan data dari DB jika ada, jika tidak fallback ke statis
   const article = dbArticle || staticArticle;
 
   if (isLoading) {
     return (
-      <div className="h-screen flex items-center justify-center">
+      <div className="h-screen flex items-center justify-center bg-black">
         <Loader2 className="animate-spin text-primary h-12 w-12" />
       </div>
     );
@@ -40,7 +40,7 @@ const ArticleDetailPage = ({ params }: PageProps) => {
   if (!article) {
     return (
       <div className="h-screen flex flex-col items-center justify-center space-y-4">
-        <h1 className="text-4xl font-black uppercase">Artikel Tidak Ditemukan</h1>
+        <h1 className="text-4xl font-black uppercase tracking-tighter">Artikel Tidak Ditemukan</h1>
         <Button asChild variant="outline">
           <Link href="/">Kembali ke Beranda</Link>
         </Button>
@@ -51,15 +51,15 @@ const ArticleDetailPage = ({ params }: PageProps) => {
   return (
     <article className="bg-background pb-24">
       <section className="relative h-[70vh] w-full flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 bg-black">
           <Image
             src={article.image}
             alt={article.title}
             fill
-            className="object-cover"
+            className="object-cover opacity-60"
             priority
           />
-          <div className="absolute inset-0 bg-black/40 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
         </div>
         
         <div className="container mx-auto px-6 md:px-32 relative z-10">
@@ -75,7 +75,7 @@ const ArticleDetailPage = ({ params }: PageProps) => {
                 {article.date}
               </span>
             </div>
-            <h1 className="text-4xl md:text-7xl font-black font-headline text-white leading-tight uppercase tracking-tighter">
+            <h1 className="text-4xl md:text-7xl font-black text-white leading-tight uppercase tracking-tighter">
               {article.title}
             </h1>
           </div>
@@ -87,7 +87,7 @@ const ArticleDetailPage = ({ params }: PageProps) => {
           <Button variant="ghost" asChild className="mb-10 group pl-0 h-auto hover:bg-transparent">
             <Link href="/" className="flex items-center gap-2 font-bold text-xs uppercase tracking-widest text-primary">
               <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-              Kembali ke Beranda
+              Kembali
             </Link>
           </Button>
 
@@ -97,36 +97,22 @@ const ArticleDetailPage = ({ params }: PageProps) => {
             </p>
           </div>
 
-          <div className="max-w-none text-foreground/80 leading-loose font-body">
+          <div className="max-w-none text-foreground/80 leading-loose">
             <ReactMarkdown
               components={{
-                p: ({ children }) => <p className="mb-8 text-sm font-medium tracking-wide leading-loose">{children}</p>,
-                h2: ({ children }) => <h2 className="text-2xl font-black uppercase tracking-tight mt-12 mb-6 text-black border-b-2 border-primary w-fit pb-1">{children}</h2>,
-                h3: ({ children }) => <h3 className="text-xl font-black uppercase tracking-tight mt-10 mb-4 text-black">{children}</h3>,
+                p: ({ children }) => <p className="mb-8 text-sm md:text-base font-medium tracking-wide leading-loose">{children}</p>,
+                h2: ({ children }) => <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight mt-16 mb-8 text-black border-b-2 border-primary w-fit pb-1">{children}</h2>,
+                h3: ({ children }) => <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight mt-12 mb-6 text-black">{children}</h3>,
                 strong: ({ children }) => <strong className="font-black text-black">{children}</strong>,
                 em: ({ children }) => <em className="italic text-primary font-bold">{children}</em>,
-                ul: ({ children }) => <ul className="list-disc list-inside mb-8 space-y-2">{children}</ul>,
-                ol: ({ children }) => <ol className="list-decimal list-inside mb-8 space-y-2">{children}</ol>,
-                li: ({ children }) => <li className="text-sm font-medium">{children}</li>,
-                blockquote: ({ children }) => <blockquote className="border-l-4 border-primary bg-secondary/20 p-6 my-8 italic font-medium">{children}</blockquote>,
+                ul: ({ children }) => <ul className="list-disc list-inside mb-8 space-y-4 pl-4">{children}</ul>,
+                ol: ({ children }) => <ol className="list-decimal list-inside mb-8 space-y-4 pl-4">{children}</ol>,
+                li: ({ children }) => <li className="text-sm md:text-base font-medium">{children}</li>,
+                blockquote: ({ children }) => <blockquote className="border-l-4 border-primary bg-secondary/30 p-8 my-10 italic font-medium text-lg">{children}</blockquote>,
               }}
             >
               {article.content}
             </ReactMarkdown>
-          </div>
-
-          <div className="mt-20 pt-16 border-t border-border flex flex-col items-center text-center space-y-8">
-            <div className="space-y-4">
-              <h3 className="text-3xl font-black font-headline text-primary uppercase tracking-tight">Siap Menjelajah?</h3>
-              <p className="text-muted-foreground max-w-lg font-medium">
-                Wujudkan perjalanan impian Anda di Wonosobo sekarang juga bersama guide lokal terbaik kami.
-              </p>
-            </div>
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest px-12 py-8 text-xs rounded-none" asChild>
-              <a href={`https://wa.me/6281230939128?text=Halo%20saya%20tertarik%20setelah%20membaca%20artikel%20${encodeURIComponent(article.title)}`} target="_blank">
-                Tanya via WhatsApp
-              </a>
-            </Button>
           </div>
         </div>
       </div>
