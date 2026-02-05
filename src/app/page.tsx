@@ -67,7 +67,7 @@ export default function Home() {
     <div className="bg-white">
       <Hero />
       
-      <section className="py-32 bg-white border-b">
+      <section className="py-16 bg-white border-b">
         <div className="container mx-auto px-6 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
             <div className="max-w-2xl">
