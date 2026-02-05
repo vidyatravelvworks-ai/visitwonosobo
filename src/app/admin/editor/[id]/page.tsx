@@ -93,37 +93,45 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     }
     setIsGenerating(true);
     try {
-      const result = await generateArticle({ 
+      // Menggunakan result object dari Server Action untuk menghindari dev error overlay
+      const { data: result, error } = await generateArticle({ 
         title: formData.title, 
         focusKeyword: formData.focusKeyword 
       });
       
-      let suggestedImage = formData.image;
-      if (result.suggestedImageId) {
-        const found = PlaceHolderImages.find(img => img.id === result.suggestedImageId);
-        if (found) suggestedImage = found.imageUrl;
+      if (error) {
+        const isQuota = error === 'QUOTA_EXCEEDED';
+        toast({ 
+          variant: 'destructive', 
+          title: isQuota ? 'Kuota AI Habis' : 'Gagal', 
+          description: isQuota 
+            ? 'Batas penggunaan gratis tercapai. Mohon tunggu 60 detik sebelum mencoba lagi.' 
+            : 'Terjadi kesalahan pada AI Write.' 
+        });
+        return;
       }
 
-      setFormData(prev => ({
-        ...prev,
-        content: result.content,
-        metaTitle: result.metaTitle,
-        excerpt: result.metaDescription,
-        focusKeyword: result.focusKeywordSuggested || prev.focusKeyword,
-        image: suggestedImage,
-        slug: prev.slug || formData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
-      }));
-      toast({ title: 'Berhasil', description: 'Artikel SEO 100% telah dibuat.' });
-    } catch (error: any) {
-      console.error(error);
-      const isQuota = error.message?.includes('QUOTA_EXCEEDED') || error.message?.includes('429');
-      toast({ 
-        variant: 'destructive', 
-        title: isQuota ? 'Kuota AI Habis' : 'Gagal', 
-        description: isQuota 
-          ? 'Batas penggunaan gratis tercapai. Mohon tunggu 60 detik sebelum mencoba lagi.' 
-          : 'Terjadi kesalahan pada AI Write.' 
-      });
+      if (result) {
+        let suggestedImage = formData.image;
+        if (result.suggestedImageId) {
+          const found = PlaceHolderImages.find(img => img.id === result.suggestedImageId);
+          if (found) suggestedImage = found.imageUrl;
+        }
+
+        setFormData(prev => ({
+          ...prev,
+          content: result.content,
+          metaTitle: result.metaTitle,
+          excerpt: result.metaDescription,
+          focusKeyword: result.focusKeywordSuggested || prev.focusKeyword,
+          image: suggestedImage,
+          slug: prev.slug || formData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
+        }));
+        toast({ title: 'Berhasil', description: 'Artikel SEO 100% telah dibuat.' });
+      }
+    } catch (e) {
+      // Fallback catch untuk error jaringan yang tidak terduga
+      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghubungi AI Server.' });
     } finally {
       setIsGenerating(false);
     }
@@ -206,6 +214,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         <div className="lg:col-span-3 space-y-3">
           <Card className="rounded-none border-2 shadow-sm">
             <CardContent className="p-6 space-y-3">
+              {/* Featured Image URL at the top */}
               <div className="space-y-1">
                 <Label className="text-[10px] font-black uppercase flex justify-between">
                   <span>Featured Image URL</span>
@@ -214,11 +223,13 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                 <Input value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="rounded-none h-9 text-xs" />
               </div>
 
+              {/* Title in its own full row */}
               <div className="space-y-1">
                 <Label className="text-[10px] font-black uppercase">Article Title</Label>
                 <Input value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="rounded-none h-12 text-lg font-black uppercase w-full" />
               </div>
 
+              {/* SEO Row with 60:40 Ratio */}
               <div className="grid grid-cols-10 gap-3 items-end">
                 <div className="col-span-6 space-y-1">
                   <Label className="text-[10px] font-black uppercase text-primary">Focus Keyword</Label>

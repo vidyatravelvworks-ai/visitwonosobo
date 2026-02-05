@@ -30,10 +30,13 @@ const AdminDashboard = () => {
   const { data: allArticles, isLoading: isArticlesLoading } = useCollection(articlesQ);
 
   const handleDelete = async (e: React.MouseEvent, id: string) => {
+    // Stop propagation and prevent default to ensure the click is handled exclusively by this handler
     e.preventDefault();
     e.stopPropagation();
+    
     if (!db) return;
     
+    // Memberikan prioritas tertinggi pada interaksi konfirmasi
     const confirmed = window.prompt(`Ketik "hapus" untuk mengonfirmasi penghapusan:`);
     if (confirmed === 'hapus') {
       try {

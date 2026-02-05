@@ -22,8 +22,20 @@ const GenerateArticleOutputSchema = z.object({
 });
 export type GenerateArticleOutput = z.infer<typeof GenerateArticleOutputSchema>;
 
-export async function generateArticle(input: GenerateArticleInput): Promise<GenerateArticleOutput> {
-  return generateArticleFlow(input);
+/**
+ * Wrapper function for the AI flow.
+ * Menggunakan pola result object agar tidak memicu global error overlay di NextJS saat kuota habis.
+ */
+export async function generateArticle(input: GenerateArticleInput): Promise<{ data?: GenerateArticleOutput; error?: string }> {
+  try {
+    const output = await generateArticleFlow(input);
+    return { data: output };
+  } catch (error: any) {
+    if (error.message?.includes('429') || error.message?.includes('quota')) {
+      return { error: 'QUOTA_EXCEEDED' };
+    }
+    return { error: error.message || 'FAILED_TO_GENERATE' };
+  }
 }
 
 const prompt = ai.definePrompt({
@@ -33,14 +45,14 @@ const prompt = ai.definePrompt({
   prompt: `Bertindaklah sebagai Senior Content Strategist dan Pakar SEO. 
 Tugas Anda adalah menulis artikel mendalam tentang: "{{title}}".
 
-KRITERIA WAJIB UNTUK SKOR SEO 100%:
-1. PANJANG KONTEN: Minimal 1150 kata. Berikan informasi unik, mendalam, dan bermanfaat.
+KRITERIA WAJIB UNTUK SKOR SEO 100% (SANGAT KETAT):
+1. PANJANG KONTEN: WAJIB minimal 1150 kata. Jangan kurang dari itu. Berikan informasi unik, mendalam, dan sangat bermanfaat.
 2. PENEMPATAN KEYWORD: 
    - Masukkan kata kunci fokus ({{focusKeyword}}) secara eksplisit di KALIMAT PERTAMA pada paragraf pertama.
    - Gunakan kata kunci secara natural di beberapa sub-judul (H2/H3).
-3. METADATA:
-   - metaTitle: Buat 50-60 karakter, harus mengandung kata kunci.
-   - metaDescription: Buat 145-155 karakter, persuasif, mengandung kata kunci.
+3. METADATA PRESISI:
+   - metaTitle: Buat tepat 50-60 karakter, harus mengandung kata kunci.
+   - metaDescription: Buat tepat 145-155 karakter, sangat persuasif, mengandung kata kunci.
 4. STRUKTUR: Gunakan format Markdown lengkap (H1, H2, H3, bullet points, dan daftar referensi di akhir).
 
 Pilih satu ID gambar paling relevan dari daftar: hero-sikunir, candi-arjuna, mie-ongklok, telaga-warna, kawah-sikidang, kebun-teh, waterfall, carica, coffee, cave, mountain-prau.
@@ -55,15 +67,8 @@ const generateArticleFlow = ai.defineFlow(
     outputSchema: GenerateArticleOutputSchema,
   },
   async (input) => {
-    try {
-      const { output } = await prompt(input);
-      if (!output) throw new Error('Gagal menghasilkan konten artikel.');
-      return output;
-    } catch (error: any) {
-      if (error.message?.includes('429') || error.message?.includes('quota')) {
-        throw new Error('QUOTA_EXCEEDED: Batas penggunaan AI gratis tercapai. Harap tunggu 30-60 detik.');
-      }
-      throw error;
-    }
+    const { output } = await prompt(input);
+    if (!output) throw new Error('Gagal menghasilkan konten artikel.');
+    return output;
   }
 );
