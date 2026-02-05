@@ -155,9 +155,9 @@ const AdminDashboard = () => {
             <p className="text-[10px] font-black truncate">{user.email}</p>
           </div>
           <Button 
-            variant="outline" 
+            variant="destructive" 
             onClick={handleSignOut} 
-            className="w-full border-white/20 text-white hover:bg-primary hover:text-white rounded-none h-12 gap-3"
+            className="w-full rounded-none h-12 gap-3 shadow-lg"
           >
             <LogOut size={18} />
             <span className="text-[10px] font-bold uppercase tracking-widest">Sign Out</span>
