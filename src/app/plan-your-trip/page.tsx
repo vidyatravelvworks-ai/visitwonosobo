@@ -8,7 +8,8 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { 
   Clock, Loader2, Grid, MapPin, 
   CheckCircle2, XCircle, CarFront, ArrowRight,
-  Activity, ShieldAlert, ThermometerSnowflake, Footprints
+  Activity, ShieldAlert, ThermometerSnowflake, Footprints,
+  MessageCircle, Home as HomeIcon, Settings2
 } from 'lucide-react';
 import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
@@ -294,6 +295,45 @@ const PlanYourTripPage = () => {
                   <p className="text-xs text-muted-foreground leading-relaxed">{point.content}</p>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* New CTA Section */}
+          <div className="mt-24 pt-16 border-t border-black/5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="bg-black text-white p-10 md:p-16 flex flex-col justify-between items-start space-y-8 group transition-all duration-500 hover:bg-primary">
+                <div className="space-y-4">
+                  <div className="p-3 bg-white/10 w-fit group-hover:bg-white group-hover:text-primary transition-colors">
+                    <Settings2 size={24} />
+                  </div>
+                  <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none">Custom Your Trip</h3>
+                  <p className="text-white/60 text-xs font-bold uppercase tracking-widest leading-relaxed max-w-sm group-hover:text-white/80 transition-colors">
+                    Punya rencana sendiri? Buat itinerary sesukamu. Konsultasikan rute impianmu dengan tim lokal kami yang ahli.
+                  </p>
+                </div>
+                <Button size="lg" className="bg-white text-black hover:bg-black hover:text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-3" asChild>
+                  <a href="https://wa.me/6281230939128?text=Halo%20saya%20ingin%20konsultasi%20Custom%20Trip%20di%20Wonosobo" target="_blank">
+                    <MessageCircle size={16} /> Konsultasi Rute
+                  </a>
+                </Button>
+              </div>
+
+              <div className="bg-secondary/30 p-10 md:p-16 flex flex-col justify-between items-start space-y-8 border-2 border-transparent hover:border-primary transition-all duration-500">
+                <div className="space-y-4">
+                  <div className="p-3 bg-primary text-white w-fit">
+                    <HomeIcon size={24} />
+                  </div>
+                  <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none text-black">Cari Penginapan</h3>
+                  <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest leading-relaxed max-w-sm">
+                    Belum punya tempat menginap? Kami bantu carikan homestay atau hotel terbaik yang sesuai dengan budget dan rute wisatamu.
+                  </p>
+                </div>
+                <Button size="lg" className="bg-primary text-white hover:bg-black rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-3" asChild>
+                  <a href="https://wa.me/6281230939128?text=Halo%20saya%20butuh%20bantuan%20mencari%20penginapan%20di%20Wonosobo" target="_blank">
+                    <MessageCircle size={16} /> Cari Homestay/Hotel
+                  </a>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
