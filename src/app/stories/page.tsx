@@ -21,7 +21,6 @@ import { articles as staticArticles } from '@/data/articles';
 const StoriesPage = () => {
   const db = useFirestore();
   
-  // Queries
   const articlesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story')) : null, [db]);
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
 
@@ -30,7 +29,6 @@ const StoriesPage = () => {
   
   const stories = (dbStories && dbStories.length > 0) ? dbStories : staticArticles.filter(a => a.type === 'story');
   
-  // Hero Image Fallback
   const storiesConfigHero = config?.heroImages?.stories;
   const storiesPlaceholderHero = PlaceHolderImages.find(img => img.id === 'mountain-prau')?.imageUrl || 'https://picsum.photos/seed/wonosobo-stories/1200/600';
   const heroImage = (storiesConfigHero && storiesConfigHero.trim() !== "") ? storiesConfigHero : storiesPlaceholderHero;
@@ -47,6 +45,14 @@ const StoriesPage = () => {
     for (let i = 0; i < arr.length; i += 2) pairs.push(arr.slice(i, i + 2));
     return pairs;
   };
+
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin text-primary h-12 w-12" />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white">
@@ -104,7 +110,9 @@ const StoriesPage = () => {
                   {pairs.map((pair, idx) => (
                     <CarouselItem key={idx} className="pl-12 basis-full md:basis-1/2 lg:basis-1/3">
                       <div className="flex flex-col gap-12">
-                        {pair.map((article: any) => <ArticleCard key={article.id} article={article} />)}
+                        {pair.map((article: any) => (
+                          <ArticleCard key={article.slug || article.id} article={article} />
+                        ))}
                       </div>
                     </CarouselItem>
                   ))}

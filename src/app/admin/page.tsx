@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -36,7 +37,6 @@ const AdminDashboard = () => {
     }
   }, [user, isUserLoading, router]);
 
-  // Firestore Queries
   const articlesQuery = useMemoFirebase(() => {
     if (!db) return null;
     return query(collection(db, 'articles'), orderBy('updatedAt', 'desc'));
@@ -59,7 +59,6 @@ const AdminDashboard = () => {
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
   const { data: dbConfig, isLoading: isConfigLoading } = useDoc(configRef);
 
-  // Initialize configData with defaults if not exists in DB
   useEffect(() => {
     if (dbConfig) {
       setConfigData(dbConfig);
@@ -150,7 +149,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-secondary/20 flex">
-      {/* SIDEBAR */}
       <aside className="w-64 bg-black text-white flex flex-col p-8 fixed h-full z-20">
         <div className="mb-12">
           <span className="text-xl font-black uppercase tracking-tighter text-primary">Admin Panel</span>
@@ -180,12 +178,11 @@ const AdminDashboard = () => {
           </Button>
         </nav>
 
-        <Button variant="destructive" onClick={handleSignOut} className="mt-auto w-full rounded-none h-12 gap-3 shadow-lg bg-red-600 hover:bg-red-700 text-white">
+        <Button variant="destructive" onClick={handleSignOut} className="mt-auto w-full rounded-none h-12 gap-3 shadow-lg bg-red-600 hover:bg-red-700 text-white border-none">
           <LogOut size={18} /> <span className="text-[10px] font-bold uppercase tracking-widest">Sign Out</span>
         </Button>
       </aside>
 
-      {/* MAIN CONTENT */}
       <main className="flex-grow ml-64 p-12">
         <header className="flex justify-between items-end mb-12">
           <div>
@@ -207,7 +204,6 @@ const AdminDashboard = () => {
           )}
         </header>
 
-        {/* VIEW: ARTICLES & PACKAGES TABLE */}
         {(currentView === 'see-and-do' || currentView === 'stories' || currentView === 'packages') && (
           <Card className="rounded-none border-2 border-black/5 shadow-xl">
             {(isArticlesLoading || isPkgsLoading) ? (
@@ -238,9 +234,11 @@ const AdminDashboard = () => {
                     ))
                   ) : (
                     filteredArticles.map(a => (
-                      <TableRow key={a.id} className="hover:bg-secondary/10">
+                      <TableRow key={a.id || a.slug} className="hover:bg-secondary/10">
                         <TableCell className="py-1 px-4 flex items-center gap-3">
-                          <div className="w-10 h-7 bg-gray-200 border p-0.5"><img src={a.image} className="w-full h-full object-cover" /></div>
+                          <div className="w-10 h-7 bg-gray-200 border p-0.5">
+                            {a.image ? <img src={a.image} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gray-300" />}
+                          </div>
                           <div>
                             <div className="font-bold uppercase text-[11px] truncate max-w-[300px]">{a.title}</div>
                             <div className="text-[8px] text-muted-foreground uppercase">{a.date}</div>
@@ -260,7 +258,6 @@ const AdminDashboard = () => {
           </Card>
         )}
 
-        {/* VIEW: WEBSITE CONFIG */}
         {currentView === 'website-config' && (
           <div className="space-y-8">
             {isConfigLoading ? (
@@ -309,11 +306,10 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* VIEW: GALLERY */}
         {currentView === 'gallery' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {isGalleryLoading ? (
-              <div className="col-span-full flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
+              <div className="col-span-full flex justify-center p-20"><Loader2 className="animate-spin h-10 w-10" /></div>
             ) : galleryItems?.map(item => (
               <Card key={item.id} className="rounded-none border-2 border-black/5 shadow-xl overflow-hidden group">
                 <div className="aspect-video bg-gray-100 relative">

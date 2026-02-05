@@ -21,7 +21,6 @@ import { articles as staticArticles } from '@/data/articles';
 const SeeAndDoPage = () => {
   const db = useFirestore();
   
-  // Queries
   const articlesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'destination')) : null, [db]);
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
 
@@ -30,7 +29,6 @@ const SeeAndDoPage = () => {
   
   const destinations = (dbDestinations && dbDestinations.length > 0) ? dbDestinations : staticArticles.filter(a => a.type === 'destination');
   
-  // Hero Image Fallback logic
   const configHero = config?.heroImages?.seeAndDo;
   const placeholderHero = PlaceHolderImages.find(img => img.id === 'candi-arjuna')?.imageUrl || 'https://picsum.photos/seed/wonosobo-hero/1200/600';
   const heroImage = (configHero && configHero.trim() !== "") ? configHero : placeholderHero;
@@ -47,9 +45,16 @@ const SeeAndDoPage = () => {
     return pairs;
   };
 
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin text-primary h-12 w-12" />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white">
-      {/* Dynamic Hero */}
       <section className="relative h-[40vh] w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image src={heroImage} alt="Hero" fill className="object-cover" priority />
@@ -60,7 +65,6 @@ const SeeAndDoPage = () => {
         </div>
       </section>
 
-      {/* Dynamic Categories Grid */}
       <section className="pt-1 pb-24 md:pt-2 md:pb-32">
         <div className="container mx-auto px-12 md:px-32">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
@@ -91,7 +95,6 @@ const SeeAndDoPage = () => {
         </div>
       </section>
 
-      {/* Content */}
       <div className="pb-32 container mx-auto px-12 md:px-32 space-y-32">
         {categoryData.map((cat) => {
           const filtered = destinations.filter(d => d.category === cat.categoryName);
@@ -108,7 +111,9 @@ const SeeAndDoPage = () => {
                   {pairs.map((pair, idx) => (
                     <CarouselItem key={idx} className="pl-12 basis-full md:basis-1/2 lg:basis-1/3">
                       <div className="flex flex-col gap-12">
-                        {pair.map((article: any) => <ArticleCard key={article.id} article={article} />)}
+                        {pair.map((article: any) => (
+                          <ArticleCard key={article.slug || article.id} article={article} />
+                        ))}
                       </div>
                     </CarouselItem>
                   ))}

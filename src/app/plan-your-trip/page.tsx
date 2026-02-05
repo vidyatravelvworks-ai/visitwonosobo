@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Clock, MapPin, CheckCircle2, MessageCircle, Loader2, Grid } from 'lucide-react';
+import { Clock, MessageCircle, Loader2, Grid } from 'lucide-react';
 import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { staticPackages } from '@/data/packages';
@@ -15,7 +15,6 @@ import { cn } from '@/lib/utils';
 const PlanYourTripPage = () => {
   const db = useFirestore();
   
-  // Queries
   const packagesQ = useMemoFirebase(() => db ? query(collection(db, 'trip_packages'), orderBy('title', 'asc')) : null, [db]);
   const galleryQ = useMemoFirebase(() => db ? query(collection(db, 'gallery'), orderBy('order', 'asc')) : null, [db]);
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
@@ -24,7 +23,6 @@ const PlanYourTripPage = () => {
   const { data: galleryItems, isLoading: isGalleryLoading } = useCollection(galleryQ);
   const { data: config } = useDoc(configRef);
 
-  // Ensure hero image is never an empty string
   const storiesHero = config?.heroImages?.stories;
   const fallbackHero = PlaceHolderImages.find(img => img.id === 'mountain-prau')?.imageUrl || 'https://picsum.photos/seed/wonosobo/1200/800';
   const heroImage = (storiesHero && storiesHero.trim() !== "") ? storiesHero : fallbackHero;
@@ -33,7 +31,6 @@ const PlanYourTripPage = () => {
 
   return (
     <div className="bg-white">
-      {/* Mini Hero Section */}
       <section className="relative h-[45vh] w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
@@ -55,7 +52,6 @@ const PlanYourTripPage = () => {
         </div>
       </section>
 
-      {/* Packages Section */}
       <section className="relative pt-4 pb-24 md:pt-6 md:pb-32 overflow-hidden">
         <div className="container mx-auto px-12 md:px-32 relative z-10">
           <div className="text-center mb-20 max-w-3xl mx-auto space-y-4">
@@ -69,11 +65,11 @@ const PlanYourTripPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               {packages.map((pkg: any, idx: number) => (
                 <Card 
-                  key={idx} 
+                  key={pkg.id || idx} 
                   className={cn(
                     "border-2 rounded-none overflow-hidden hover:shadow-2xl transition-all duration-500",
-                    config?.packageDesign?.cardBorder || pkg.borderColor,
-                    config?.packageDesign?.cardColor || pkg.color
+                    pkg.borderColor || "border-primary/20",
+                    pkg.color || "bg-primary/5"
                   )}
                 >
                   <CardHeader className="space-y-8 p-10 pb-0">
@@ -115,7 +111,6 @@ const PlanYourTripPage = () => {
             </div>
           )}
 
-          {/* UNIQUE TRIP GALLERY GRID */}
           <div className="mt-32">
             <div className="flex items-center gap-4 mb-12">
               <div className="p-2 bg-primary text-white"><Grid size={24} /></div>
@@ -132,12 +127,14 @@ const PlanYourTripPage = () => {
                     "col-span-1 row-span-1", "col-span-2 row-span-1", "col-span-1 row-span-2",
                     "col-span-1 row-span-1", "col-span-1 row-span-1"
                   ];
+                  const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/${item.id}/800/800`;
                   return (
                     <div key={item.id} className={cn("relative overflow-hidden group", spans[idx % spans.length])}>
-                      <img 
-                        src={item.url && item.url.trim() !== "" ? item.url : `https://picsum.photos/seed/${item.id}/800/800`} 
-                        alt={item.caption} 
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                      <Image 
+                        src={galleryImg} 
+                        alt={item.caption || "Trip Photo"} 
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110" 
                       />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
                         <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
