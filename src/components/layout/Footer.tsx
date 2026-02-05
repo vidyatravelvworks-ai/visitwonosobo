@@ -21,7 +21,7 @@ const Footer = () => {
   return (
     <footer className="bg-white border-t py-20">
       <div className="container mx-auto px-12 md:px-32">
-        {/* Menggunakan grid-cols-5 untuk mencapai rasio 40% (2/5) dan 20% (1/5) */}
+        {/* Grid 5 kolom untuk mencapai rasio 40% (2/5) dan 20% (1/5) */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-16 mb-20">
           {/* Kolom 1: 40% lebar (span 2 dari 5) */}
           <div className="col-span-1 md:col-span-2 space-y-6">
@@ -74,7 +74,7 @@ const Footer = () => {
         
         <div className="pt-10 border-t flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
           <p>
-            &copy; {year}{' '}
+            &copy; <span suppressHydrationWarning>{year}</span>{' '}
             <Link href="/login" className="hover:text-primary transition-colors">
               visitwonosobo
             </Link>
