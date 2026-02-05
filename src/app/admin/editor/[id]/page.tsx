@@ -48,19 +48,24 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     metaTitle: '',
     category: queryType === 'destination' ? 'Alam' : 'Sejarah',
     type: queryType,
-    date: '', // Akan diisi via useEffect untuk menghindari hidrasi mismatch
+    date: '', 
     focusKeyword: ''
   });
 
   // Effect untuk auto-fill tanggal hari ini jika artikel baru
   useEffect(() => {
-    if (isNew && !formData.date) {
-      const today = new Date().toLocaleDateString('id-ID', { 
-        day: '2-digit', 
-        month: 'short', 
-        year: 'numeric' 
-      });
-      setFormData(prev => ({ ...prev, date: today }));
+    if (isNew) {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+      const month = monthNames[now.getMonth()];
+      const year = now.getFullYear();
+      const todayFormatted = `${day} ${month} ${year}`;
+      
+      setFormData(prev => ({ 
+        ...prev, 
+        date: todayFormatted 
+      }));
     }
   }, [isNew]);
 
@@ -237,7 +242,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
             </span>
             <span className="h-1 w-1 rounded-full bg-white/40" />
             <span className="flex items-center gap-2">
-              <Calendar className="h-3 w-3 text-primary" /> {formData.date || 'Auto-date Today'}
+              <Calendar className="h-3 w-3 text-primary" /> {formData.date || 'Memuat Tanggal...'}
             </span>
           </div>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tighter leading-tight">
@@ -368,6 +373,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     <Input 
                       value={formData.date}
                       onChange={(e) => setFormData({...formData, date: e.target.value})}
+                      placeholder="Contoh: 20 Jan 2026"
                       className="rounded-none border-2 text-[10px] h-10 font-bold"
                     />
                   </div>
