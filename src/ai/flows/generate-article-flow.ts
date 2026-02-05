@@ -14,8 +14,8 @@ export type GenerateArticleInput = z.infer<typeof GenerateArticleInputSchema>;
 
 const GenerateArticleOutputSchema = z.object({
   content: z.string().describe('Konten artikel utama (1000-1100 kata) dalam format Markdown'),
-  metaTitle: z.string().describe('Judul untuk SEO (Meta Title)'),
-  metaDescription: z.string().describe('Deskripsi singkat untuk SEO (Meta Description) max 150 karakter'),
+  metaTitle: z.string().describe('Judul untuk SEO (Meta Title) max 60 karakter'),
+  metaDescription: z.string().describe('Deskripsi singkat untuk SEO (Meta Description) max 150-160 karakter'),
   internalLinks: z.string().describe('Rekomendasi internal link untuk artikel terkait'),
 });
 export type GenerateArticleOutput = z.infer<typeof GenerateArticleOutputSchema>;
@@ -40,21 +40,21 @@ KRITERIA WAJIB:
 2. STRUKTUR SEO:
    - Gunakan H1 untuk judul di dalam konten.
    - Gunakan H2 dan H3 secara hierarkis untuk sub-bab.
-   - Masukkan kata kunci utama dan LSI (kata kunci terkait) secara natural.
-   - Buat paragraf yang singkat (maksimal 4 kalimat per paragraf) agar mudah dibaca (readability).
+   - Masukkan kata kunci utama dan LSI (kata kunci terkait) secara natural di sepanjang teks.
+   - Buat paragraf yang singkat (maksimal 4 kalimat per paragraf) agar mudah dibaca (readability tinggi).
    - Sertakan kesimpulan yang kuat di akhir artikel.
 
 3. KUALITAS ILMIAH & VALIDITAS:
-   - Gunakan gaya bahasa formal namun tetap enak dibaca.
-   - Sertakan fakta-fakta terbaru atau argumen yang logis.
+   - Gunakan gaya bahasa formal namun tetap enak dibaca (populer).
+   - Sertakan fakta-fakta terbaru, argumen logis, dan perspektif mendalam.
 
 4. SUMBER REFERENSI:
    - Di bagian paling bawah konten, buat daftar pustaka dengan "Gaya Standar (APA/Harvard)".
-   - Cantumkan minimal 5 referensi (jurnal, buku, atau situs berita kredibel).
+   - Cantumkan minimal 5 referensi (jurnal, buku, atau situs berita kredibel). Gunakan data nyata jika ada dalam memori Anda, atau simulasikan referensi yang kredibel dan relevan.
 
 5. ASPEK TAMBAHAN (Output dalam field terpisah):
-   - Buatkan metaTitle yang menarik (max 60 karakter).
-   - Buatkan metaDescription (maksimal 150 karakter).
+   - Buatkan metaTitle yang menarik dan mengandung focus keyword (max 60 karakter).
+   - Buatkan metaDescription yang persuasif (150-160 karakter).
    - Berikan rekomendasi "Internal Link" (saran artikel lain yang relevan untuk ditautkan).
 
 Tuliskan artikel secara lengkap, utuh, dan profesional.`,
