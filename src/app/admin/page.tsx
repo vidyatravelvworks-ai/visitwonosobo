@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { 
   Plus, Edit, Trash2, LogOut, Map, BookOpen, MapPin, 
-  Layout, Save, Grid, Loader2, CheckCircle, Image as ImageIcon
+  Layout, Save, Grid, Loader2, Image as ImageIcon
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -33,7 +33,6 @@ const AdminDashboard = () => {
   const [configData, setConfigData] = useState<any>(null);
   const [isSavingConfig, setIsSavingConfig] = useState(false);
   
-  // New State for Gallery Input
   const [newGalleryItem, setNewGalleryItem] = useState({ url: '', caption: '' });
   const [isAddingPhoto, setIsAddingPhoto] = useState(false);
 
@@ -150,15 +149,18 @@ const AdminDashboard = () => {
       });
   };
 
-  const handleDeleteGallery = (id: string) => {
-    const confirmation = window.prompt('Ketik "hapus" untuk mengonfirmasi penghapusan gambar galeri ini:');
-    if (confirmation !== 'hapus') {
-      if (confirmation !== null) {
-        toast({ variant: 'destructive', title: 'Gagal', description: 'Konfirmasi salah. Gambar tidak dihapus.' });
-      }
-      return;
+  // Unified Security Prompt Helper
+  const confirmWithHapus = (itemType: string) => {
+    const input = window.prompt(`Ketik "hapus" untuk mengonfirmasi penghapusan ${itemType} ini:`);
+    if (input === 'hapus') return true;
+    if (input !== null) {
+      toast({ variant: 'destructive', title: 'Gagal', description: 'Kata kunci konfirmasi salah.' });
     }
+    return false;
+  };
 
+  const handleDeleteGallery = (id: string) => {
+    if (!confirmWithHapus('gambar galeri')) return;
     if (!db) return;
     const docRef = doc(db, 'gallery', id);
     deleteDoc(docRef)
@@ -174,7 +176,7 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteArticle = (id: string) => {
-    if (!window.confirm('Hapus artikel ini?')) return;
+    if (!confirmWithHapus('artikel')) return;
     if (!db) return;
     const docRef = doc(db, 'articles', id);
     deleteDoc(docRef)
@@ -190,7 +192,7 @@ const AdminDashboard = () => {
   };
 
   const handleDeletePackage = (id: string) => {
-    if (!window.confirm('Hapus paket trip ini?')) return;
+    if (!confirmWithHapus('paket trip')) return;
     if (!db) return;
     const docRef = doc(db, 'trip_packages', id);
     deleteDoc(docRef)
@@ -337,7 +339,6 @@ const AdminDashboard = () => {
               <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
             ) : configData && (
               <>
-                {/* Banner Utama */}
                 <Card className="rounded-none border-2 border-black/5 shadow-xl">
                   <CardHeader className="border-b bg-white"><CardTitle className="text-xs font-black uppercase tracking-widest">Gambar Banner Utama (Hero)</CardTitle></CardHeader>
                   <CardContent className="p-6 space-y-6 bg-white">
@@ -364,7 +365,6 @@ const AdminDashboard = () => {
                   </CardContent>
                 </Card>
 
-                {/* Kategori See and Do */}
                 <Card className="rounded-none border-2 border-black/5 shadow-xl">
                   <CardHeader className="border-b bg-white"><CardTitle className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2"><Map size={14}/> Kategori See &amp; Do</CardTitle></CardHeader>
                   <CardContent className="p-6 space-y-6 bg-white">
@@ -391,7 +391,6 @@ const AdminDashboard = () => {
                   </CardContent>
                 </Card>
 
-                {/* Kategori Stories */}
                 <Card className="rounded-none border-2 border-black/5 shadow-xl">
                   <CardHeader className="border-b bg-white"><CardTitle className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2"><BookOpen size={14}/> Kategori Stories</CardTitle></CardHeader>
                   <CardContent className="p-6 space-y-6 bg-white">
@@ -423,9 +422,6 @@ const AdminDashboard = () => {
                     {isSavingConfig ? <Loader2 className="animate-spin" /> : <Save size={20} />}
                     {isSavingConfig ? 'Menyimpan Konfigurasi...' : 'Simpan Perubahan Website'}
                   </Button>
-                  <p className="text-[9px] font-medium text-muted-foreground italic text-center">
-                    Pastikan URL gambar valid dan menggunakan domain yang didukung (Unsplash, Picsum, Cloudinary, Imgur, dsb).
-                  </p>
                 </div>
               </>
             )}
@@ -434,7 +430,6 @@ const AdminDashboard = () => {
 
         {currentView === 'gallery' && (
           <div className="space-y-12">
-            {/* New Unified Input Panel for Gallery - Minimalist Pressed Layout */}
             <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white w-full">
               <CardHeader className="border-b bg-secondary/10 p-3">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
@@ -443,7 +438,6 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent className="p-3">
                 <div className="flex gap-3 items-start">
-                  {/* Preview Image on the Left */}
                   <div className="w-28 h-[120px] bg-gray-100 border-2 border-dashed border-black/10 shrink-0 overflow-hidden flex items-center justify-center relative">
                     {newGalleryItem.url ? (
                       <img src={newGalleryItem.url} className="w-full h-full object-cover" alt="Preview" />
@@ -455,7 +449,6 @@ const AdminDashboard = () => {
                     )}
                   </div>
                   
-                  {/* Inputs and Button on the Right - Pressed Verticality */}
                   <div className="flex-grow space-y-1.5">
                     <div className="space-y-0.5">
                       <Label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">URL Gambar</Label>
@@ -488,7 +481,6 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
 
-            {/* List of Existing Photos Below */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {isGalleryLoading ? (
                 <div className="col-span-full flex justify-center p-20"><Loader2 className="animate-spin h-10 w-10" /></div>
@@ -503,7 +495,6 @@ const AdminDashboard = () => {
                       </div>
                     )}
                     
-                    {/* Centered Trash Icon Overlay */}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <Button 
                         variant="destructive" 
