@@ -93,7 +93,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     }
     setIsGenerating(true);
     try {
-      // Menggunakan result object dari Server Action untuk menghindari dev error overlay
       const { data: result, error } = await generateArticle({ 
         title: formData.title, 
         focusKeyword: formData.focusKeyword 
@@ -130,7 +129,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         toast({ title: 'Berhasil', description: 'Artikel SEO 100% telah dibuat.' });
       }
     } catch (e) {
-      // Fallback catch untuk error jaringan yang tidak terduga
       toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghubungi AI Server.' });
     } finally {
       setIsGenerating(false);
@@ -214,7 +212,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         <div className="lg:col-span-3 space-y-3">
           <Card className="rounded-none border-2 shadow-sm">
             <CardContent className="p-6 space-y-3">
-              {/* Featured Image URL at the top */}
               <div className="space-y-1">
                 <Label className="text-[10px] font-black uppercase flex justify-between">
                   <span>Featured Image URL</span>
@@ -223,13 +220,11 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                 <Input value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="rounded-none h-9 text-xs" />
               </div>
 
-              {/* Title in its own full row */}
               <div className="space-y-1">
                 <Label className="text-[10px] font-black uppercase">Article Title</Label>
                 <Input value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="rounded-none h-12 text-lg font-black uppercase w-full" />
               </div>
 
-              {/* SEO Row with 60:40 Ratio */}
               <div className="grid grid-cols-10 gap-3 items-end">
                 <div className="col-span-6 space-y-1">
                   <Label className="text-[10px] font-black uppercase text-primary">Focus Keyword</Label>

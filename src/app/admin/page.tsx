@@ -28,7 +28,6 @@ const AdminDashboard = () => {
     if (!isUserLoading && !user) router.push('/login');
   }, [user, isUserLoading, router]);
 
-  // Queries for different entities
   const articlesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), orderBy('updatedAt', 'desc')) : null, [db]);
   const packagesQ = useMemoFirebase(() => db ? query(collection(db, 'trip_packages'), orderBy('updatedAt', 'desc')) : null, [db]);
   const galleryQ = useMemoFirebase(() => db ? query(collection(db, 'gallery'), orderBy('order', 'asc')) : null, [db]);
@@ -116,7 +115,6 @@ const AdminDashboard = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {/* ARTICLES VIEW */}
                 {(currentView === 'see-and-do' || currentView === 'stories') && (
                   filteredArticles.length === 0 ? (
                     <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">Tidak ada artikel.</TableCell></TableRow>
@@ -153,7 +151,6 @@ const AdminDashboard = () => {
                   ))
                 )}
 
-                {/* PACKAGES VIEW */}
                 {currentView === 'packages' && (
                   allPackages?.length === 0 ? (
                     <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">Tidak ada paket.</TableCell></TableRow>
@@ -185,7 +182,6 @@ const AdminDashboard = () => {
                   ))
                 )}
 
-                {/* GALLERY VIEW */}
                 {currentView === 'gallery' && (
                   allGallery?.length === 0 ? (
                     <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">Tidak ada gambar.</TableCell></TableRow>
