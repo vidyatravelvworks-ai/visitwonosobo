@@ -20,9 +20,9 @@ const Footer = () => {
   if (!mounted) return null;
 
   return (
-    <footer className="bg-white border-t py-16 px-6">
+    <footer className="bg-white border-t py-8 px-6">
       <div className="container mx-auto px-0 md:px-8 lg:px-32">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-16 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-16 mb-12">
           {/* Kolom 1: 40% lebar (span 2 dari 5) */}
           <div className="col-span-1 md:col-span-2 space-y-6">
             <span className="text-2xl font-black font-headline tracking-tighter uppercase text-primary">
@@ -82,9 +82,9 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="pt-10 border-t flex flex-col items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+        <div className="pt-8 border-t flex flex-col items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
           <p className="text-center">
-            &copy; 2026 visitwonosobo. All Rights Reserved.
+            &copy; 2026 <Link href="/admin" className="hover:text-primary transition-colors">visitwonosobo</Link>. All Rights Reserved.
           </p>
         </div>
       </div>
