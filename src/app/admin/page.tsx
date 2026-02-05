@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser, useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
-import { collection, doc, deleteDoc, query, orderBy, setDoc } from 'firebase/firestore';
+import { collection, doc, deleteDoc, query, orderBy, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
@@ -19,6 +19,8 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { getAuth, signOut } from 'firebase/auth';
 import { cn } from '@/lib/utils';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 const AdminDashboard = () => {
   const { user, isUserLoading } = useUser();
@@ -79,20 +81,26 @@ const AdminDashboard = () => {
     return false;
   }) || [];
 
-  const handleSaveConfig = async () => {
+  const handleSaveConfig = () => {
     if (!db || !configData) return;
     setIsSavingConfig(true);
-    try {
-      await setDoc(doc(db, 'config', 'website'), configData, { merge: true });
-      toast({ title: 'Success', description: 'Website configuration saved.' });
-    } catch (error) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Failed to save config.' });
-    } finally {
-      setIsSavingConfig(false);
-    }
+    const docRef = doc(db, 'config', 'website');
+    setDoc(docRef, configData, { merge: true })
+      .then(() => {
+        toast({ title: 'Success', description: 'Website configuration saved.' });
+        setIsSavingConfig(false);
+      })
+      .catch((err) => {
+        setIsSavingConfig(false);
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: docRef.path,
+          operation: 'write',
+          requestResourceData: configData
+        }));
+      });
   };
 
-  const handleAddGalleryImage = async () => {
+  const handleAddGalleryImage = () => {
     if (!db) return;
     const id = `img-${Date.now()}`;
     const newImage = {
@@ -101,37 +109,63 @@ const AdminDashboard = () => {
       caption: 'New Trip Photo',
       order: (galleryItems?.length || 0) + 1
     };
-    await setDoc(doc(db, 'gallery', id), newImage);
+    const docRef = doc(db, 'gallery', id);
+    setDoc(docRef, newImage)
+      .catch((err) => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: docRef.path,
+          operation: 'create',
+          requestResourceData: newImage
+        }));
+      });
   };
 
-  const handleDeleteGallery = async (id: string) => {
+  const handleDeleteGallery = (id: string) => {
     if (!window.confirm('Hapus gambar galeri ini?')) return;
-    try {
-      await deleteDoc(doc(db!, 'gallery', id));
-      toast({ title: 'Berhasil', description: 'Gambar dihapus.' });
-    } catch (error) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus.' });
-    }
+    if (!db) return;
+    const docRef = doc(db, 'gallery', id);
+    deleteDoc(docRef)
+      .then(() => {
+        toast({ title: 'Berhasil', description: 'Gambar dihapus.' });
+      })
+      .catch((err) => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: docRef.path,
+          operation: 'delete'
+        }));
+      });
   };
 
-  const handleDeleteArticle = async (id: string) => {
+  const handleDeleteArticle = (id: string) => {
     if (!window.confirm('Hapus artikel ini?')) return;
-    try {
-      await deleteDoc(doc(db!, 'articles', id));
-      toast({ title: 'Berhasil', description: 'Artikel telah dihapus.' });
-    } catch (error) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus.' });
-    }
+    if (!db) return;
+    const docRef = doc(db, 'articles', id);
+    deleteDoc(docRef)
+      .then(() => {
+        toast({ title: 'Berhasil', description: 'Artikel telah dihapus.' });
+      })
+      .catch((err) => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: docRef.path,
+          operation: 'delete'
+        }));
+      });
   };
 
-  const handleDeletePackage = async (id: string) => {
+  const handleDeletePackage = (id: string) => {
     if (!window.confirm('Hapus paket trip ini?')) return;
-    try {
-      await deleteDoc(doc(db!, 'trip_packages', id));
-      toast({ title: 'Berhasil', description: 'Paket trip telah dihapus.' });
-    } catch (error) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus.' });
-    }
+    if (!db) return;
+    const docRef = doc(db, 'trip_packages', id);
+    deleteDoc(docRef)
+      .then(() => {
+        toast({ title: 'Berhasil', description: 'Paket trip telah dihapus.' });
+      })
+      .catch((err) => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: docRef.path,
+          operation: 'delete'
+        }));
+      });
   };
 
   const handleSignOut = async () => {
@@ -319,7 +353,18 @@ const AdminDashboard = () => {
                   <Input 
                     placeholder="Image URL" 
                     value={item.url} 
-                    onChange={(e) => setDoc(doc(db!, 'gallery', item.id), { ...item, url: e.target.value })}
+                    onChange={(e) => {
+                      const newUrl = e.target.value;
+                      const docRef = doc(db!, 'gallery', item.id);
+                      setDoc(docRef, { ...item, url: newUrl }, { merge: true })
+                        .catch(err => {
+                          errorEmitter.emit('permission-error', new FirestorePermissionError({
+                            path: docRef.path,
+                            operation: 'update',
+                            requestResourceData: { ...item, url: newUrl }
+                          }));
+                        });
+                    }}
                     className="rounded-none border-2 text-[9px] h-8"
                   />
                   <div className="flex gap-2">
@@ -327,7 +372,18 @@ const AdminDashboard = () => {
                       placeholder="Order" 
                       type="number"
                       value={item.order} 
-                      onChange={(e) => setDoc(doc(db!, 'gallery', item.id), { ...item, order: parseInt(e.target.value) || 0 })}
+                      onChange={(e) => {
+                        const newOrder = parseInt(e.target.value) || 0;
+                        const docRef = doc(db!, 'gallery', item.id);
+                        setDoc(docRef, { ...item, order: newOrder }, { merge: true })
+                          .catch(err => {
+                            errorEmitter.emit('permission-error', new FirestorePermissionError({
+                              path: docRef.path,
+                              operation: 'update',
+                              requestResourceData: { ...item, order: newOrder }
+                            }));
+                          });
+                      }}
                       className="rounded-none border-2 text-[9px] h-8 w-20"
                     />
                     <Button variant="ghost" className="text-red-600 h-8 px-2 ml-auto" onClick={() => handleDeleteGallery(item.id)}><Trash2 size={14}/></Button>
