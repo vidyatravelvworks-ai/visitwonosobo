@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, use } from 'react';
@@ -69,6 +70,19 @@ const ArticleEditorPage = ({ params }: PageProps) => {
   const docRef = useMemoFirebase(() => db && !isNew ? doc(db, 'articles', id) : null, [db, id, isNew]);
   const { data: article, isLoading } = useDoc(docRef);
 
+  const getCategoryLabel = (cat: string) => {
+    const map: Record<string, string> = {
+      'Alam': 'Nature & Adventure',
+      'Budaya': 'Heritage & Culture',
+      'Kuliner': 'Food & Drink',
+      'Sejarah': 'History & Heritage',
+      'Sosial': 'People & Culture',
+      'Geografis': 'Geography & Landscape',
+      'Tips': 'Travel Tips'
+    };
+    return map[cat] || cat;
+  };
+
   useEffect(() => {
     if (article) {
       setFormData({
@@ -78,7 +92,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         content: article.content || '',
         image: article.image || '',
         metaTitle: article.metaTitle || '',
-        category: article.category || (article.type === 'destination' ? 'Nature & Adventure' : 'History & Heritage'),
+        category: getCategoryLabel(article.category || (article.type === 'destination' ? 'Nature & Adventure' : 'History & Heritage')),
         type: article.type || 'destination',
         date: article.date || getTodayFormatted(),
         author: article.author || 'Admin Lokal',

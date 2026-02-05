@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -83,9 +84,9 @@ const AdminDashboard = () => {
         },
         updatedAt: serverTimestamp()
       }, { merge: true });
-      toast({ title: 'Berhasil', description: 'Konfigurasi website diperbarui.' });
+      toast({ title: 'Success', description: 'Website configuration updated.' });
     } catch (err) {
-      toast({ variant: 'destructive', title: 'Gagal' });
+      toast({ variant: 'destructive', title: 'Error' });
     } finally {
       setIsSavingConfig(false);
     }
@@ -96,12 +97,25 @@ const AdminDashboard = () => {
     try {
       const id = `img-${Date.now()}`;
       await setDoc(doc(db, 'gallery', id), { ...galleryForm, id, createdAt: serverTimestamp() });
-      toast({ title: 'Berhasil', description: 'Gambar galeri ditambahkan.' });
+      toast({ title: 'Success', description: 'Gallery image added.' });
       setIsGalleryOpen(false);
       setGalleryForm({ url: '', caption: '', order: (allGallery?.length || 0) + 1 });
     } catch (err) {
-      toast({ variant: 'destructive', title: 'Gagal' });
+      toast({ variant: 'destructive', title: 'Error' });
     }
+  };
+
+  const getCategoryLabel = (cat: string) => {
+    const map: Record<string, string> = {
+      'Alam': 'Nature & Adventure',
+      'Budaya': 'Heritage & Culture',
+      'Kuliner': 'Food & Drink',
+      'Sejarah': 'History & Heritage',
+      'Sosial': 'People & Culture',
+      'Geografis': 'Geography & Landscape',
+      'Tips': 'Travel Tips'
+    };
+    return map[cat] || cat;
   };
 
   if (isUserLoading || !user) return <div className="h-screen flex items-center justify-center font-black uppercase text-xs tracking-widest">Authenticating...</div>;
@@ -246,14 +260,14 @@ const AdminDashboard = () => {
                 <TableHeader className="bg-secondary/50">
                   <TableRow>
                     <TableHead className="text-[10px] font-black uppercase tracking-widest py-4">Preview</TableHead>
-                    <TableHead className="text-[10px] font-black uppercase tracking-widest">kategori</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest">CATEGORY</TableHead>
                     <TableHead className="text-[10px] font-black uppercase tracking-widest text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {(currentView === 'see-and-do' || currentView === 'stories') && (
                     filteredArticles.length === 0 ? (
-                      <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">Tidak ada artikel.</TableCell></TableRow>
+                      <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No articles found.</TableCell></TableRow>
                     ) : filteredArticles.map(a => (
                       <TableRow key={a.id} className="hover:bg-secondary/10 h-20">
                         <TableCell className="py-2 px-4 flex items-center gap-4">
@@ -265,7 +279,7 @@ const AdminDashboard = () => {
                             <div className="text-[8px] text-muted-foreground uppercase mt-1 font-bold tracking-wider">{a.date} | {a.author || 'Admin'}</div>
                           </div>
                         </TableCell>
-                        <TableCell className="py-2 px-4"><Badge className="rounded-none text-[8px] uppercase font-black px-2">{a.category}</Badge></TableCell>
+                        <TableCell className="py-2 px-4"><Badge className="rounded-none text-[8px] uppercase font-black px-2">{getCategoryLabel(a.category)}</Badge></TableCell>
                         <TableCell className="py-2 px-4 text-right">
                           <div className="flex justify-end gap-2">
                             <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={14}/></Link></Button>
@@ -277,7 +291,7 @@ const AdminDashboard = () => {
 
                   {currentView === 'packages' && (
                     allPackages?.length === 0 ? (
-                      <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">Tidak ada paket.</TableCell></TableRow>
+                      <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No packages found.</TableCell></TableRow>
                     ) : allPackages?.map(p => (
                       <TableRow key={p.id} className="hover:bg-secondary/10 h-20">
                         <TableCell className="py-2 px-4">
@@ -298,7 +312,7 @@ const AdminDashboard = () => {
 
                   {currentView === 'gallery' && (
                     allGallery?.length === 0 ? (
-                      <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">Tidak ada gambar.</TableCell></TableRow>
+                      <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No images found.</TableCell></TableRow>
                     ) : allGallery?.map(g => (
                       <TableRow key={g.id} className="hover:bg-secondary/10 h-20">
                         <TableCell className="py-2 px-4">
