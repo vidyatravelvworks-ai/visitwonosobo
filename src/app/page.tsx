@@ -68,7 +68,7 @@ export default function Home() {
       <Hero />
       
       <section className="py-32 bg-white border-b">
-        <div className="container mx-auto px-2 md:px-8 lg:px-32">
+        <div className="container mx-auto px-6 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
             <div className="max-w-2xl">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Plan Your Trip</h3>
@@ -182,7 +182,7 @@ export default function Home() {
       </section>
 
       <section className="py-32 bg-secondary/20">
-        <div className="container mx-auto px-2 md:px-8 lg:px-32">
+        <div className="container mx-auto px-6 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
             <div className="max-w-2xl">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Discover More</h3>
@@ -217,7 +217,7 @@ export default function Home() {
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="container mx-auto px-2 md:px-8 lg:px-32 relative z-10 text-center">
+        <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10 text-center">
           <div className="max-w-4xl mx-auto space-y-12">
             <h2 className="text-5xl md:text-8xl font-black text-white uppercase leading-none tracking-tighter">
               Ready to <span className="text-primary">Explore</span> <br /> Wonosobo?

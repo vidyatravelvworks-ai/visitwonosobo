@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -58,7 +59,7 @@ const ArticleDetailPage = () => {
           <div className="absolute inset-0 bg-black/40 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
         </div>
         
-        <div className="container mx-auto px-4 md:px-32 relative z-10">
+        <div className="container mx-auto px-6 md:px-32 relative z-10">
           <div className="max-w-4xl mx-auto space-y-6">
             <div className="flex items-center gap-4 text-xs font-bold text-white/80 uppercase tracking-[0.3em]">
               <span className="flex items-center gap-2">
@@ -78,7 +79,7 @@ const ArticleDetailPage = () => {
         </div>
       </section>
 
-      <div className="container mx-auto px-4 md:px-32 -mt-10 relative z-20">
+      <div className="container mx-auto px-6 md:px-32 -mt-10 relative z-20">
         <div className="max-w-4xl mx-auto bg-white p-8 md:p-16 shadow-2xl">
           <Button variant="ghost" asChild className="mb-10 group pl-0 h-auto hover:bg-transparent">
             <Link href="/" className="flex items-center gap-2 font-bold text-xs uppercase tracking-widest text-primary">

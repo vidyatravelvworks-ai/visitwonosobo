@@ -38,7 +38,7 @@ const Navbar = () => {
         "fixed top-0 w-full z-50 transition-all duration-300 border-b",
         scrolled ? "bg-white py-3 shadow-sm border-border" : "bg-transparent py-5 border-transparent text-white"
       )}>
-        <div className="container mx-auto px-2 md:px-8 lg:px-32 flex items-center justify-between">
+        <div className="container mx-auto px-6 md:px-8 lg:px-32 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <span className={cn(
               "text-2xl font-black font-headline tracking-tighter uppercase",
