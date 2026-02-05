@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -10,7 +11,7 @@ import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { 
   Activity, ShieldAlert, CarFront, 
-  Clock, ThermometerSnowflake, CheckCircle2, Loader2,
+  Clock, ThermometerSnowflake, CheckCircle2, XCircle, Loader2,
   Footprints, MapPin, ArrowRight
 } from 'lucide-react';
 
@@ -116,18 +117,46 @@ export default function Home() {
                       <Clock size={12} className="text-primary" /> {pkg.time}
                     </p>
 
-                    <div className="h-px bg-black/10 w-full mb-6 dashed-border" style={{ backgroundImage: 'linear-gradient(to right, rgba(0,0,0,0.1) 50%, transparent 50%)', backgroundSize: '10px 1px', backgroundRepeat: 'repeat-x', height: '1px', border: 'none' }} />
+                    <div className="h-px bg-black/10 w-full mb-6" style={{ backgroundImage: 'linear-gradient(to right, rgba(0,0,0,0.1) 50%, transparent 50%)', backgroundSize: '10px 1px', backgroundRepeat: 'repeat-x', height: '1px' }} />
                     
-                    <ul className="space-y-3 mb-10 flex-grow">
-                      {pkg.spots?.slice(0, 5).map((feature: string, i: number) => (
-                        <li key={i} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-tight">
-                          <CheckCircle2 className="h-3 w-3 text-primary shrink-0" /> 
-                          <span className="truncate">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="space-y-6 flex-grow">
+                      <div>
+                        <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-3">Destinasi Utama</p>
+                        <ul className="space-y-2">
+                          {pkg.spots?.slice(0, 4).map((feature: string, i: number) => (
+                            <li key={i} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-tight">
+                              <MapPin className="h-3 w-3 text-muted-foreground shrink-0" /> 
+                              <span className="truncate">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
 
-                    <Button className="w-full bg-black hover:bg-primary text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-2 group/btn" asChild>
+                      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-dashed">
+                        <div>
+                          <p className="text-[8px] font-black uppercase tracking-widest text-green-600 mb-2">Include</p>
+                          <ul className="space-y-1">
+                            {pkg.includes?.slice(0, 3).map((item: string, i: number) => (
+                              <li key={i} className="flex items-center gap-1.5 text-[8px] font-bold uppercase text-muted-foreground">
+                                <CheckCircle2 className="h-2 w-2 text-green-600 shrink-0" /> {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <p className="text-[8px] font-black uppercase tracking-widest text-red-600 mb-2">Exclude</p>
+                          <ul className="space-y-1">
+                            {pkg.excludes?.slice(0, 3).map((item: string, i: number) => (
+                              <li key={i} className="flex items-center gap-1.5 text-[8px] font-bold uppercase text-muted-foreground">
+                                <XCircle className="h-2 w-2 text-red-600 shrink-0" /> {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Button className="w-full bg-black hover:bg-primary text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-2 group/btn mt-8" asChild>
                       <a href={`https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20paket%20${encodeURIComponent(pkg.title)}`} target="_blank">
                         Booking Sekarang
                         <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />

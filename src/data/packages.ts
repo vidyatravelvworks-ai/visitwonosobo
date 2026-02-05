@@ -6,6 +6,8 @@ export interface TripPackage {
   price: string;
   description: string;
   spots: string[];
+  includes: string[];
+  excludes: string[];
   color: string;
   borderColor: string;
 }
@@ -18,6 +20,8 @@ export const staticPackages: TripPackage[] = [
     price: "Rp 650.000",
     description: "Mobil, BBM, Driver as Guide",
     spots: ["Pintu Langit", "Candi Arjuna", "Kawah Sikidang", "Batu Ratapan", "Bukit Scooter", "Telaga Warna"],
+    includes: ["Mobil Private", "BBM & Driver as Guide", "Parkir Semua Destinasi", "Antar Jemput Hotel"],
+    excludes: ["Tiket Masuk Wisata", "Makan & Pengeluaran Pribadi", "Dokumentasi"],
     color: "bg-primary/5",
     borderColor: "border-primary/20"
   },
@@ -28,6 +32,8 @@ export const staticPackages: TripPackage[] = [
     price: "Rp 650.000",
     description: "Mobil, BBM, Driver as Guide",
     spots: ["Bukit Sikunir", "Air Terjun Sikarim", "Swiss Van Java", "Telaga Menjer", "Kahyangan Skyline", "Kebun Teh Panama"],
+    includes: ["Mobil Private", "BBM & Driver as Guide", "Parkir Semua Destinasi", "Antar Jemput Hotel"],
+    excludes: ["Tiket Masuk Wisata", "Makan & Pengeluaran Pribadi", "Dokumentasi"],
     color: "bg-secondary/50",
     borderColor: "border-border"
   },
@@ -38,6 +44,8 @@ export const staticPackages: TripPackage[] = [
     price: "Mulai Rp 500rb",
     description: "Avanza, Innova, Hiace. Driver = Guide Lokal.",
     spots: ["BBM Termasuk", "Driver Berpengalaman", "Waktu Fleksibel", "Antar Jemput Hotel"],
+    includes: ["Mobil Private", "BBM (Opsional)", "Driver Berpengalaman", "Antar Jemput Area Kota"],
+    excludes: ["Biaya Parkir", "Makan Driver", "Tiket Wisata"],
     color: "bg-white",
     borderColor: "border-border"
   }

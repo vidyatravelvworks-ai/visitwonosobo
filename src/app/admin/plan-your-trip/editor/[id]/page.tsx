@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Save, MapPin, Clock, DollarSign, ListChecks } from 'lucide-react';
+import { ArrowLeft, Save, MapPin, Clock, DollarSign, ListChecks, CheckCircle2, XCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import Link from 'next/link';
@@ -30,7 +30,9 @@ const TripPackageEditorPage = () => {
     time: '',
     price: '',
     description: '',
-    spotsRaw: '', // Textarea input for spots, newline separated
+    spotsRaw: '',
+    includesRaw: '',
+    excludesRaw: '',
     color: 'bg-primary/5',
     borderColor: 'border-primary/20'
   });
@@ -50,6 +52,8 @@ const TripPackageEditorPage = () => {
         price: pkg.price || '',
         description: pkg.description || '',
         spotsRaw: (pkg.spots || []).join('\n'),
+        includesRaw: (pkg.includes || []).join('\n'),
+        excludesRaw: (pkg.excludes || []).join('\n'),
         color: pkg.color || 'bg-primary/5',
         borderColor: pkg.borderColor || 'border-primary/20'
       });
@@ -77,13 +81,17 @@ const TripPackageEditorPage = () => {
       const finalDocRef = doc(db, 'trip_packages', packageId);
       
       const spots = formData.spotsRaw.split('\n').map(s => s.trim()).filter(s => s !== '');
+      const includes = formData.includesRaw.split('\n').map(s => s.trim()).filter(s => s !== '');
+      const excludes = formData.excludesRaw.split('\n').map(s => s.trim()).filter(s => s !== '');
 
       await setDoc(finalDocRef, {
         title: formData.title,
         time: formData.time,
         price: formData.price,
         description: formData.description,
-        spots: spots,
+        spots,
+        includes,
+        excludes,
         color: formData.color,
         borderColor: formData.borderColor,
         id: packageId,
@@ -91,7 +99,7 @@ const TripPackageEditorPage = () => {
       }, { merge: true });
 
       toast({ title: 'Berhasil', description: 'Paket trip telah diperbarui.' });
-      router.push('/admin'); // Kembali ke dashboard utama
+      router.push('/admin');
     } catch (error) {
       console.error(error);
       toast({ variant: 'destructive', title: 'Error', description: 'Gagal menyimpan paket.' });
@@ -135,26 +143,21 @@ const TripPackageEditorPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Judul Paket</Label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input 
-                    value={formData.title}
-                    onChange={(e) => setFormData({...formData, title: e.target.value})}
-                    placeholder="E.g. Paket Keliling Zona 1"
-                    className="pl-10 rounded-none border-2 border-black/10 focus:border-primary h-12 font-bold"
-                  />
-                </div>
+                <Input 
+                  value={formData.title}
+                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                  className="rounded-none border-2 border-black/10 h-12 font-bold"
+                />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Harga (Tampil)</Label>
+                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Harga</Label>
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input 
                     value={formData.price}
                     onChange={(e) => setFormData({...formData, price: e.target.value})}
-                    placeholder="E.g. Rp 650.000"
-                    className="pl-10 rounded-none border-2 border-black/10 focus:border-primary h-12 font-bold text-primary"
+                    className="pl-10 rounded-none border-2 border-black/10 h-12 font-bold text-primary"
                   />
                 </div>
               </div>
@@ -166,55 +169,62 @@ const TripPackageEditorPage = () => {
                   <Input 
                     value={formData.time}
                     onChange={(e) => setFormData({...formData, time: e.target.value})}
-                    placeholder="E.g. 05:00 - 15:00"
-                    className="pl-10 rounded-none border-2 border-black/10 focus:border-primary h-12 font-bold"
+                    className="pl-10 rounded-none border-2 border-black/10 h-12 font-bold"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Deskripsi Singkat</Label>
+                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Deskripsi</Label>
                 <Input 
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  placeholder="E.g. Mobil, BBM, Driver as Guide"
-                  className="rounded-none border-2 border-black/10 focus:border-primary h-12 font-bold"
+                  className="rounded-none border-2 border-black/10 h-12 font-bold"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                <ListChecks size={14} />
-                Daftar Destinasi (Satu per baris)
-              </Label>
-              <Textarea 
-                value={formData.spotsRaw}
-                onChange={(e) => setFormData({...formData, spotsRaw: e.target.value})}
-                placeholder="Pintu Langit&#10;Candi Arjuna&#10;Kawah Sikidang"
-                className="rounded-none border-2 border-black/10 focus:border-primary min-h-[200px] font-bold text-xs leading-loose"
-              />
-              <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight mt-2">Tekan Enter untuk menambah destinasi baru ke dalam daftar.</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="space-y-2">
+                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <ListChecks size={14} /> Destinasi (Newline)
+                </Label>
+                <Textarea 
+                  value={formData.spotsRaw}
+                  onChange={(e) => setFormData({...formData, spotsRaw: e.target.value})}
+                  className="rounded-none border-2 min-h-[150px] font-bold text-xs"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[10px] font-bold uppercase tracking-widest text-green-600 flex items-center gap-2">
+                  <CheckCircle2 size={14} /> Include (Newline)
+                </Label>
+                <Textarea 
+                  value={formData.includesRaw}
+                  onChange={(e) => setFormData({...formData, includesRaw: e.target.value})}
+                  className="rounded-none border-2 min-h-[150px] font-bold text-xs"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[10px] font-bold uppercase tracking-widest text-red-600 flex items-center gap-2">
+                  <XCircle size={14} /> Exclude (Newline)
+                </Label>
+                <Textarea 
+                  value={formData.excludesRaw}
+                  onChange={(e) => setFormData({...formData, excludesRaw: e.target.value})}
+                  className="rounded-none border-2 min-h-[150px] font-bold text-xs"
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Background Color (Tailwind Class)</Label>
-                <Input 
-                  value={formData.color}
-                  onChange={(e) => setFormData({...formData, color: e.target.value})}
-                  placeholder="bg-primary/5"
-                  className="rounded-none border-2 border-black/10 focus:border-primary h-10 font-mono text-xs"
-                />
+                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">BG Color Class</Label>
+                <Input value={formData.color} onChange={(e) => setFormData({...formData, color: e.target.value})} className="rounded-none border-2 h-10 font-mono text-xs" />
               </div>
               <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Border Color (Tailwind Class)</Label>
-                <Input 
-                  value={formData.borderColor}
-                  onChange={(e) => setFormData({...formData, borderColor: e.target.value})}
-                  placeholder="border-primary/20"
-                  className="rounded-none border-2 border-black/10 focus:border-primary h-10 font-mono text-xs"
-                />
+                <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Border Color Class</Label>
+                <Input value={formData.borderColor} onChange={(e) => setFormData({...formData, borderColor: e.target.value})} className="rounded-none border-2 h-10 font-mono text-xs" />
               </div>
             </div>
           </CardContent>
