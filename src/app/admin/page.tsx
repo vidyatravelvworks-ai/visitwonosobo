@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -26,7 +27,7 @@ const AdminDashboard = () => {
   const { toast } = useToast();
   const [currentView, setCurrentView] = useState<DashboardView>('see-and-do');
   const [isSavingConfig, setIsSavingConfig] = useState(false);
-  const [galleryForm, setGalleryForm] = useState({ url: '', caption: '', order: 0 });
+  const [galleryForm, setGalleryForm] = useState({ url: '', caption: '' });
   const [tableSearch, setTableSearch] = useState('');
 
   useEffect(() => {
@@ -100,7 +101,7 @@ const AdminDashboard = () => {
       const newOrder = (allGallery?.length || 0) + 1;
       await setDoc(doc(db, 'gallery', id), { ...galleryForm, id, order: newOrder, createdAt: serverTimestamp() });
       toast({ title: 'Success', description: 'Gallery image added.' });
-      setGalleryForm({ url: '', caption: '', order: newOrder + 1 });
+      setGalleryForm({ url: '', caption: '' });
     } catch (err) {
       toast({ variant: 'destructive', title: 'Error' });
     }
@@ -167,16 +168,18 @@ const AdminDashboard = () => {
       </aside>
 
       <main className="flex-grow ml-64 p-12">
-        <header className="flex justify-between items-end mb-12">
-          <h1 className="text-4xl font-black uppercase tracking-tighter">{currentView.replace('-', ' ')}</h1>
-          {(currentView !== 'settings' && currentView !== 'gallery') && (
-            <Button asChild className="bg-primary text-white rounded-none h-14 px-8 font-black uppercase text-[10px] tracking-widest">
-              <Link href={currentView === 'packages' ? '/admin/plan-your-trip/editor/new' : `/admin/editor/new?type=${currentView === 'see-and-do' ? 'destination' : 'story'}`}>
-                <Plus size={18} className="mr-2" /> New {currentView === 'packages' ? 'Package' : 'Article'}
-              </Link>
-            </Button>
-          )}
-        </header>
+        {currentView !== 'gallery' && (
+          <header className="flex justify-between items-end mb-12">
+            <h1 className="text-4xl font-black uppercase tracking-tighter">{currentView.replace('-', ' ')}</h1>
+            {currentView !== 'settings' && (
+              <Button asChild className="bg-primary text-white rounded-none h-14 px-8 font-black uppercase text-[10px] tracking-widest">
+                <Link href={currentView === 'packages' ? '/admin/plan-your-trip/editor/new' : `/admin/editor/new?type=${currentView === 'see-and-do' ? 'destination' : 'story'}`}>
+                  <Plus size={18} className="mr-2" /> New {currentView === 'packages' ? 'Package' : 'Article'}
+                </Link>
+              </Button>
+            )}
+          </header>
+        )}
 
         {currentView === 'settings' ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
@@ -240,39 +243,38 @@ const AdminDashboard = () => {
                 <p className="text-[10px] font-bold uppercase text-muted-foreground">Add new photos to the trip gallery instantly.</p>
               </div>
               <div className="flex flex-col lg:flex-row gap-8 items-stretch">
-                <div className="w-32 shrink-0 flex flex-col items-stretch">
-                  <div className="h-5"></div> {/* Offset for top label on the right */}
-                  <div className="flex-grow bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden">
-                    {galleryForm.url && galleryForm.url.trim() !== "" ? (
-                      <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
-                    ) : (
-                      <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2 px-2 text-center">
-                        <ImageIcon size={24} className="opacity-20" />
-                        <span className="text-[8px]">No Preview</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex-grow space-y-4">
-                  <div className="space-y-1">
-                    <div className="flex justify-start">
-                      <Label className="text-[10px] font-black uppercase">Image URL</Label>
+                <div className="w-32 shrink-0 aspect-square bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden">
+                  {galleryForm.url && galleryForm.url.trim() !== "" ? (
+                    <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
+                  ) : (
+                    <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2 px-2 text-center">
+                      <ImageIcon size={24} className="opacity-20" />
+                      <span className="text-[8px]">No Preview</span>
                     </div>
-                    <Input 
-                      value={galleryForm.url} 
-                      onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 
-                      className="rounded-none border-2 h-10 text-xs" 
-                      placeholder="https://..."
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-[10px] font-black uppercase">Caption</Label>
-                    <Input 
-                      value={galleryForm.caption} 
-                      onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
-                      className="rounded-none border-2 h-10 text-xs" 
-                      placeholder="Description..."
-                    />
+                  )}
+                </div>
+                <div className="flex-grow flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <div className="flex justify-between items-center">
+                        <Label className="text-[10px] font-black uppercase">Image URL</Label>
+                      </div>
+                      <Input 
+                        value={galleryForm.url} 
+                        onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 
+                        className="rounded-none border-2 h-10 text-xs" 
+                        placeholder="https://..."
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[10px] font-black uppercase">Caption</Label>
+                      <Input 
+                        value={galleryForm.caption} 
+                        onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
+                        className="rounded-none border-2 h-10 text-xs" 
+                        placeholder="Description..."
+                      />
+                    </div>
                   </div>
                   <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-10 font-black uppercase text-[10px] tracking-widest gap-2">
                     <Save size={14} /> Save Image
@@ -288,7 +290,7 @@ const AdminDashboard = () => {
                  <div className="col-span-full py-20 text-center text-[10px] font-black uppercase text-muted-foreground">No images in gallery yet.</div>
                ) : allGallery?.map(g => (
                  <div key={g.id} className="relative group aspect-square bg-gray-100 border overflow-hidden">
-                    {g.url && g.url.trim() !== "" ? <img src={g.url} className="w-full h-full object-cover" alt={g.caption} /> : null}
+                    {g.url && g.url.trim() !== "" && <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />}
                     <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
                       <p className="text-[9px] font-black text-white uppercase tracking-tighter leading-tight mb-2">{g.caption}</p>
                       <div className="text-[8px] font-bold text-primary uppercase">Order: {g.order}</div>
