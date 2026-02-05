@@ -52,7 +52,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     focusKeyword: ''
   });
 
-  // Helper untuk mendapatkan tanggal hari ini dalam format Indonesia (05 Feb 2026)
   const getTodayFormatted = () => {
     const now = new Date();
     const day = String(now.getDate()).padStart(2, '0');
@@ -62,7 +61,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     return `${day} ${month} ${year}`;
   };
 
-  // Effect untuk auto-fill tanggal hari ini saat komponen dimuat
   useEffect(() => {
     const today = getTodayFormatted();
     setFormData(prev => ({ ...prev, date: today }));
@@ -86,7 +84,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         metaTitle: article.metaTitle || '',
         category: article.category || (article.type === 'destination' ? 'Alam' : 'Sejarah'),
         type: article.type || 'destination',
-        date: getTodayFormatted(), // Update ke hari ini saat dibuka untuk diedit
+        date: getTodayFormatted(),
         focusKeyword: article.focusKeyword || ''
       });
     } else if (!isNew) {
@@ -113,7 +111,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
       toast({
         variant: 'destructive',
         title: 'Judul Kosong',
-        description: 'Silakan isi judul artikel terlebih dahulu.',
+        description: 'Silakan isi judul artikel terlebih dahulu agar AI bisa bekerja.',
       });
       return;
     }
@@ -124,15 +122,18 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         title: formData.title,
         focusKeyword: formData.focusKeyword 
       });
+      
       setFormData(prev => ({
         ...prev,
         content: result.content,
         metaTitle: result.metaTitle,
-        excerpt: result.metaDescription
+        excerpt: result.metaDescription,
+        focusKeyword: result.focusKeywordSuggested || prev.focusKeyword
       }));
+
       toast({
         title: 'Berhasil',
-        description: 'Artikel SEO 1000+ kata telah dihasilkan otomatis.',
+        description: 'Artikel SEO 1100+ kata berhasil dibuat. Keyword fokus juga telah diatur.',
       });
     } catch (error) {
       toast({
@@ -158,8 +159,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     try {
       const articleId = formData.slug.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
       const finalDocRef = doc(db, 'articles', articleId);
-      
-      // Selalu update tanggal rilis ke hari ini saat disimpan
       const finalDate = getTodayFormatted();
 
       await setDoc(finalDocRef, {
@@ -170,7 +169,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         updatedAt: serverTimestamp(),
       }, { merge: true });
 
-      toast({ title: 'Berhasil', description: `Artikel telah diperbarui dengan tanggal rilis ${finalDate}.` });
+      toast({ title: 'Berhasil', description: `Artikel telah dipublikasikan.` });
       router.push('/admin');
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Gagal menyimpan artikel.' });
@@ -181,13 +180,42 @@ const ArticleEditorPage = ({ params }: PageProps) => {
 
   const getSEOAnalysis = () => {
     const wordCount = formData.content.trim() ? formData.content.split(/\s+/).length : 0;
+    const contentLower = formData.content.toLowerCase();
+    const keywordLower = formData.focusKeyword.toLowerCase();
+    
     const checks = [
-      { id: 1, label: 'Keyword in Content', pass: formData.focusKeyword && formData.content.toLowerCase().includes(formData.focusKeyword.toLowerCase()) },
-      { id: 2, label: 'Meta Description Length (120-160)', pass: formData.excerpt.length >= 100 && formData.excerpt.length <= 160 },
-      { id: 3, label: 'Content Length (>1000 words)', pass: wordCount >= 1000 },
-      { id: 4, label: 'Meta Title Length (<60)', pass: !!formData.metaTitle && formData.metaTitle.length <= 60 },
-      { id: 5, label: 'Featured Image present', pass: !!formData.image },
+      { 
+        id: 1, 
+        label: 'Keyword in Content', 
+        pass: formData.focusKeyword && contentLower.includes(keywordLower) 
+      },
+      { 
+        id: 2, 
+        label: 'Meta Description (120-160 chars)', 
+        pass: formData.excerpt.length >= 120 && formData.excerpt.length <= 160 
+      },
+      { 
+        id: 3, 
+        label: 'High Content Density (>1100 words)', 
+        pass: wordCount >= 1100 
+      },
+      { 
+        id: 4, 
+        label: 'Optimized Meta Title (<60 chars)', 
+        pass: !!formData.metaTitle && formData.metaTitle.length <= 60 && formData.metaTitle.length > 30 
+      },
+      { 
+        id: 5, 
+        label: 'Keyword in First Paragraph', 
+        pass: formData.focusKeyword && contentLower.split('\n')[0]?.includes(keywordLower) 
+      },
+      { 
+        id: 6, 
+        label: 'Visual Media Ready (Featured Image)', 
+        pass: !!formData.image 
+      },
     ];
+    
     const score = Math.round((checks.filter(c => c.pass).length / checks.length) * 100);
     return { checks, score, wordCount };
   };
@@ -201,7 +229,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
 
   return (
     <div className="min-h-screen bg-secondary/10 flex flex-col">
-      {/* Action Bar */}
       <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b px-8 py-4 flex justify-between items-center shadow-sm">
         <Button variant="ghost" asChild className="rounded-none hover:bg-transparent pl-0 h-auto group">
           <Link href="/admin" className="flex items-center gap-2 font-black uppercase tracking-widest text-[10px]">
@@ -214,7 +241,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">SEO Health</span>
              <div className="flex items-center gap-2">
                 <div className="w-24 h-1.5 bg-gray-100 border rounded-full overflow-hidden">
-                   <div className={cn("h-full transition-all duration-500", seo.score > 70 ? "bg-green-500" : seo.score > 40 ? "bg-yellow-500" : "bg-red-500")} style={{ width: `${seo.score}%` }} />
+                   <div className={cn("h-full transition-all duration-500", seo.score > 80 ? "bg-green-500" : seo.score > 50 ? "bg-yellow-500" : "bg-red-500")} style={{ width: `${seo.score}%` }} />
                 </div>
                 <span className="text-[10px] font-black">{seo.score}%</span>
              </div>
@@ -230,7 +257,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         </div>
       </div>
 
-      {/* Hero Preview Section (Half Screen Height) */}
       <section className="relative h-[50vh] w-full flex items-center justify-center overflow-hidden bg-black">
         {formData.image && (
           <div className="absolute inset-0 z-0">
@@ -262,7 +288,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         </div>
       </section>
 
-      {/* Main Content Area */}
       <div className="max-w-7xl mx-auto w-full p-8 md:p-12 -mt-20 relative z-20 space-y-8 pb-32">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-3 space-y-8">
@@ -274,7 +299,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-8 space-y-8">
-                {/* Image & Keyword Inputs */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                    <div className="space-y-2">
                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
@@ -294,7 +318,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                      <Input 
                        value={formData.focusKeyword}
                        onChange={(e) => setFormData({...formData, focusKeyword: e.target.value})}
-                       placeholder="Contoh: wisata wonosobo terbaik"
+                       placeholder="AI akan menyarankan jika dikosongkan"
                        className="rounded-none border-2 border-primary/20 h-12 text-[11px] font-bold"
                      />
                    </div>
@@ -315,7 +339,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     className="bg-black text-white hover:bg-primary rounded-none h-12 px-8 gap-3 font-bold uppercase tracking-widest text-[10px]"
                   >
                     {isGenerating ? <Loader2 className="animate-spin h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
-                    {isGenerating ? 'AI Sedang Menulis...' : 'Buat Artikel Instan'}
+                    {isGenerating ? 'AI Sedang Menulis Artikel SEO...' : 'Buat Artikel Instan'}
                   </Button>
                 </div>
 
@@ -332,7 +356,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
             </Card>
           </div>
 
-          {/* Sidebar Tools */}
           <div className="space-y-8">
             <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white">
               <CardHeader className="border-b p-6 bg-secondary/10">
@@ -350,9 +373,9 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     ))}
                  </div>
                  <div className="pt-4 border-t mt-4">
-                    <div className="p-3 bg-secondary/20 border-l-2 border-primary">
+                    <div className={cn("p-3 border-l-2", seo.score === 100 ? "bg-green-50 border-green-500" : "bg-secondary/20 border-primary")}>
                        <p className="text-[9px] font-bold text-muted-foreground leading-relaxed uppercase">
-                          {seo.score === 100 ? "Luar biasa! Teroptimasi sempurna." : "Lengkapi checklist untuk performa SEO."}
+                          {seo.score === 100 ? "Luar biasa! Teroptimasi sempurna." : `Skor: ${seo.score}%. Lengkapi checklist untuk performa maksimal.`}
                        </p>
                     </div>
                  </div>

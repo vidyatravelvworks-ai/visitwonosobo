@@ -1,6 +1,7 @@
 'use server';
 /**
  * @fileOverview Flow untuk menghasilkan artikel ilmiah populer dengan standar SEO Senior.
+ * Ditambahkan kemampuan untuk menyarankan kata kunci fokus jika belum ada.
  */
 
 import { ai } from '@/ai/genkit';
@@ -13,9 +14,10 @@ const GenerateArticleInputSchema = z.object({
 export type GenerateArticleInput = z.infer<typeof GenerateArticleInputSchema>;
 
 const GenerateArticleOutputSchema = z.object({
-  content: z.string().describe('Konten artikel utama (1000-1100 kata) dalam format Markdown'),
+  content: z.string().describe('Konten artikel utama (1100-1200 kata) dalam format Markdown'),
   metaTitle: z.string().describe('Judul untuk SEO (Meta Title) max 60 karakter'),
-  metaDescription: z.string().describe('Deskripsi singkat untuk SEO (Meta Description) max 150-160 karakter'),
+  metaDescription: z.string().describe('Deskripsi singkat untuk SEO (Meta Description) max 155 karakter'),
+  focusKeywordSuggested: z.string().describe('Kata kunci fokus yang digunakan (atau disarankan jika input kosong)'),
   internalLinks: z.string().describe('Rekomendasi internal link untuk artikel terkait'),
 });
 export type GenerateArticleOutput = z.infer<typeof GenerateArticleOutputSchema>;
@@ -30,34 +32,34 @@ const prompt = ai.definePrompt({
   output: { schema: GenerateArticleOutputSchema },
   prompt: `Bertindaklah sebagai Senior Content Strategist dan Pakar SEO yang berpengalaman menulis artikel ilmiah populer. 
 Tugas Anda adalah menulis artikel mendalam tentang: "{{title}}".
-{{#if focusKeyword}}Fokuskan optimasi SEO pada kata kunci utama ini: "{{focusKeyword}}".{{/if}}
 
-KRITERIA WAJIB:
+{{#if focusKeyword}}
+Optimalkan SEO secara ketat pada kata kunci utama ini: "{{focusKeyword}}".
+{{else}}
+Karena kata kunci fokus tidak disediakan, silakan riset dan tentukan satu kata kunci fokus paling kompetitif untuk judul ini, lalu cantumkan di field focusKeywordSuggested.
+{{/if}}
+
+KRITERIA WAJIB UNTUK SKOR SEO SEMPURNA:
 1. PANJANG & FORMAT:
-   - Panjang artikel: 1000-1100 kata.
+   - Panjang artikel: Minimal 1100 kata (Sangat penting untuk SEO pilar).
    - Format: Markdown murni.
 
-2. STRUKTUR SEO:
-   - Gunakan H1 untuk judul di dalam konten.
-   - Gunakan H2 dan H3 secara hierarkis untuk sub-bab.
-   - Masukkan kata kunci utama dan LSI (kata kunci terkait) secara natural di sepanjang teks.
-   - Buat paragraf yang singkat (maksimal 4 kalimat per paragraf) agar mudah dibaca (readability tinggi).
-   - Sertakan kesimpulan yang kuat di akhir artikel.
+2. STRUKTUR SEO & DENSITAS KATA KUNCI:
+   - Gunakan H1 untuk judul.
+   - Gunakan H2 dan H3 secara hierarkis.
+   - Masukkan kata kunci fokus (focusKeyword) di paragraf pertama, beberapa sub-judul (H2/H3), dan secara natural (1-2% density).
+   - Buat paragraf yang singkat dan poin-poin list (bullet points) jika relevan.
 
-3. KUALITAS ILMIAH & VALIDITAS:
-   - Gunakan gaya bahasa formal namun tetap enak dibaca (populer).
-   - Sertakan fakta-fakta terbaru, argumen logis, dan perspektif mendalam.
+3. KUALITAS & SUMBER:
+   - Gunakan gaya bahasa formal-populer.
+   - Sertakan minimal 5 referensi nyata/simulasi berkualitas di akhir artikel (Gaya APA).
 
-4. SUMBER REFERENSI:
-   - Di bagian paling bawah konten, buat daftar pustaka dengan "Gaya Standar (APA/Harvard)".
-   - Cantumkan minimal 5 referensi (jurnal, buku, atau situs berita kredibel). Gunakan data nyata jika ada dalam memori Anda, atau simulasikan referensi yang kredibel dan relevan.
+4. OUTPUT SEO METRICS:
+   - metaTitle: Harus di bawah 60 karakter dan mengandung kata kunci fokus.
+   - metaDescription: Antara 140-155 karakter, harus persuasif dan mengandung kata kunci fokus.
+   - focusKeywordSuggested: Jika user memberikan input, kembalikan input tersebut. Jika kosong, berikan saran terbaik Anda.
 
-5. ASPEK TAMBAHAN (Output dalam field terpisah):
-   - Buatkan metaTitle yang menarik dan mengandung focus keyword (max 60 karakter).
-   - Buatkan metaDescription yang persuasif (150-160 karakter).
-   - Berikan rekomendasi "Internal Link" (saran artikel lain yang relevan untuk ditautkan).
-
-Tuliskan artikel secara lengkap, utuh, dan profesional.`,
+Tuliskan artikel secara lengkap dan profesional agar langsung siap terbit dengan performa SEO maksimal.`,
 });
 
 const generateArticleFlow = ai.defineFlow(
