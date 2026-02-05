@@ -99,7 +99,7 @@ export default function Home() {
                     className="bg-white border-2 border-black/5 shadow-lg p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:border-primary/50"
                   >
                     <div className="flex justify-between items-start mb-10">
-                      <div className="p-4 bg-primary text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"><MapPin size={24} /></div>
+                      <div className="p-4 bg-primary text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"><CarFront size={24} /></div>
                       <div className="text-right">
                         <span className="block text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Harga Mulai</span>
                         <div className="bg-black text-white px-3 py-1 font-black text-lg tracking-tight inline-block">
