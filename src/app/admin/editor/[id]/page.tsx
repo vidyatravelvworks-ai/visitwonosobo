@@ -52,7 +52,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     focusKeyword: ''
   });
 
-  // Effect untuk auto-fill tanggal hari ini jika artikel baru
+  // Effect untuk auto-fill tanggal hari ini secara real-time
   useEffect(() => {
     if (isNew) {
       const now = new Date();
@@ -373,7 +373,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     <Input 
                       value={formData.date}
                       onChange={(e) => setFormData({...formData, date: e.target.value})}
-                      placeholder="Contoh: 20 Jan 2026"
+                      placeholder="Contoh: 05 Feb 2026"
                       className="rounded-none border-2 text-[10px] h-10 font-bold"
                     />
                   </div>
