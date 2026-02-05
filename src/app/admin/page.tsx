@@ -503,10 +503,11 @@ const AdminDashboard = () => {
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <Button 
                         variant="destructive" 
-                        className="rounded-none px-6 h-10 font-black uppercase tracking-widest text-[10px]"
+                        size="icon"
+                        className="rounded-none h-12 w-12"
                         onClick={() => handleDeleteGallery(item.id)}
                       >
-                        Hapus
+                        <Trash2 className="h-6 w-6" />
                       </Button>
                     </div>
                   </div>
