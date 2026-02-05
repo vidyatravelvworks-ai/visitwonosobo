@@ -8,6 +8,7 @@ import { z } from 'zod';
 
 const GenerateArticleInputSchema = z.object({
   title: z.string().describe('Judul artikel yang akan dibuat'),
+  focusKeyword: z.string().optional().describe('Kata kunci utama yang ingin ditargetkan untuk SEO'),
 });
 export type GenerateArticleInput = z.infer<typeof GenerateArticleInputSchema>;
 
@@ -29,6 +30,7 @@ const prompt = ai.definePrompt({
   output: { schema: GenerateArticleOutputSchema },
   prompt: `Bertindaklah sebagai Senior Content Strategist dan Pakar SEO yang berpengalaman menulis artikel ilmiah populer. 
 Tugas Anda adalah menulis artikel mendalam tentang: "{{title}}".
+{{#if focusKeyword}}Fokuskan optimasi SEO pada kata kunci utama ini: "{{focusKeyword}}".{{/if}}
 
 KRITERIA WAJIB:
 1. PANJANG & FORMAT:

@@ -10,12 +10,16 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save, Globe, FileText, ArrowLeft, Link as LinkIcon, Sparkles, Loader2, Search, Tag, Calendar, Layers } from 'lucide-react';
+import { 
+  Save, Globe, FileText, ArrowLeft, Sparkles, Loader2, 
+  Search, Tag, Calendar, Layers, Activity, CheckCircle2, AlertCircle, Clock
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import Link from 'next/link';
 import { generateArticle } from '@/ai/flows/generate-article-flow';
 import { articles as staticArticles } from '@/data/articles';
+import { cn } from '@/lib/utils';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -34,6 +38,11 @@ const ArticleEditorPage = ({ params }: PageProps) => {
 
   const queryType = searchParams.get('type') as 'destination' | 'story' || 'destination';
 
+  // Helper untuk mendapatkan tanggal hari ini format ID
+  const getTodayDate = () => {
+    return new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
+
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -43,7 +52,8 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     metaTitle: '',
     category: queryType === 'destination' ? 'Alam' : 'Sejarah',
     type: queryType,
-    date: ''
+    date: getTodayDate(),
+    focusKeyword: ''
   });
 
   const docRef = useMemoFirebase(() => {
@@ -64,10 +74,10 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         metaTitle: article.metaTitle || '',
         category: article.category || (article.type === 'destination' ? 'Alam' : 'Sejarah'),
         type: article.type || 'destination',
-        date: article.date || ''
+        date: article.date || getTodayDate(),
+        focusKeyword: article.focusKeyword || ''
       });
     } else if (!isNew) {
-      // Fallback ke data statis jika tidak ada di DB
       const staticArt = staticArticles.find(a => a.slug === id);
       if (staticArt) {
         setFormData({
@@ -79,16 +89,10 @@ const ArticleEditorPage = ({ params }: PageProps) => {
           metaTitle: staticArt.title,
           category: staticArt.category,
           type: staticArt.type,
-          date: staticArt.date
+          date: staticArt.date,
+          focusKeyword: ''
         });
       }
-    }
-
-    if (isNew && !formData.date) {
-      setFormData(prev => ({
-        ...prev,
-        date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
-      }));
     }
   }, [article, isNew, id]);
 
@@ -104,7 +108,10 @@ const ArticleEditorPage = ({ params }: PageProps) => {
 
     setIsGenerating(true);
     try {
-      const result = await generateArticle({ title: formData.title });
+      const result = await generateArticle({ 
+        title: formData.title,
+        focusKeyword: formData.focusKeyword 
+      });
       setFormData(prev => ({
         ...prev,
         content: result.content,
@@ -113,7 +120,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
       }));
       toast({
         title: 'Berhasil',
-        description: 'Artikel 1000+ kata dan Meta Tags telah dihasilkan.',
+        description: 'Artikel SEO 1000+ kata telah dihasilkan.',
       });
     } catch (error) {
       toast({
@@ -147,7 +154,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         updatedAt: serverTimestamp(),
       }, { merge: true });
 
-      toast({ title: 'Berhasil', description: 'Artikel telah diperbarui di database.' });
+      toast({ title: 'Berhasil', description: 'Artikel telah diperbarui.' });
       router.push('/admin');
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Gagal menyimpan artikel.' });
@@ -155,6 +162,23 @@ const ArticleEditorPage = ({ params }: PageProps) => {
       setIsSaving(false);
     }
   };
+
+  // SEO Score Calculator
+  const getSEOAnalysis = () => {
+    const checks = [
+      { id: 1, label: 'Focus Keyword in Content', pass: formData.focusKeyword && formData.content.toLowerCase().includes(formData.focusKeyword.toLowerCase()) },
+      { id: 2, label: 'Meta Description Length (120-160)', pass: formData.excerpt.length >= 120 && formData.excerpt.length <= 160 },
+      { id: 3, label: 'Content Length (>800 words)', pass: formData.content.split(/\s+/).length > 800 },
+      { id: 4, label: 'Meta Title defined', pass: !!formData.metaTitle },
+      { id: 5, label: 'Featured Image present', pass: !!formData.image },
+    ];
+    const score = Math.round((checks.filter(c => c.pass).length / checks.length) * 100);
+    return { checks, score };
+  };
+
+  const seo = getSEOAnalysis();
+  const wordCount = formData.content.trim() ? formData.content.split(/\s+/).length : 0;
+  const readingTime = Math.ceil(wordCount / 200);
 
   if (isUserLoading || (isLoading && !isNew)) {
     return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Loading Editor...</div>;
@@ -170,21 +194,32 @@ const ArticleEditorPage = ({ params }: PageProps) => {
             Dashboard
           </Link>
         </Button>
-        <Button 
-          onClick={handleSave} 
-          disabled={isSaving}
-          className="bg-primary hover:bg-primary/90 text-white rounded-none h-12 px-10 gap-3 font-black uppercase tracking-widest text-[10px]"
-        >
-          <Save size={16} />
-          {isSaving ? 'Saving...' : 'Publish Update'}
-        </Button>
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col items-end mr-4">
+             <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">SEO Health</span>
+             <div className="flex items-center gap-2">
+                <div className="w-24 h-1.5 bg-gray-100 border rounded-full overflow-hidden">
+                   <div className={cn("h-full transition-all duration-500", seo.score > 70 ? "bg-green-500" : seo.score > 40 ? "bg-yellow-500" : "bg-red-500")} style={{ width: `${seo.score}%` }} />
+                </div>
+                <span className="text-[10px] font-black">{seo.score}%</span>
+             </div>
+          </div>
+          <Button 
+            onClick={handleSave} 
+            disabled={isSaving}
+            className="bg-primary hover:bg-primary/90 text-white rounded-none h-12 px-10 gap-3 font-black uppercase tracking-widest text-[10px]"
+          >
+            <Save size={16} />
+            {isSaving ? 'Saving...' : 'Publish Update'}
+          </Button>
+        </div>
       </div>
 
-      {/* Hero Preview - Fixed Top Half */}
+      {/* Hero Preview */}
       <section className="relative h-[50vh] w-full flex items-center justify-center overflow-hidden bg-black">
         {formData.image && (
           <div className="absolute inset-0 z-0">
-            <img src={formData.image} alt="Hero" className="w-full h-full object-cover opacity-60 animate-in fade-in duration-700" />
+            <img src={formData.image} alt="Hero" className="w-full h-full object-cover opacity-60" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
           </div>
         )}
@@ -201,14 +236,21 @@ const ArticleEditorPage = ({ params }: PageProps) => {
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tighter leading-tight">
             {formData.title || "Judul Artikel"}
           </h1>
-          <p className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] italic">Live Design Preview</p>
+          <div className="flex items-center justify-center gap-6 pt-2">
+             <div className="flex items-center gap-2 text-[9px] font-bold text-white/50 uppercase tracking-widest">
+                <Clock size={12} className="text-primary" /> {readingTime} Menit Baca
+             </div>
+             <div className="flex items-center gap-2 text-[9px] font-bold text-white/50 uppercase tracking-widest">
+                <FileText size={12} className="text-primary" /> {wordCount} Kata
+             </div>
+          </div>
         </div>
       </section>
 
       {/* Main Content Area */}
-      <div className="max-w-6xl mx-auto w-full p-8 md:p-12 -mt-20 relative z-20 space-y-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
+      <div className="max-w-7xl mx-auto w-full p-8 md:p-12 -mt-20 relative z-20 space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <div className="lg:col-span-3 space-y-8">
             <Card className="rounded-none border-2 border-black/5 shadow-2xl bg-white">
               <CardHeader className="border-b p-8">
                 <CardTitle className="text-xl font-black uppercase tracking-tight flex items-center gap-3">
@@ -217,15 +259,25 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-8 space-y-8">
-                <div className="space-y-2 p-6 bg-secondary/20 border-l-4 border-primary">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Featured Image URL</Label>
-                  <Input 
-                    value={formData.image}
-                    onChange={(e) => setFormData({...formData, image: e.target.value})}
-                    placeholder="https://images.unsplash.com/..."
-                    className="rounded-none border-2 border-black/10 h-12 text-[11px] font-bold"
-                  />
-                  <p className="text-[9px] font-bold text-muted-foreground uppercase mt-1">Gunakan URL dari Unsplash, Picsum, atau Cloudinary untuk hasil terbaik.</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                   <div className="space-y-2">
+                     <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Featured Image URL</Label>
+                     <Input 
+                       value={formData.image}
+                       onChange={(e) => setFormData({...formData, image: e.target.value})}
+                       placeholder="https://images.unsplash.com/..."
+                       className="rounded-none border-2 border-black/10 h-12 text-[11px] font-bold"
+                     />
+                   </div>
+                   <div className="space-y-2">
+                     <Label className="text-[10px] font-black uppercase tracking-widest text-primary">Target Focus Keyword (SEO)</Label>
+                     <Input 
+                       value={formData.focusKeyword}
+                       onChange={(e) => setFormData({...formData, focusKeyword: e.target.value})}
+                       placeholder="Contoh: wisata sikunir wonosobo"
+                       className="rounded-none border-2 border-primary/20 h-12 text-[11px] font-bold"
+                     />
+                   </div>
                 </div>
 
                 <div className="space-y-4">
@@ -243,7 +295,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     className="bg-black text-white hover:bg-primary rounded-none h-12 px-8 gap-3 font-bold uppercase tracking-widest text-[10px]"
                   >
                     {isGenerating ? <Loader2 className="animate-spin h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
-                    {isGenerating ? 'Menulis Konten Ilmiah...' : 'Buat Artikel Instan'}
+                    {isGenerating ? 'AI Sedang Menulis...' : 'Buat Artikel Instan'}
                   </Button>
                 </div>
 
@@ -252,7 +304,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                   <Textarea 
                     value={formData.content}
                     onChange={(e) => setFormData({...formData, content: e.target.value})}
-                    placeholder="Isi konten atau gunakan tombol AI di atas..."
+                    placeholder="Konten akan muncul di sini..."
                     className="rounded-none border-2 border-black/10 min-h-[600px] font-medium leading-loose p-8 text-sm"
                   />
                 </div>
@@ -260,11 +312,37 @@ const ArticleEditorPage = ({ params }: PageProps) => {
             </Card>
           </div>
 
+          {/* Sidebar Tools */}
           <div className="space-y-8">
+            <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white">
+              <CardHeader className="border-b p-6 bg-secondary/10">
+                <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
+                  <Activity className="text-primary" size={16} /> SEO Health
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 space-y-4">
+                 <div className="space-y-3">
+                    {seo.checks.map(check => (
+                       <div key={check.id} className="flex items-center justify-between gap-3">
+                          <span className="text-[10px] font-bold text-muted-foreground uppercase">{check.label}</span>
+                          {check.pass ? <CheckCircle2 className="text-green-500 h-4 w-4 shrink-0" /> : <AlertCircle className="text-gray-300 h-4 w-4 shrink-0" />}
+                       </div>
+                    ))}
+                 </div>
+                 <div className="pt-4 border-t mt-4">
+                    <div className="p-3 bg-secondary/20 border-l-2 border-primary">
+                       <p className="text-[9px] font-bold text-muted-foreground leading-relaxed uppercase">
+                          {seo.score === 100 ? "Luar biasa! Artikel ini sudah teroptimasi sempurna." : "Lengkapi checklist di atas untuk performa Google yang lebih baik."}
+                       </p>
+                    </div>
+                 </div>
+              </CardContent>
+            </Card>
+
             <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white sticky top-28">
               <CardHeader className="border-b p-6">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
-                  <Globe className="text-primary" size={16} /> Settings & SEO
+                  <Globe className="text-primary" size={16} /> Settings
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -278,7 +356,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                     <Input 
                       value={formData.date}
                       onChange={(e) => setFormData({...formData, date: e.target.value})}
-                      placeholder="Contoh: 12 Feb 2025"
                       className="rounded-none border-2 text-[10px] h-10 font-bold"
                     />
                   </div>
@@ -328,21 +405,19 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Slug URL</Label>
-                  <Input 
-                    value={formData.slug}
-                    onChange={(e) => setFormData({...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-')})}
-                    className="rounded-none border-2 text-[11px] font-bold h-10"
-                    placeholder="judul-artikel-anda"
-                  />
-                </div>
-
-                <div className="space-y-4 pt-6 border-t">
+                <div className="space-y-4 pt-6">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
                     <Search size={14} /> SEO Meta Tags
                   </Label>
                   <div className="space-y-4">
+                    <div className="space-y-1">
+                      <Label className="text-[9px] font-bold uppercase">Slug URL</Label>
+                      <Input 
+                        value={formData.slug}
+                        onChange={(e) => setFormData({...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-')})}
+                        className="rounded-none border-2 text-[11px] font-bold h-10"
+                      />
+                    </div>
                     <div className="space-y-1">
                       <Label className="text-[9px] font-bold uppercase">Meta Title</Label>
                       <Input value={formData.metaTitle} onChange={(e) => setFormData({...formData, metaTitle: e.target.value})} className="rounded-none text-[10px] h-9" />
