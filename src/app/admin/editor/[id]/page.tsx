@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect, use, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser, useFirestore, useDoc } from '@/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
@@ -11,9 +11,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger 
+} from '@/components/ui/dialog';
+import { 
   Save, Globe, FileText, ArrowLeft, Sparkles, Loader2, 
   Search, Tag, Calendar, Layers, Activity, CheckCircle2, AlertCircle, Clock,
-  Image as ImageIcon, ExternalLink
+  Image as ImageIcon, ExternalLink, Check, MousePointer2
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
@@ -37,6 +40,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   const queryType = searchParams.get('type') as 'destination' | 'story' || 'destination';
 
@@ -136,7 +140,8 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         metaTitle: result.metaTitle,
         excerpt: result.metaDescription,
         focusKeyword: result.focusKeywordSuggested || prev.focusKeyword,
-        image: suggestedImage
+        image: suggestedImage,
+        slug: prev.slug || formData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
       }));
 
       toast({
@@ -195,7 +200,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
       { id: 1, label: 'Keyword in Content', pass: formData.focusKeyword && contentLower.includes(keywordLower) },
       { id: 2, label: 'Meta Description (120-160 chars)', pass: formData.excerpt.length >= 120 && formData.excerpt.length <= 160 },
       { id: 3, label: 'High Content Density (>1100 words)', pass: wordCount >= 1100 },
-      { id: 4, label: 'Optimized Meta Title (<60 chars)', pass: !!formData.metaTitle && formData.metaTitle.length <= 60 && formData.metaTitle.length > 30 },
+      { id: 4, label: 'Optimized Meta Title (<60 chars)', pass: !!formData.metaTitle && formData.metaTitle.length <= 60 && formData.metaTitle.length > 25 },
       { id: 5, label: 'Keyword in First Paragraph', pass: formData.focusKeyword && contentLower.split('\n')[0]?.includes(keywordLower) },
       { id: 6, label: 'Visual Media Ready (Featured Image)', pass: !!formData.image },
     ];
@@ -216,12 +221,47 @@ const ArticleEditorPage = ({ params }: PageProps) => {
     window.open(urls[platform], '_blank');
   };
 
+  const selectFromLibrary = (imageUrl: string) => {
+    setFormData(prev => ({ ...prev, image: imageUrl }));
+    setIsPickerOpen(false);
+    toast({
+      title: "Gambar Dipilih",
+      description: "URL gambar berhasil diperbarui.",
+    });
+  };
+
   if (isUserLoading || (isLoading && !isNew)) {
     return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Loading Editor...</div>;
   }
 
   return (
     <div className="min-h-screen bg-secondary/10 flex flex-col">
+      {/* Picker Modal */}
+      <Dialog open={isPickerOpen} onOpenChange={setIsPickerOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto rounded-none border-4 border-black">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-black uppercase tracking-tighter flex items-center gap-2">
+              <ImageIcon className="text-primary" /> Browse Wonosobo Library
+            </DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2">
+            {PlaceHolderImages.map((img) => (
+              <div 
+                key={img.id} 
+                className="group relative aspect-video bg-gray-100 border-2 border-transparent hover:border-primary cursor-pointer transition-all overflow-hidden"
+                onClick={() => selectFromLibrary(img.imageUrl)}
+              >
+                <img src={img.imageUrl} alt={img.description} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-opacity text-center p-2">
+                  <Check className="text-white h-8 w-8 mb-2" />
+                  <span className="text-[8px] font-black text-white uppercase tracking-widest leading-tight">{img.description}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b px-8 py-4 flex justify-between items-center shadow-sm">
         <Button variant="ghost" asChild className="rounded-none hover:bg-transparent pl-0 h-auto group">
           <Link href="/admin" className="flex items-center gap-2 font-black uppercase tracking-widest text-[10px]">
@@ -299,13 +339,20 @@ const ArticleEditorPage = ({ params }: PageProps) => {
               <CardContent className="p-8 space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                    <div className="space-y-3">
-                     <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                       <ImageIcon size={12} /> Featured Image URL
+                     <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center justify-between">
+                       <span className="flex items-center gap-2"><ImageIcon size={12} /> Featured Image URL</span>
+                       <Button 
+                         variant="link" 
+                         onClick={() => setIsPickerOpen(true)}
+                         className="h-auto p-0 text-[9px] font-black uppercase text-primary tracking-widest flex items-center gap-1"
+                       >
+                         <MousePointer2 size={10} /> Browse Library
+                       </Button>
                      </Label>
                      <Input 
                        value={formData.image}
                        onChange={(e) => setFormData({...formData, image: e.target.value})}
-                       placeholder="Gunakan URL Unsplash/Picsum atau biarkan AI memilih"
+                       placeholder="Pilih dari library atau paste URL"
                        className="rounded-none border-2 border-black/10 h-12 text-[11px] font-bold"
                      />
                      <div className="flex gap-2">
