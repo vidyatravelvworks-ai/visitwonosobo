@@ -23,7 +23,7 @@ const PlanYourTripPage = () => {
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
 
   const { data: dbPackages, isLoading: isPkgsLoading } = useCollection(packagesQ);
-  const { data: galleryItems, isLoading: isGalleryLoading } = useCollection(galleryQ);
+  const { data: dbGalleryItems, isLoading: isGalleryLoading } = useCollection(galleryQ);
   const { data: config } = useDoc(configRef);
 
   const storiesHero = config?.heroImages?.stories;
@@ -31,6 +31,16 @@ const PlanYourTripPage = () => {
   const heroImage = (storiesHero && storiesHero.trim() !== "") ? storiesHero : fallbackHero;
 
   const packages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticPackages;
+
+  // Fallback data for gallery if Firestore is empty
+  const defaultGalleryItems = Array.from({ length: 20 }).map((_, i) => ({
+    id: `dummy-${i}`,
+    url: `https://picsum.photos/seed/trip-${i + 10}/800/800`,
+    caption: `Experience Wonosobo ${i + 1}`,
+    order: i
+  }));
+
+  const galleryItems = (dbGalleryItems && dbGalleryItems.length > 0) ? dbGalleryItems : defaultGalleryItems;
 
   const essentialPoints = [
     { 
@@ -104,8 +114,8 @@ const PlanYourTripPage = () => {
                   key={pkg.id || idx} 
                   className={cn(
                     "bg-white border-2 border-black/5 shadow-lg p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:border-primary/50",
-                    pkg.color,
-                    pkg.borderColor
+                    pkg.color || "bg-white",
+                    pkg.borderColor || "border-border"
                   )}
                 >
                   <div className="flex justify-between items-start mb-10">
@@ -167,7 +177,7 @@ const PlanYourTripPage = () => {
                     </div>
                   </div>
 
-                  <Button className="w-full bg-black hover:bg-primary text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-2 group/btn mt-10" asChild>
+                  <Button className="w-full bg-primary text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-2 group/btn mt-10" asChild>
                     <a href={`https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20pesan%20${encodeURIComponent(pkg.title)}`} target="_blank">
                       Pesan Sekarang
                       <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -179,27 +189,33 @@ const PlanYourTripPage = () => {
           )}
 
           <div className="mt-32">
-            <div className="flex items-center gap-4 mb-12">
-              <div className="p-2 bg-primary text-white"><Grid size={24} /></div>
-              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Trip Gallery</h2>
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+              <div className="flex items-center gap-4">
+                <div className="p-2 bg-primary text-white"><Grid size={24} /></div>
+                <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Trip Gallery</h2>
+              </div>
+              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-primary pl-4 max-w-xs">
+                Momen-momen terbaik dari para penjelajah kami di Wonosobo.
+              </p>
             </div>
             
             {isGalleryLoading ? (
               <div className="flex justify-center p-20"><Loader2 className="animate-spin h-10 w-10 text-primary" /></div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2 auto-rows-[250px] md:auto-rows-[300px]">
-                {galleryItems?.slice(0, 16).map((item, idx) => {
+                {galleryItems.map((item, idx) => {
                   const spans = [
                     "col-span-2 row-span-2", "col-span-1 row-span-1", "col-span-1 row-span-2",
                     "col-span-1 row-span-1", "col-span-2 row-span-1", "col-span-1 row-span-2",
                     "col-span-1 row-span-1", "col-span-1 row-span-1", "col-span-1 row-span-2",
                     "col-span-2 row-span-2", "col-span-1 row-span-1", "col-span-1 row-span-1",
                     "col-span-1 row-span-2", "col-span-1 row-span-1", "col-span-2 row-span-1",
-                    "col-span-1 row-span-1"
+                    "col-span-1 row-span-1", "col-span-1 row-span-2", "col-span-2 row-span-1",
+                    "col-span-1 row-span-1", "col-span-1 row-span-1"
                   ];
-                  const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/${item.id}/800/800`;
+                  const galleryImg = (item.url && item.url.trim() !== "") ? item.url : `https://picsum.photos/seed/trip-${idx + 10}/800/800`;
                   return (
-                    <div key={item.id} className={cn("relative overflow-hidden group border", spans[idx % spans.length])}>
+                    <div key={item.id} className={cn("relative overflow-hidden group border-2 border-black/5", spans[idx % spans.length])}>
                       <Image 
                         src={galleryImg} 
                         alt={item.caption || "Trip Photo"} 
@@ -216,7 +232,6 @@ const PlanYourTripPage = () => {
             )}
           </div>
 
-          {/* Essential Info Section Added Here */}
           <div className="mt-32 pt-24 border-t">
             <div className="max-w-2xl mb-16">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Travel Essentials</h3>
