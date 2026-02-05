@@ -4,14 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser, useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
-import { collection, doc, deleteDoc, query, orderBy, setDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, query, orderBy, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Plus, Edit, Trash2, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, X } from 'lucide-react';
+import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { getAuth, signOut } from 'firebase/auth';
@@ -246,7 +246,7 @@ const AdminDashboard = () => {
                 <TableHeader className="bg-secondary/50">
                   <TableRow>
                     <TableHead className="text-[10px] font-black uppercase tracking-widest py-4">Preview</TableHead>
-                    <TableHead className="text-[10px] font-black uppercase tracking-widest">Metadata</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase tracking-widest">kategori</TableHead>
                     <TableHead className="text-[10px] font-black uppercase tracking-widest text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -308,7 +308,6 @@ const AdminDashboard = () => {
                         </TableCell>
                         <TableCell className="py-2 px-4"><span className="text-[10px] font-bold uppercase">{g.caption}</span></TableCell>
                         <TableCell className="py-2 px-4 text-right">
-                          {/* Tombol hapus dihapus */}
                         </TableCell>
                       </TableRow>
                     ))
