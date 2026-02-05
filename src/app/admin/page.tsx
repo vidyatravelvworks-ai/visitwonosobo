@@ -136,17 +136,6 @@ const AdminDashboard = () => {
             <BookOpen size={18} />
             <span className="text-[10px] font-bold uppercase tracking-widest text-left leading-tight">Stories Articles</span>
           </Button>
-
-          <div className="pt-6 pb-2">
-            <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mb-2">Actions</p>
-          </div>
-
-          <Button variant="ghost" asChild className="w-full justify-start text-white hover:bg-primary rounded-none h-12 gap-3 px-4">
-            <Link href={newArticleUrl}>
-              <Plus size={18} />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Create New Article</span>
-            </Link>
-          </Button>
         </nav>
 
         <div className="mt-auto pt-6 space-y-4">
