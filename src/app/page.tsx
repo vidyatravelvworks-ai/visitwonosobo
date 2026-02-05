@@ -8,8 +8,8 @@ import { staticPackages as staticTripPackages } from '@/data/packages';
 import { articles as staticArticles } from '@/data/articles';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy, limit, where } from 'firebase/firestore';
+import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy, limit, where, doc } from 'firebase/firestore';
 import { 
   Activity, ShieldAlert, CarFront, 
   Clock, ThermometerSnowflake, CheckCircle2, XCircle, Loader2,
@@ -17,18 +17,25 @@ import {
 } from 'lucide-react';
 import ArticleCard from '@/components/article/ArticleCard';
 import { cn } from '@/lib/utils';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
   const db = useFirestore();
 
   const packagesQ = useMemoFirebase(() => db ? query(collection(db, 'trip_packages'), orderBy('title', 'asc'), limit(3)) : null, [db]);
   const storiesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story'), limit(3)) : null, [db]);
+  const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
 
   const { data: dbPackages, isLoading: isPkgsLoading } = useCollection(packagesQ);
   const { data: dbStories, isLoading: isStoriesLoading } = useCollection(storiesQ);
+  const { data: config } = useDoc(configRef);
 
   const tourPackages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticTripPackages.slice(0, 3);
   const latestStories = (dbStories && dbStories.length > 0) ? dbStories : staticArticles.filter(a => a.type === 'story').slice(0, 3);
+
+  const configHomeHero = config?.heroImages?.home;
+  const placeholderHomeHero = PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl || 'https://picsum.photos/seed/wonosobo-home/1200/800';
+  const heroImage = (configHomeHero && configHomeHero.trim() !== "") ? configHomeHero : placeholderHomeHero;
 
   const essentialPoints = [
     { 
@@ -67,6 +74,37 @@ export default function Home() {
     <div className="bg-white">
       <Hero />
       
+      {/* 1. Discover New Experiences (Services) */}
+      <Services />
+
+      {/* 2. Town Stories (Discover More) - Moved below Services as requested */}
+      <section className="py-16 bg-secondary/20 px-6">
+        <div className="container mx-auto px-0 md:px-8 lg:px-32">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-10">
+            <div className="max-w-2xl">
+              <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Discover More</h3>
+              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Town Stories</h2>
+            </div>
+            <Button variant="link" className="text-black font-black uppercase text-[10px] tracking-widest p-0 flex items-center gap-2 group" asChild>
+              <Link href="/stories">
+                Lihat Semua Cerita <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+
+          {isStoriesLoading ? (
+            <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+              {latestStories.map((story: any) => (
+                <ArticleCard key={story.id || story.slug} article={story} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 3. Essential Information & Paket Wisata */}
       <section className="py-16 bg-white border-b px-6">
         <div className="container mx-auto px-0 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-8">
@@ -181,38 +219,11 @@ export default function Home() {
         </div>
       </section>
 
-      <Services />
-
-      <section className="py-16 bg-secondary/20 px-6">
-        <div className="container mx-auto px-0 md:px-8 lg:px-32">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-10">
-            <div className="max-w-2xl">
-              <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Discover More</h3>
-              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Town Stories</h2>
-            </div>
-            <Button variant="link" className="text-black font-black uppercase text-[10px] tracking-widest p-0 flex items-center gap-2 group" asChild>
-              <Link href="/stories">
-                Lihat Semua Cerita <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
-          </div>
-
-          {isStoriesLoading ? (
-            <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-              {latestStories.map((story: any) => (
-                <ArticleCard key={story.id || story.slug} article={story} />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
+      {/* 4. Ready to Explore CTA - Background synced with Hero Image */}
       <section className="py-24 bg-black relative overflow-hidden px-6">
         <div className="absolute inset-0 opacity-30">
           <img 
-            src="https://images.unsplash.com/photo-1595495745827-85bcc5c9a028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" 
+            src={heroImage} 
             alt="CTA Background" 
             className="w-full h-full object-cover"
           />
