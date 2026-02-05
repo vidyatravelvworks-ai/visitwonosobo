@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -310,10 +309,10 @@ const AdminDashboard = () => {
                 <>
                   <TableHeader>
                     <TableRow className="bg-secondary/50">
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6 w-24">Preview</TableHead>
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Judul Artikel</TableHead>
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Kategori</TableHead>
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6 text-right">Action</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-4 w-24">Preview</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-4">Judul Artikel</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-4">Kategori</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-4 text-right">Action</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -321,19 +320,19 @@ const AdminDashboard = () => {
                       <TableRow><TableCell colSpan={4} className="p-12 text-center text-xs font-bold uppercase text-muted-foreground animate-pulse">Loading Articles...</TableCell></TableRow>
                     ) : filteredArticles.map(a => (
                       <TableRow key={a.id} className="hover:bg-secondary/10">
-                        <TableCell className="p-6">
+                        <TableCell className="p-4">
                           <div className="w-16 h-12 bg-gray-200 border overflow-hidden">
                             {a.image && <img src={a.image} alt="" className="w-full h-full object-cover" />}
                           </div>
                         </TableCell>
-                        <TableCell className="p-6">
+                        <TableCell className="p-4">
                           <div className="font-bold uppercase text-sm">{a.title}</div>
                           <div className="text-[9px] font-bold text-muted-foreground mt-1 uppercase">Type: {a.type} | Slug: /{a.id}</div>
                         </TableCell>
-                        <TableCell className="p-6">
+                        <TableCell className="p-4">
                           <Badge variant="outline" className="rounded-none border-2 font-black text-[8px] uppercase tracking-widest">{a.category}</Badge>
                         </TableCell>
-                        <TableCell className="p-6 text-right space-x-2">
+                        <TableCell className="p-4 text-right space-x-2">
                           <Button variant="ghost" size="icon" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={16}/></Link></Button>
                           <Button variant="ghost" size="icon" className="text-red-600" onClick={() => handleDeleteArticle(a.id)}><Trash2 size={16}/></Button>
                         </TableCell>
@@ -345,10 +344,10 @@ const AdminDashboard = () => {
                 <>
                   <TableHeader>
                     <TableRow className="bg-secondary/50">
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Nama Paket</TableHead>
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Harga</TableHead>
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6">Durasi</TableHead>
-                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-6 text-right">Action</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-4">Nama Paket</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-4">Harga</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-4">Durasi</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase tracking-widest p-4 text-right">Action</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -356,19 +355,19 @@ const AdminDashboard = () => {
                       <TableRow><TableCell colSpan={4} className="p-12 text-center text-xs font-bold uppercase text-muted-foreground animate-pulse">Loading Packages...</TableCell></TableRow>
                     ) : filteredPackages.map(p => (
                       <TableRow key={p.id} className="hover:bg-secondary/10">
-                        <TableCell className="p-6">
+                        <TableCell className="p-4">
                           <div className="font-bold uppercase text-sm">{p.title}</div>
                           <div className="text-[9px] font-bold text-muted-foreground mt-1 uppercase">{p.description}</div>
                         </TableCell>
-                        <TableCell className="p-6">
+                        <TableCell className="p-4">
                           <Badge className="bg-primary text-white font-black text-[10px] uppercase rounded-none">{p.price}</Badge>
                         </TableCell>
-                        <TableCell className="p-6">
+                        <TableCell className="p-4">
                           <div className="flex items-center gap-2 text-xs font-bold">
                             <Clock size={14} className="text-primary" /> {p.time}
                           </div>
                         </TableCell>
-                        <TableCell className="p-6 text-right space-x-2">
+                        <TableCell className="p-4 text-right space-x-2">
                           <Button variant="ghost" size="icon" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={16}/></Link></Button>
                           <Button variant="ghost" size="icon" className="text-red-600" onClick={() => handleDeletePackage(p.id)}><Trash2 size={16}/></Button>
                         </TableCell>
