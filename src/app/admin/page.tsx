@@ -432,7 +432,7 @@ const AdminDashboard = () => {
         )}
 
         {currentView === 'gallery' && (
-          <div className="space-y-12">
+          <div className="space-y-8">
             <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white w-full">
               <CardHeader className="border-b bg-secondary/10 p-3">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
@@ -440,8 +440,8 @@ const AdminDashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-3">
-                <div className="flex gap-3 items-start">
-                  <div className="w-28 h-[120px] bg-gray-100 border-2 border-dashed border-black/10 shrink-0 overflow-hidden flex items-center justify-center relative">
+                <div className="flex gap-3 items-stretch">
+                  <div className="w-32 bg-gray-100 border-2 border-dashed border-black/10 shrink-0 overflow-hidden flex items-center justify-center relative min-h-[100px]">
                     {newGalleryItem.url ? (
                       <img src={newGalleryItem.url} className="w-full h-full object-cover" alt="Preview" />
                     ) : (
@@ -452,24 +452,26 @@ const AdminDashboard = () => {
                     )}
                   </div>
                   
-                  <div className="flex-grow space-y-1.5">
-                    <div className="space-y-0.5">
-                      <Label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">URL Gambar</Label>
-                      <Input 
-                        placeholder="https://..." 
-                        value={newGalleryItem.url} 
-                        onChange={(e) => setNewGalleryItem({...newGalleryItem, url: e.target.value})}
-                        className="rounded-none border-2 text-[10px] h-8 font-bold focus:border-primary"
-                      />
-                    </div>
-                    <div className="space-y-0.5">
-                      <Label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Keterangan Foto</Label>
-                      <Input 
-                        placeholder="Keterangan..." 
-                        value={newGalleryItem.caption} 
-                        onChange={(e) => setNewGalleryItem({...newGalleryItem, caption: e.target.value})}
-                        className="rounded-none border-2 text-[10px] h-8 font-bold focus:border-primary"
-                      />
+                  <div className="flex-grow flex flex-col justify-between space-y-2">
+                    <div className="space-y-1">
+                      <div className="space-y-0.5">
+                        <Label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">URL Gambar</Label>
+                        <Input 
+                          placeholder="https://..." 
+                          value={newGalleryItem.url} 
+                          onChange={(e) => setNewGalleryItem({...newGalleryItem, url: e.target.value})}
+                          className="rounded-none border-2 text-[10px] h-8 font-bold focus:border-primary"
+                        />
+                      </div>
+                      <div className="space-y-0.5">
+                        <Label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Keterangan Foto</Label>
+                        <Input 
+                          placeholder="Keterangan..." 
+                          value={newGalleryItem.caption} 
+                          onChange={(e) => setNewGalleryItem({...newGalleryItem, caption: e.target.value})}
+                          className="rounded-none border-2 text-[10px] h-8 font-bold focus:border-primary"
+                        />
+                      </div>
                     </div>
                     <Button 
                       onClick={handleSaveNewGalleryItem} 
@@ -486,7 +488,7 @@ const AdminDashboard = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {isGalleryLoading ? (
-                <div className="col-span-full flex justify-center p-20"><Loader2 className="animate-spin h-10 w-10" /></div>
+                <div className="col-span-full flex justify-center p-20"><Loader2 className="animate-spin h-10 w-10 text-primary" /></div>
               ) : galleryItems?.map(item => (
                 <Card key={item.id} className="rounded-none border-2 border-black/5 shadow-xl overflow-hidden group relative">
                   <div className="aspect-video bg-gray-100 relative">
@@ -498,14 +500,13 @@ const AdminDashboard = () => {
                       </div>
                     )}
                     
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <Button 
                         variant="destructive" 
-                        size="icon" 
-                        className="rounded-full w-12 h-12 shadow-2xl scale-90 group-hover:scale-100 transition-transform duration-300"
+                        className="rounded-none px-6 h-10 font-black uppercase tracking-widest text-[10px]"
                         onClick={() => handleDeleteGallery(item.id)}
                       >
-                        <Trash2 size={24} />
+                        Hapus
                       </Button>
                     </div>
                   </div>
