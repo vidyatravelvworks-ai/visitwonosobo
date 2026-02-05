@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -222,7 +221,7 @@ export default function Home() {
             <h2 className="text-5xl md:text-8xl font-black text-white uppercase leading-none tracking-tighter">
               Ready to <span className="text-primary">Explore</span> <br /> Wonosobo?
             </h2>
-            <p className="text-white/60 text-lg md:text-xl font-medium max-w-2xl mx-auto uppercase tracking-wide">
+            <p className="text-white/60 text-sm md:text-base font-medium max-w-2xl mx-auto">
               Wujudkan perjalanan impian Anda dengan layanan guide dan rental lokal terbaik. Kami siap menyambut Anda di negeri di atas awan.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6 pt-10">
