@@ -35,7 +35,10 @@ export default function Home() {
   const essentialPoints = [
     { title: "Kondisi Fisik", icon: <Activity />, content: "Dieng berada di ketinggian >2.000 mdpl. Waspadai Altitude Sickness." },
     { title: "Etika Budaya", icon: <ShieldAlert />, content: "Gunakan masker di kawah. Hormati ritual anak rambut gimbal." },
-    { title: "Persiapan Mobil", icon: <CarFront />, content: "Jalur Dieng memiliki tanjakan 15%. Cek rem dan kopling." }
+    { title: "Persiapan Mobil", icon: <CarFront />, content: "Jalur Dieng memiliki tanjakan 15%. Cek rem dan kopling." },
+    { title: "Pakaian Hangat", icon: <ThermometerSnowflake />, content: "Suhu bisa mencapai 0°C. Siapkan jaket tebal, sarung tangan, dan kupluk." },
+    { title: "Uang Tunai", icon: <Briefcase />, content: "ATM sangat terbatas di area atas Dieng. Siapkan uang tunai sebelum berangkat." },
+    { title: "Waktu Terbaik", icon: <Clock />, content: "Juli - Agustus adalah waktu terbaik untuk melihat embun es (upas) yang langka." }
   ];
 
   return (
@@ -54,10 +57,10 @@ export default function Home() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-32">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-y-16 gap-x-12 mb-32">
             {essentialPoints.map((point, idx) => (
               <div key={idx} className="group space-y-4 border-l-2 border-primary/20 pl-6 hover:border-primary transition-all">
-                <div className="p-3 bg-secondary w-fit text-primary group-hover:bg-primary group-hover:text-white">{point.icon}</div>
+                <div className="p-3 bg-secondary w-fit text-primary group-hover:bg-primary group-hover:text-white transition-colors">{point.icon}</div>
                 <h4 className="font-bold uppercase text-xs tracking-widest">{point.title}</h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">{point.content}</p>
               </div>
