@@ -1,11 +1,10 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser, useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
-import { collection, doc, deleteDoc, query, orderBy, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
+import { collection, doc, deleteDoc, query, orderBy, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
@@ -13,21 +12,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { 
   Plus, Edit, Trash2, LogOut, Map, BookOpen, MapPin, Globe, 
-  Image as ImageIcon, Palette, Layout, Save, RefreshCw, Grid 
+  Layout, Save, Grid 
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { getAuth, signOut } from 'firebase/auth';
 import { cn } from '@/lib/utils';
-import { staticPackages } from '@/data/packages';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const AdminDashboard = () => {
   const { user, isUserLoading } = useUser();
@@ -37,7 +27,6 @@ const AdminDashboard = () => {
   const { toast } = useToast();
 
   const [currentView, setCurrentView] = useState<'see-and-do' | 'stories' | 'packages' | 'website-config' | 'gallery'>('see-and-do');
-  const [isSyncing, setIsSyncing] = useState(false);
   const [configData, setConfigData] = useState<any>(null);
   const [isSavingConfig, setIsSavingConfig] = useState(false);
 
@@ -50,9 +39,8 @@ const AdminDashboard = () => {
   // Firestore Queries
   const articlesQuery = useMemoFirebase(() => {
     if (!db) return null;
-    const type = currentView === 'see-and-do' ? 'destination' : 'story';
     return query(collection(db, 'articles'), orderBy('updatedAt', 'desc'));
-  }, [db, currentView]);
+  }, [db]);
 
   const packagesQuery = useMemoFirebase(() => {
     if (!db) return null;
@@ -64,9 +52,9 @@ const AdminDashboard = () => {
     return query(collection(db, 'gallery'), orderBy('order', 'asc'));
   }, [db]);
 
-  const { data: allArticles, isLoading: isArticlesLoading } = useCollection(articlesQuery);
-  const { data: packages, isLoading: isPackagesLoading } = useCollection(packagesQuery);
-  const { data: galleryItems, isLoading: isGalleryLoading } = useCollection(galleryQuery);
+  const { data: allArticles } = useCollection(articlesQuery);
+  const { data: packages } = useCollection(packagesQuery);
+  const { data: galleryItems } = useCollection(galleryQuery);
   
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
   const { data: dbConfig } = useDoc(configRef);
@@ -146,7 +134,7 @@ const AdminDashboard = () => {
         <nav className="flex-grow space-y-2">
           <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mb-2">Content</p>
           <Button variant="ghost" onClick={() => setCurrentView('see-and-do')} className={cn("w-full justify-start text-white hover:bg-primary rounded-none h-10 gap-3 px-4", currentView === 'see-and-do' && "bg-primary")}>
-            <Map size={16} /> <span className="text-[10px] font-bold uppercase tracking-widest">See & Do</span>
+            <Map size={16} /> <span className="text-[10px] font-bold uppercase tracking-widest">See &amp; Do</span>
           </Button>
           <Button variant="ghost" onClick={() => setCurrentView('stories')} className={cn("w-full justify-start text-white hover:bg-primary rounded-none h-10 gap-3 px-4", currentView === 'stories' && "bg-primary")}>
             <BookOpen size={16} /> <span className="text-[10px] font-bold uppercase tracking-widest">Stories</span>
@@ -154,7 +142,7 @@ const AdminDashboard = () => {
 
           <p className="text-[8px] font-bold uppercase tracking-widest text-white/30 px-4 mt-6 mb-2">Appearance</p>
           <Button variant="ghost" onClick={() => setCurrentView('website-config')} className={cn("w-full justify-start text-white hover:bg-primary rounded-none h-10 gap-3 px-4", currentView === 'website-config' && "bg-primary")}>
-            <Layout size={16} /> <span className="text-[10px] font-bold uppercase tracking-widest">Hero & Categories</span>
+            <Layout size={16} /> <span className="text-[10px] font-bold uppercase tracking-widest">Hero &amp; Categories</span>
           </Button>
           <Button variant="ghost" onClick={() => setCurrentView('gallery')} className={cn("w-full justify-start text-white hover:bg-primary rounded-none h-10 gap-3 px-4", currentView === 'gallery' && "bg-primary")}>
             <Grid size={16} /> <span className="text-[10px] font-bold uppercase tracking-widest">Trip Gallery</span>
@@ -181,9 +169,9 @@ const AdminDashboard = () => {
             <p className="text-sm font-medium text-muted-foreground mt-2">Adjust your website elements in real-time.</p>
           </div>
           {(currentView === 'see-and-do' || currentView === 'stories' || currentView === 'packages' || currentView === 'gallery') && (
-            <Button asChild onClick={currentView === 'gallery' ? handleAddGalleryImage : undefined} className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
+            <Button onClick={currentView === 'gallery' ? handleAddGalleryImage : undefined} asChild={currentView !== 'gallery'} className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-8 gap-3 font-black uppercase tracking-widest text-[10px]">
               {currentView === 'gallery' ? (
-                <span><Plus size={18} /> Add Photo</span>
+                <span className="flex items-center gap-3 cursor-pointer"><Plus size={18} /> Add Photo</span>
               ) : (
                 <Link href={currentView === 'packages' ? '/admin/plan-your-trip/editor/new' : `/admin/editor/new?type=${currentView === 'see-and-do' ? 'destination' : 'story'}`}>
                   <Plus size={18} /> New {currentView === 'packages' ? 'Package' : 'Article'}
@@ -199,23 +187,23 @@ const AdminDashboard = () => {
             <Table>
               <TableHeader className="bg-secondary/50">
                 <TableRow>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4">Title / Info</TableHead>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4">Category / Price</TableHead>
-                  <TableHead className="text-[10px] font-bold uppercase tracking-widest py-2 px-4 text-right">Actions</TableHead>
+                  <TableHead className="text-[10px] font-bold uppercase tracking-widest py-1 px-4">Title / Info</TableHead>
+                  <TableHead className="text-[10px] font-bold uppercase tracking-widest py-1 px-4">Category / Price</TableHead>
+                  <TableHead className="text-[10px] font-bold uppercase tracking-widest py-1 px-4 text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {currentView === 'packages' ? (
                   packages?.map(p => (
                     <TableRow key={p.id} className="hover:bg-secondary/10">
-                      <TableCell className="py-2 px-4">
-                        <div className="font-bold uppercase text-xs">{p.title}</div>
+                      <TableCell className="py-1 px-4">
+                        <div className="font-bold uppercase text-[11px]">{p.title}</div>
                         <div className="text-[8px] text-muted-foreground">{p.time}</div>
                       </TableCell>
-                      <TableCell className="py-2 px-4"><Badge className="bg-primary rounded-none text-[9px] uppercase">{p.price}</Badge></TableCell>
-                      <TableCell className="py-2 px-4 text-right">
-                        <Button variant="ghost" size="icon" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={14}/></Link></Button>
-                        <Button variant="ghost" size="icon" className="text-red-600" onClick={() => deleteDoc(doc(db!, 'trip_packages', p.id))}><Trash2 size={14}/></Button>
+                      <TableCell className="py-1 px-4"><Badge className="bg-primary rounded-none text-[8px] uppercase">{p.price}</Badge></TableCell>
+                      <TableCell className="py-1 px-4 text-right space-x-1">
+                        <Button variant="ghost" size="icon" className="h-7 w-7" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={12}/></Link></Button>
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => deleteDoc(db!, 'trip_packages', p.id)}><Trash2 size={12}/></Button>
                       </TableCell>
                     </TableRow>
                   ))
@@ -223,16 +211,16 @@ const AdminDashboard = () => {
                   filteredArticles.map(a => (
                     <TableRow key={a.id} className="hover:bg-secondary/10">
                       <TableCell className="py-1 px-4 flex items-center gap-3">
-                        <div className="w-10 h-8 bg-gray-200 border p-0.5"><img src={a.image} className="w-full h-full object-cover" /></div>
+                        <div className="w-10 h-7 bg-gray-200 border p-0.5"><img src={a.image} className="w-full h-full object-cover" /></div>
                         <div>
                           <div className="font-bold uppercase text-[11px] truncate max-w-[300px]">{a.title}</div>
                           <div className="text-[8px] text-muted-foreground uppercase">{a.date}</div>
                         </div>
                       </TableCell>
                       <TableCell className="py-1 px-4"><Badge variant="outline" className="rounded-none text-[8px] uppercase">{a.category}</Badge></TableCell>
-                      <TableCell className="py-1 px-4 text-right">
-                        <Button variant="ghost" size="icon" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={14}/></Link></Button>
-                        <Button variant="ghost" size="icon" className="text-red-600" onClick={() => handleDeleteArticle(a.id)}><Trash2 size={14}/></Button>
+                      <TableCell className="py-1 px-4 text-right space-x-1">
+                        <Button variant="ghost" size="icon" className="h-7 w-7" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={12}/></Link></Button>
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-red-600" onClick={() => handleDeleteArticle(a.id)}><Trash2 size={12}/></Button>
                       </TableCell>
                     </TableRow>
                   ))
@@ -242,7 +230,7 @@ const AdminDashboard = () => {
           </Card>
         )}
 
-        {/* VIEW: WEBSITE CONFIG (HERO & CATEGORIES) */}
+        {/* VIEW: WEBSITE CONFIG */}
         {currentView === 'website-config' && configData && (
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -266,7 +254,7 @@ const AdminDashboard = () => {
                 <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Trip Card Design</CardTitle></CardHeader>
                 <CardContent className="p-6 space-y-4">
                   <div className="space-y-1">
-                    <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Global Card Background (Tailwind)</Label>
+                    <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Card Background (Tailwind Class)</Label>
                     <Input 
                       value={configData.packageDesign?.cardColor || ''} 
                       onChange={(e) => setConfigData({...configData, packageDesign: {...configData.packageDesign, cardColor: e.target.value}})}
@@ -274,7 +262,7 @@ const AdminDashboard = () => {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Global Card Border (Tailwind)</Label>
+                    <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Card Border (Tailwind Class)</Label>
                     <Input 
                       value={configData.packageDesign?.cardBorder || ''} 
                       onChange={(e) => setConfigData({...configData, packageDesign: {...configData.packageDesign, cardBorder: e.target.value}})}
@@ -286,11 +274,11 @@ const AdminDashboard = () => {
             </div>
 
             <Card className="rounded-none border-2 border-black/5 shadow-xl">
-              <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Category Images (See & Do / Stories Cards)</CardTitle></CardHeader>
+              <CardHeader className="border-b"><CardTitle className="text-xs font-black uppercase tracking-widest">Category Images</CardTitle></CardHeader>
               <CardContent className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                 {['Alam', 'Budaya', 'Kuliner', 'Sejarah', 'Sosial', 'Geografis', 'Tips'].map(cat => (
                   <div key={cat} className="space-y-1">
-                    <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{cat} Category Image URL</Label>
+                    <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{cat} Category URL</Label>
                     <Input 
                       value={configData.categoryImages?.[cat] || ''} 
                       onChange={(e) => setConfigData({...configData, categoryImages: {...configData.categoryImages, [cat]: e.target.value}})}
@@ -302,12 +290,12 @@ const AdminDashboard = () => {
             </Card>
 
             <Button onClick={handleSaveConfig} disabled={isSavingConfig} className="bg-black hover:bg-primary text-white rounded-none h-14 w-full gap-3 font-black uppercase tracking-widest text-[10px]">
-              <Save size={18} /> {isSavingConfig ? 'Saving...' : 'Save Website Configuration'}
+              <Save size={18} /> {isSavingConfig ? 'Saving...' : 'Save Configuration'}
             </Button>
           </div>
         )}
 
-        {/* VIEW: GALLERY MANAGEMENT */}
+        {/* VIEW: GALLERY */}
         {currentView === 'gallery' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {galleryItems?.map(item => (
@@ -319,7 +307,7 @@ const AdminDashboard = () => {
                   <Input 
                     placeholder="Image URL" 
                     value={item.url} 
-                    onChange={(e) => setDoc(doc(db!, 'gallery', item.id), { ...item, url: e.target.value })}
+                    onChange={(e) => setDoc(db!, 'gallery', item.id), { ...item, url: e.target.value })}
                     className="rounded-none border-2 text-[9px] h-8"
                   />
                   <div className="flex gap-2">
@@ -327,7 +315,7 @@ const AdminDashboard = () => {
                       placeholder="Order" 
                       type="number"
                       value={item.order} 
-                      onChange={(e) => setDoc(doc(db!, 'gallery', item.id), { ...item, order: parseInt(e.target.value) })}
+                      onChange={(e) => setDoc(db!, 'gallery', item.id), { ...item, order: parseInt(e.target.value) })}
                       className="rounded-none border-2 text-[9px] h-8 w-20"
                     />
                     <Button variant="ghost" className="text-red-600 h-8 px-2 ml-auto" onClick={() => handleDeleteGallery(item.id)}><Trash2 size={14}/></Button>

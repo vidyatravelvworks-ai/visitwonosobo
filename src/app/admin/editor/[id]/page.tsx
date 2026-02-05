@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChevronLeft, Save, Globe, Image as ImageIcon, FileText, Layout, ArrowLeft, Link as LinkIcon } from 'lucide-react';
+import { Save, Globe, FileText, Layout, ArrowLeft, Link as LinkIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useMemoFirebase } from '@/firebase';
 import Link from 'next/link';
@@ -26,7 +26,6 @@ const ArticleEditorPage = () => {
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
 
-  // Ambil tipe default dari URL jika ada
   const queryType = searchParams.get('type') as 'destination' | 'story' || 'destination';
 
   const [formData, setFormData] = useState({
@@ -89,27 +88,14 @@ const ArticleEditorPage = () => {
         updatedAt: serverTimestamp(),
       }, { merge: true });
 
-      toast({ title: 'Berhasil', description: 'Artikel telah disimpan dan dipublikasikan.' });
-      if (isNew) {
-        router.push(`/admin/editor/${articleId}`);
-      }
+      toast({ title: 'Berhasil', description: 'Artikel telah disimpan.' });
+      router.push('/admin');
     } catch (error) {
-      console.error(error);
-      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menyimpan artikel. Periksa izin database Anda.' });
+      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menyimpan artikel.' });
     } finally {
       setIsSaving(false);
     }
   };
-
-  const handleTypeChange = (val: 'destination' | 'story') => {
-    // Reset kategori ke default tipe baru saat tipe diubah
-    const defaultCategory = val === 'destination' ? 'Alam' : 'Sejarah';
-    setFormData({ ...formData, type: val, category: defaultCategory });
-  };
-
-  if (isUserLoading || (isLoading && !isNew)) {
-    return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Loading Editor...</div>;
-  }
 
   const destinationCategories = [
     { value: "Alam", label: "Nature & Adventure" },
@@ -126,6 +112,10 @@ const ArticleEditorPage = () => {
 
   const currentCategories = formData.type === 'destination' ? destinationCategories : storyCategories;
 
+  if (isUserLoading || (isLoading && !isNew)) {
+    return <div className="h-screen flex items-center justify-center font-black uppercase tracking-widest text-xs">Loading Editor...</div>;
+  }
+
   return (
     <div className="min-h-screen bg-secondary/20 p-8 md:p-12">
       <div className="max-w-5xl mx-auto space-y-8">
@@ -136,16 +126,14 @@ const ArticleEditorPage = () => {
               Kembali ke Dashboard
             </Link>
           </Button>
-          <div className="flex gap-4">
-            <Button 
-              onClick={handleSave} 
-              disabled={isSaving}
-              className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-10 gap-3 font-black uppercase tracking-widest text-[10px]"
-            >
-              <Save size={18} />
-              {isSaving ? 'Saving...' : 'Publish Article'}
-            </Button>
-          </div>
+          <Button 
+            onClick={handleSave} 
+            disabled={isSaving}
+            className="bg-primary hover:bg-primary/90 text-white rounded-none h-14 px-10 gap-3 font-black uppercase tracking-widest text-[10px]"
+          >
+            <Save size={18} />
+            {isSaving ? 'Saving...' : 'Publish Article'}
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -186,93 +174,38 @@ const ArticleEditorPage = () => {
               <CardHeader className="border-b p-6">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
                   <Globe className="text-primary" size={16} />
-                  SEO &amp; URL Settings
+                  Settings
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
                 <div className="space-y-2">
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">URL Slug</Label>
-                  <div className="flex">
-                    <div className="bg-secondary flex items-center px-3 border-2 border-r-0 border-black/10 text-[9px] font-bold text-muted-foreground">/artikel/</div>
-                    <Input 
-                      value={formData.slug}
-                      onChange={(e) => setFormData({...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-')})}
-                      placeholder="url-artikel-anda"
-                      className="rounded-none border-2 border-black/10 focus:border-primary h-10 text-[11px] font-bold"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Meta Excerpt (SEO Description)</Label>
-                  <Textarea 
-                    value={formData.excerpt}
-                    onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
-                    placeholder="Ringkasan pendek..."
-                    className="rounded-none border-2 border-black/10 focus:border-primary h-24 text-[11px]"
+                  <Input 
+                    value={formData.slug}
+                    onChange={(e) => setFormData({...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-')})}
+                    className="rounded-none border-2 border-black/10 h-10 text-[11px] font-bold"
                   />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white">
-              <CardHeader className="border-b p-6">
-                <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
-                  <Layout className="text-primary" size={16} />
-                  Media &amp; Category
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6 space-y-6">
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Article Image URL (Imgur/External)</Label>
-                  <div className="relative">
-                    <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input 
-                      value={formData.image}
-                      onChange={(e) => setFormData({...formData, image: e.target.value})}
-                      placeholder="https://i.imgur.com/your-image.jpg"
-                      className="pl-10 rounded-none border-2 border-black/10 focus:border-primary h-10 text-[11px] font-bold"
-                    />
-                  </div>
-                  {formData.image && (
-                    <div className="mt-4 aspect-video relative border-2 border-black/10 overflow-hidden bg-gray-100">
-                      <img src={formData.image} alt="Preview" className="object-cover w-full h-full" />
-                    </div>
-                  )}
-                  <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight mt-2">Paste URL gambar dari Imgur atau sumber lainnya di sini.</p>
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Content Type</Label>
-                  <Select 
-                    value={formData.type} 
-                    onValueChange={handleTypeChange}
-                  >
-                    <SelectTrigger className="rounded-none border-2 border-black/10 h-10 font-bold text-xs">
-                      <SelectValue placeholder="Pilih Tipe" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-none border-2">
-                      <SelectItem value="destination">Destination (See &amp; Do)</SelectItem>
-                      <SelectItem value="story">Story (Blog)</SelectItem>
-                    </SelectContent>
+                  <Select value={formData.type} onValueChange={(val: any) => setFormData({...formData, type: val, category: val === 'destination' ? 'Alam' : 'Sejarah'})}>
+                    <SelectTrigger className="rounded-none border-2 text-xs font-bold"><SelectValue /></SelectTrigger>
+                    <SelectContent><SelectItem value="destination">Destination</SelectItem><SelectItem value="story">Story</SelectItem></SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Category</Label>
-                  <Select 
-                    value={formData.category} 
-                    onValueChange={(val) => setFormData({...formData, category: val})}
-                  >
-                    <SelectTrigger className="rounded-none border-2 border-black/10 h-10 font-bold text-xs">
-                      <SelectValue placeholder="Pilih Kategori" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-none border-2">
-                      {currentCategories.map(cat => (
-                        <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
-                      ))}
-                    </SelectContent>
+                  <Select value={formData.category} onValueChange={(val) => setFormData({...formData, category: val})}>
+                    <SelectTrigger className="rounded-none border-2 text-xs font-bold"><SelectValue /></SelectTrigger>
+                    <SelectContent>{currentCategories.map(cat => <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>)}</SelectContent>
                   </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Image URL</Label>
+                  <div className="relative"><LinkIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" /><Input value={formData.image} onChange={(e) => setFormData({...formData, image: e.target.value})} className="pl-10 rounded-none border-2 h-10 text-[11px]" /></div>
                 </div>
               </CardContent>
             </Card>
