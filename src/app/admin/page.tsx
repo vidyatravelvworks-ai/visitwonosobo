@@ -63,7 +63,6 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (dbConfig) {
-      // Pastikan struktur data lengkap agar tidak terjadi error saat input diakses
       setConfigData({
         heroImages: dbConfig.heroImages || { home: '', seeAndDo: '', stories: '' },
         categoryImages: dbConfig.categoryImages || {
@@ -93,7 +92,6 @@ const AdminDashboard = () => {
     setIsSavingConfig(true);
     const docRef = doc(db, 'config', 'website');
     
-    // Hapus field id internal jika ada agar tidak tersimpan di database
     const dataToSave = { ...configData };
     delete dataToSave.id;
 
@@ -101,7 +99,7 @@ const AdminDashboard = () => {
       .then(() => {
         toast({ 
           title: 'Berhasil Disimpan', 
-          description: 'Konfigurasi website telah diperbarui. Jika gambar belum muncul, pastikan domain URL sudah didukung (Unsplash, Picsum, dll).',
+          description: 'Konfigurasi website telah diperbarui.',
         });
         setIsSavingConfig(false);
       })
@@ -322,16 +320,25 @@ const AdminDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
                   <Card className="rounded-none border-2 border-black/5 shadow-xl">
                     <CardHeader className="border-b bg-white"><CardTitle className="text-xs font-black uppercase tracking-widest">Gambar Banner Utama (Hero)</CardTitle></CardHeader>
-                    <CardContent className="p-6 space-y-4 bg-white">
+                    <CardContent className="p-6 space-y-6 bg-white">
                       {['home', 'seeAndDo', 'stories'].map(page => (
                         <div key={page} className="space-y-1">
                           <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{heroLabels[page] || page} URL</Label>
-                          <Input 
-                            value={configData.heroImages?.[page] || ''} 
-                            onChange={(e) => setConfigData({...configData, heroImages: {...configData.heroImages, [page]: e.target.value}})}
-                            className="rounded-none border-2 text-[10px] h-10 focus:border-primary"
-                            placeholder="https://example.com/image.jpg"
-                          />
+                          <div className="flex gap-4 items-center">
+                             <div className="w-20 h-12 bg-gray-100 border shrink-0 overflow-hidden flex items-center justify-center">
+                                {configData.heroImages?.[page] ? (
+                                   <img src={configData.heroImages[page]} className="w-full h-full object-cover" />
+                                ) : (
+                                   <div className="text-[8px] font-bold text-muted-foreground uppercase text-center leading-tight">No Preview</div>
+                                )}
+                             </div>
+                             <Input 
+                               value={configData.heroImages?.[page] || ''} 
+                               onChange={(e) => setConfigData({...configData, heroImages: {...configData.heroImages, [page]: e.target.value}})}
+                               className="rounded-none border-2 text-[10px] h-10 focus:border-primary flex-grow"
+                               placeholder="https://example.com/image.jpg"
+                             />
+                          </div>
                         </div>
                       ))}
                     </CardContent>
@@ -340,16 +347,25 @@ const AdminDashboard = () => {
 
                 <Card className="rounded-none border-2 border-black/5 shadow-xl">
                   <CardHeader className="border-b bg-white"><CardTitle className="text-xs font-black uppercase tracking-widest">Gambar Per Kategori</CardTitle></CardHeader>
-                  <CardContent className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 bg-white">
+                  <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 bg-white">
                     {['Alam', 'Budaya', 'Kuliner', 'Sejarah', 'Sosial', 'Geografis', 'Tips'].map(cat => (
                       <div key={cat} className="space-y-1">
                         <Label className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{cat} URL</Label>
-                        <Input 
-                          value={configData.categoryImages?.[cat] || ''} 
-                          onChange={(e) => setConfigData({...configData, categoryImages: {...configData.categoryImages, [cat]: e.target.value}})}
-                          className="rounded-none border-2 text-[10px] h-10 focus:border-primary"
-                          placeholder="https://example.com/image.jpg"
-                        />
+                        <div className="flex gap-3 items-center">
+                           <div className="w-14 h-9 bg-gray-100 border shrink-0 overflow-hidden flex items-center justify-center">
+                              {configData.categoryImages?.[cat] ? (
+                                 <img src={configData.categoryImages[cat]} className="w-full h-full object-cover" />
+                              ) : (
+                                 <div className="text-[7px] font-bold text-muted-foreground uppercase text-center">No Img</div>
+                              )}
+                           </div>
+                           <Input 
+                             value={configData.categoryImages?.[cat] || ''} 
+                             onChange={(e) => setConfigData({...configData, categoryImages: {...configData.categoryImages, [cat]: e.target.value}})}
+                             className="rounded-none border-2 text-[10px] h-10 focus:border-primary flex-grow"
+                             placeholder="https://example.com/image.jpg"
+                           />
+                        </div>
                       </div>
                     ))}
                   </CardContent>
