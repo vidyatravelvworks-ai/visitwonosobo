@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -426,53 +427,53 @@ const AdminDashboard = () => {
 
         {currentView === 'gallery' && (
           <div className="space-y-12">
-            {/* New Unified Input Panel for Gallery - Updated to w-full */}
+            {/* New Unified Input Panel for Gallery - Minimalist Pressed Layout */}
             <Card className="rounded-none border-2 border-black/5 shadow-xl bg-white w-full">
-              <CardHeader className="border-b bg-secondary/10">
+              <CardHeader className="border-b bg-secondary/10 p-3">
                 <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
                   <ImageIcon size={14} className="text-primary" /> Tambah Foto Galeri Baru
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="flex gap-6 items-start">
+              <CardContent className="p-3">
+                <div className="flex gap-3 items-start">
                   {/* Preview Image on the Left */}
-                  <div className="w-44 h-36 bg-gray-100 border-2 border-dashed border-black/10 shrink-0 overflow-hidden flex items-center justify-center relative">
+                  <div className="w-28 h-[120px] bg-gray-100 border-2 border-dashed border-black/10 shrink-0 overflow-hidden flex items-center justify-center relative">
                     {newGalleryItem.url ? (
                       <img src={newGalleryItem.url} className="w-full h-full object-cover" alt="Preview" />
                     ) : (
-                      <div className="flex flex-col items-center gap-2 text-muted-foreground p-4">
-                        <ImageIcon size={20} className="opacity-20" />
-                        <span className="text-[8px] font-black uppercase tracking-widest">Image Preview</span>
+                      <div className="flex flex-col items-center gap-1 text-muted-foreground p-2">
+                        <ImageIcon size={16} className="opacity-20" />
+                        <span className="text-[7px] font-black uppercase tracking-widest">Preview</span>
                       </div>
                     )}
                   </div>
                   
-                  {/* Inputs and Button on the Right */}
-                  <div className="flex-grow space-y-4">
-                    <div className="space-y-1">
-                      <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">URL Gambar</Label>
+                  {/* Inputs and Button on the Right - Pressed Verticality */}
+                  <div className="flex-grow space-y-1.5">
+                    <div className="space-y-0.5">
+                      <Label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">URL Gambar</Label>
                       <Input 
-                        placeholder="https://images.unsplash.com/..." 
+                        placeholder="https://..." 
                         value={newGalleryItem.url} 
                         onChange={(e) => setNewGalleryItem({...newGalleryItem, url: e.target.value})}
-                        className="rounded-none border-2 text-[10px] h-10 font-bold focus:border-primary"
+                        className="rounded-none border-2 text-[10px] h-8 font-bold focus:border-primary"
                       />
                     </div>
-                    <div className="space-y-1">
-                      <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Keterangan Foto</Label>
+                    <div className="space-y-0.5">
+                      <Label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Keterangan Foto</Label>
                       <Input 
-                        placeholder="Momen sunrise di Sikunir..." 
+                        placeholder="Keterangan..." 
                         value={newGalleryItem.caption} 
                         onChange={(e) => setNewGalleryItem({...newGalleryItem, caption: e.target.value})}
-                        className="rounded-none border-2 text-[10px] h-10 font-bold focus:border-primary"
+                        className="rounded-none border-2 text-[10px] h-8 font-bold focus:border-primary"
                       />
                     </div>
                     <Button 
                       onClick={handleSaveNewGalleryItem} 
                       disabled={isAddingPhoto || !newGalleryItem.url}
-                      className="w-full bg-primary hover:bg-black text-white rounded-none h-12 gap-3 font-black uppercase tracking-widest text-[10px] shadow-md transition-all active:scale-[0.98]"
+                      className="w-full bg-primary hover:bg-black text-white rounded-none h-8 gap-2 font-black uppercase tracking-widest text-[9px] shadow-md transition-all active:scale-[0.98]"
                     >
-                      {isAddingPhoto ? <Loader2 className="animate-spin h-4 w-4" /> : <Plus size={16} />}
+                      {isAddingPhoto ? <Loader2 className="animate-spin h-3 w-3" /> : <Plus size={14} />}
                       {isAddingPhoto ? 'Menyimpan...' : 'Add Photo to Gallery'}
                     </Button>
                   </div>
