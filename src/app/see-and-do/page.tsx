@@ -73,21 +73,21 @@ const SeeAndDoPage = () => {
               const catImg = (catConfigImg && catConfigImg.trim() !== "") ? catConfigImg : (catPlaceholder || `https://picsum.photos/seed/${cat.id}/800/1000`);
 
               return (
-                <div key={cat.id} className="group relative aspect-[4/5] overflow-hidden bg-black">
+                <div key={cat.id} className="group relative aspect-square overflow-hidden bg-black">
                   <Image
                     src={catImg}
                     alt={cat.title}
                     fill
-                    className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-80"
+                    className="object-cover opacity-80 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-90"
                   />
                   
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-[5]" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent z-[5]" />
 
                   <div className="absolute top-0 left-10 p-6 bg-primary text-white z-10">
                     {cat.icon}
                   </div>
 
-                  <div className="absolute inset-0 p-10 pt-40 flex flex-col justify-end text-white z-10">
+                  <div className="absolute inset-0 p-10 pt-24 flex flex-col justify-end text-white z-10">
                     <h3 className="text-3xl font-black uppercase mb-2 tracking-tight">{cat.title}</h3>
                     <Button variant="link" className="text-white p-0 w-fit font-bold uppercase tracking-widest text-xs hover:text-primary" asChild>
                       <a href={`#${cat.id}`}>Explore Now <ArrowRight className="ml-2 h-4 w-4" /></a>
