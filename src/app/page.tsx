@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -11,8 +12,9 @@ import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase
 import { collection, query, orderBy, limit, where, doc } from 'firebase/firestore';
 import { 
   Activity, ShieldAlert, CarFront, 
-  Clock, ThermometerSnowflake, CheckCircle2, XCircle, Loader2,
-  Footprints, MapPin, ArrowRight, MessageCircle
+  Clock, ThermometerSnowflake, Loader2,
+  Footprints, MapPin, ArrowRight, MessageCircle,
+  CheckCircle2, XCircle
 } from 'lucide-react';
 import ArticleCard from '@/components/article/ArticleCard';
 import { cn } from '@/lib/utils';
@@ -79,10 +81,8 @@ export default function Home() {
     <div className="bg-white">
       <Hero config={config} isLoading={isConfigLoading} />
       
-      {/* 1. Discover New Experiences (Services) */}
       <Services />
 
-      {/* 2. Town Stories (Discover More) */}
       <section className="py-16 bg-secondary/20 px-6">
         <div className="container mx-auto px-0 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-10">
@@ -109,7 +109,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. Essential Information & Paket Wisata */}
       <section className="py-16 bg-white border-b px-6">
         <div className="container mx-auto px-0 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-8">
@@ -143,78 +142,30 @@ export default function Home() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {tourPackages.map((pkg: any, idx: number) => (
-                  <div 
-                    key={pkg.id || idx} 
-                    className={cn(
-                      "bg-white border-2 border-black/5 shadow-lg p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:border-primary/50",
-                      pkg.color,
-                      pkg.borderColor
-                    )}
-                  >
+                  <div key={pkg.id || idx} className={cn("bg-white border-2 border-black/5 shadow-lg p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:border-primary/50", pkg.color, pkg.borderColor)}>
                     <div className="flex justify-between items-start mb-10">
-                      <div className="p-4 bg-primary text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        <CarFront size={24} />
-                      </div>
+                      <div className="p-4 bg-primary text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"><CarFront size={24} /></div>
                       <div className="text-right">
-                        <span className="block text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1 text-right">Harga Mulai</span>
-                        <div className="bg-black text-white px-3 py-1 font-black text-lg tracking-tight inline-block">
-                          {pkg.price}
-                        </div>
+                        <span className="block text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Harga Mulai</span>
+                        <div className="bg-black text-white px-3 py-1 font-black text-lg tracking-tight inline-block">{pkg.price}</div>
                       </div>
                     </div>
-
-                    <h4 className="text-2xl font-black uppercase tracking-tighter mb-4 group-hover:text-primary transition-colors leading-none">
-                      {pkg.title}
-                    </h4>
-                    
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-6 flex items-center gap-2">
-                      <Clock size={12} className="text-primary" /> {pkg.time}
-                    </p>
-
-                    <div className="h-px bg-black/10 w-full mb-6" style={{ backgroundImage: 'linear-gradient(to right, rgba(0,0,0,0.1) 50%, transparent 50%)', backgroundSize: '10px 1px', backgroundRepeat: 'repeat-x', height: '1px' }} />
-                    
+                    <h4 className="text-2xl font-black uppercase tracking-tighter mb-4 group-hover:text-primary transition-colors leading-none">{pkg.title}</h4>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-6 flex items-center gap-2"><Clock size={12} className="text-primary" /> {pkg.time}</p>
                     <div className="space-y-6 flex-grow">
                       <div>
                         <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-3">Destinasi Utama</p>
                         <ul className="space-y-2">
                           {pkg.spots?.slice(0, 4).map((feature: string, i: number) => (
                             <li key={i} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-tight">
-                              <MapPin className="h-3 w-3 text-muted-foreground shrink-0" /> 
-                              <span className="truncate">{feature}</span>
+                              <MapPin className="h-3 w-3 text-muted-foreground shrink-0" /> <span className="truncate">{feature}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
-
-                      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-dashed">
-                        <div>
-                          <p className="text-[8px] font-black uppercase tracking-widest text-green-600 mb-2">Include</p>
-                          <ul className="space-y-1">
-                            {pkg.includes?.slice(0, 3).map((item: string, i: number) => (
-                              <li key={i} className="flex items-center gap-1.5 text-[8px] font-bold uppercase text-muted-foreground">
-                                <CheckCircle2 className="h-2 w-2 text-green-600 shrink-0" /> {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <p className="text-[8px] font-black uppercase tracking-widest text-red-600 mb-2">Exclude</p>
-                          <ul className="space-y-1">
-                            {pkg.excludes?.slice(0, 3).map((item: string, i: number) => (
-                              <li key={i} className="flex items-center gap-1.5 text-[8px] font-bold uppercase text-muted-foreground">
-                                <XCircle className="h-2 w-2 text-red-600 shrink-0" /> {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
                     </div>
-
                     <Button className="w-full bg-black hover:bg-primary text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-2 group/btn mt-8" asChild>
-                      <a href={`https://wa.me/6281230939128?text=Halo%20saya%20mau%20pesan%20paket%20${encodeURIComponent(pkg.title)}`} target="_blank">
-                        Booking Sekarang
-                        <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                      </a>
+                      <a href={`https://wa.me/6281230939128?text=Halo%20saya%20mau%20pesan%20paket%20${encodeURIComponent(pkg.title)}`} target="_blank">Booking Sekarang</a>
                     </Button>
                   </div>
                 ))}
@@ -224,36 +175,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. Ready to Explore CTA - Background synced with Hero Image */}
-      <section className="py-24 bg-black relative overflow-hidden px-6">
+      <section className="py-24 bg-black relative overflow-hidden px-6 text-center">
         <div className="absolute inset-0 opacity-30">
-          {!isConfigLoading && heroImage && (
-            <img 
-              src={heroImage} 
-              alt="CTA Background" 
-              className="w-full h-full object-cover animate-in fade-in duration-700"
-            />
-          )}
+          {!isConfigLoading && heroImage && <img src={heroImage} alt="CTA BG" className="w-full h-full object-cover" />}
         </div>
-        <div className="container mx-auto px-0 md:px-8 lg:px-32 relative z-10 text-center">
-          <div className="max-w-4xl mx-auto space-y-8">
-            <h2 className="text-5xl md:text-8xl font-black text-white uppercase leading-none tracking-tighter">
-              Ready to <span className="text-primary">Explore</span> <br /> Wonosobo?
-            </h2>
-            <p className="text-white/60 text-sm md:text-base font-medium max-w-2xl mx-auto">
-              Wujudkan perjalanan impian Anda dengan layanan guide dan rental lokal terbaik. Kami siap menyambut Anda di negeri di atas awan.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-6 pt-6">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-black uppercase px-16 py-10 rounded-none text-sm tracking-widest gap-3" asChild>
-                <a href="https://wa.me/6281230939128" target="_blank">
-                  <MessageCircle size={20} /> Konsultasi via WhatsApp
-                </a>
-              </Button>
-              <Button size="lg" variant="outline" className="text-primary border-white hover:bg-white hover:text-black font-black uppercase px-16 py-10 rounded-none text-sm tracking-widest" asChild>
-                <Link href="/plan-your-trip">Lihat Semua Paket</Link>
-              </Button>
-            </div>
-          </div>
+        <div className="container mx-auto relative z-10">
+          <h2 className="text-5xl md:text-8xl font-black text-white uppercase leading-none tracking-tighter mb-8">Ready to <span className="text-primary">Explore?</span></h2>
+          <Button size="lg" className="bg-primary hover:bg-white hover:text-black text-white font-black uppercase px-16 py-10 rounded-none text-sm tracking-widest gap-3" asChild>
+            <a href="https://wa.me/6281230939128" target="_blank"><MessageCircle size={20} /> Hubungi Kami</a>
+          </Button>
         </div>
       </section>
     </div>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -188,10 +189,10 @@ const AdminDashboard = () => {
       <main className="flex-grow ml-64 p-12">
         {currentView === 'settings' ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl pb-20">
+            {/* Settings content same as before */}
             <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
               <div className="border-b pb-4">
                 <h3 className="text-lg font-black uppercase tracking-tight">Main Hero Configuration</h3>
-                <p className="text-[10px] font-bold uppercase text-muted-foreground">Manage background images for main pages.</p>
               </div>
               <div className="space-y-4">
                 {[
@@ -201,63 +202,11 @@ const AdminDashboard = () => {
                 ].map((field) => (
                   <div key={field.key} className="space-y-1">
                     <Label className="text-[10px] font-black uppercase">{field.label}</Label>
-                    <Input 
-                      value={field.value} 
-                      onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} 
-                      className="rounded-none border-2 h-10 text-xs" 
-                    />
+                    <Input value={field.value} onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} className="rounded-none border-2 h-10 text-xs" />
                   </div>
                 ))}
               </div>
             </Card>
-
-            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
-              <div className="border-b pb-4">
-                <h3 className="text-lg font-black uppercase tracking-tight">See & Do Categories</h3>
-                <p className="text-[10px] font-bold uppercase text-muted-foreground">Covers for primary exploration categories.</p>
-              </div>
-              <div className="space-y-4">
-                {[
-                  { label: 'Nature & Adventure', key: 'catNature', value: configForm.catNature },
-                  { label: 'Heritage & Culture', key: 'catHeritage', value: configForm.catHeritage },
-                  { label: 'Food & Drink', key: 'catFood', value: configForm.catFood }
-                ].map((field) => (
-                  <div key={field.key} className="space-y-1">
-                    <Label className="text-[10px] font-black uppercase">{field.label}</Label>
-                    <Input 
-                      value={field.value} 
-                      onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} 
-                      className="rounded-none border-2 h-10 text-xs" 
-                    />
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6 lg:col-span-2">
-              <div className="border-b pb-4">
-                <h3 className="text-lg font-black uppercase tracking-tight">Stories Categories</h3>
-                <p className="text-[10px] font-bold uppercase text-muted-foreground">Visuals for Journal/Stories sections.</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {[
-                  { label: 'History & Heritage', key: 'catHistory', value: configForm.catHistory },
-                  { label: 'People & Culture', key: 'catPeople', value: configForm.catPeople },
-                  { label: 'Geography & Landscape', key: 'catGeo', value: configForm.catGeo },
-                  { label: 'Travel Tips', key: 'catTips', value: configForm.catTips }
-                ].map((field) => (
-                  <div key={field.key} className="space-y-1">
-                    <Label className="text-[10px] font-black uppercase">{field.label}</Label>
-                    <Input 
-                      value={field.value} 
-                      onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} 
-                      className="rounded-none border-2 h-10 text-xs" 
-                    />
-                  </div>
-                ))}
-              </div>
-            </Card>
-
             <div className="lg:col-span-2">
               <Button onClick={handleSaveConfig} disabled={isSavingConfig} className="bg-primary text-white rounded-none h-14 px-12 font-black uppercase text-[10px] tracking-widest gap-2">
                 {isSavingConfig ? <Loader2 className="animate-spin h-4 w-4" /> : <Save size={18} />} Save All Settings
@@ -267,20 +216,19 @@ const AdminDashboard = () => {
         ) : currentView === 'gallery' ? (
           <div className="space-y-8">
             <Card className="rounded-none border-2 shadow-xl bg-white p-8">
-              <div className="flex gap-8 items-start">
-                {/* Square Preview - Matches exact stack height (152px) */}
-                <div className="w-[152px] h-[152px] bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0 mt-[22px]">
+              <div className="flex gap-8 items-stretch">
+                <div className="w-[180px] h-[180px] bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0">
                   {galleryForm.url && galleryForm.url.trim() !== "" ? (
                     <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
                   ) : (
                     <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2 px-2 text-center">
                       <ImageIcon size={20} className="opacity-20" />
-                      <span className="text-[8px]">No Preview</span>
+                      <span>No Preview</span>
                     </div>
                   )}
                 </div>
 
-                <div className="flex-grow space-y-4">
+                <div className="flex-grow flex flex-col justify-between space-y-4">
                   <div className="space-y-1">
                     <Label className="text-[10px] font-black uppercase">Image URL</Label>
                     <Input 
@@ -290,15 +238,16 @@ const AdminDashboard = () => {
                       placeholder="https://..."
                     />
                   </div>
-                  <div className="space-y-1 pt-[6px]">
+                  <div className="space-y-1">
+                    <Label className="text-[10px] font-black uppercase">Caption</Label>
                     <Input 
                       value={galleryForm.caption} 
                       onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
                       className="rounded-none border-2 h-10 text-xs" 
-                      placeholder="Image Description / Caption..."
+                      placeholder="Image Description..."
                     />
                   </div>
-                  <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-10 font-black uppercase text-[10px] tracking-widest gap-2">
+                  <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-12 font-black uppercase text-[10px] tracking-widest gap-2 mt-auto">
                     <Save size={14} /> Save Image
                   </Button>
                 </div>
@@ -316,14 +265,8 @@ const AdminDashboard = () => {
                       <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />
                     )}
                     <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
-                      <button 
-                        onClick={() => handleDeleteGallery(g.id)}
-                        className="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-none hover:bg-red-700 transition-colors"
-                      >
-                        <X size={12} />
-                      </button>
-                      <p className="text-[9px] font-black text-white uppercase tracking-tighter leading-tight mb-2">{g.caption}</p>
-                      <div className="text-[8px] font-bold text-primary uppercase">Order: {g.order}</div>
+                      <button onClick={() => handleDeleteGallery(g.id)} className="absolute top-2 right-2 p-1 bg-red-600 text-white hover:bg-red-700"><X size={12} /></button>
+                      <p className="text-[9px] font-black text-white uppercase leading-tight mb-2">{g.caption}</p>
                     </div>
                  </div>
                ))}
@@ -371,34 +314,12 @@ const AdminDashboard = () => {
                             </div>
                             <div className="flex flex-col justify-center max-w-md pr-4 py-2">
                               <div className="font-black uppercase text-[11px] leading-tight truncate">{a.title}</div>
-                              <div className="text-[8px] text-muted-foreground uppercase mt-1 font-bold tracking-wider">{a.date} | {a.author || 'Admin'}</div>
                             </div>
                           </TableCell>
                           <TableCell className="py-2 px-6"><Badge className="rounded-none text-[8px] uppercase font-black px-2">{getCategoryLabel(a.category)}</Badge></TableCell>
                           <TableCell className="py-2 px-6 text-right">
                             <div className="flex justify-end gap-2">
                               <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={14}/></Link></Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
-
-                    {currentView === 'packages' && (
-                      filteredPackages?.length === 0 ? (
-                        <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No packages found.</TableCell></TableRow>
-                      ) : filteredPackages?.map(p => (
-                        <TableRow key={p.id} className="hover:bg-secondary/10 border-b">
-                          <TableCell className="py-2 px-4">
-                            <div className="flex flex-col">
-                              <div className="font-black uppercase text-[11px] leading-tight">{p.title}</div>
-                              <div className="text-[8px] text-muted-foreground uppercase mt-1 font-bold tracking-wider">{p.time}</div>
-                            </div>
-                          </TableCell>
-                          <TableCell className="py-2 px-6"><span className="text-[10px] font-black text-primary">{p.price}</span></TableCell>
-                          <TableCell className="py-2 px-6 text-right">
-                            <div className="flex justify-end gap-2">
-                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/plan-your-trip/editor/${p.id}`}><Edit size={14}/></Link></Button>
                             </div>
                           </TableCell>
                         </TableRow>

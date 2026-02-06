@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -20,8 +21,7 @@ import { articles as staticArticles } from '@/data/articles';
 const StoriesPage = () => {
   const db = useFirestore();
   
-  // Fetch stories from DB with ordering
-  const articlesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story'), orderBy('updatedAt', 'desc')) : null, [db]);
+  const articlesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story')) : null, [db]);
   const latestStoriesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story'), orderBy('updatedAt', 'desc'), limit(4)) : null, [db]);
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
 
@@ -29,11 +29,9 @@ const StoriesPage = () => {
   const { data: latestStories, isLoading: isLatestLoading } = useCollection(latestStoriesQ);
   const { data: config } = useDoc(configRef);
   
-  // Combine DB stories with static ones, prioritizing DB
   const allStories = React.useMemo(() => {
-    if (!dbStories) return staticArticles.filter(a => a.type === 'story');
+    if (!dbStories || dbStories.length === 0) return staticArticles.filter(a => a.type === 'story');
     
-    // Create a set of slugs already in DB to avoid duplicates
     const dbSlugs = new Set(dbStories.map(s => s.slug || s.id));
     const filteredStatic = staticArticles.filter(a => a.type === 'story' && !dbSlugs.has(a.slug));
     
@@ -45,9 +43,9 @@ const StoriesPage = () => {
   const heroImage = (storiesConfigHero && storiesConfigHero.trim() !== "") ? storiesConfigHero : storiesPlaceholderHero;
 
   const categoryData = [
-    { id: 'sejarah', title: 'History & Heritage', categoryName: 'History & Heritage', icon: <History className="h-5 w-5" /> },
-    { id: 'sosial', title: 'People & Culture', categoryName: 'People & Culture', icon: <Users className="h-5 w-5" /> },
-    { id: 'geografis', title: 'Geography & Landscape', categoryName: 'Geography & Landscape', icon: <Globe className="h-5 w-5" /> },
+    { id: 'history', title: 'History & Heritage', categoryName: 'History & Heritage', icon: <History className="h-5 w-5" /> },
+    { id: 'people', title: 'People & Culture', categoryName: 'People & Culture', icon: <Users className="h-5 w-5" /> },
+    { id: 'geography', title: 'Geography & Landscape', categoryName: 'Geography & Landscape', icon: <Globe className="h-5 w-5" /> },
     { id: 'tips', title: 'Travel Tips', categoryName: 'Travel Tips', icon: <Info className="h-5 w-5" /> }
   ];
 
@@ -67,7 +65,6 @@ const StoriesPage = () => {
 
   return (
     <div className="bg-white">
-      {/* Hero Section */}
       <section className="relative h-[45vh] w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image src={heroImage} alt="Hero" fill className="object-cover" priority />
@@ -79,7 +76,6 @@ const StoriesPage = () => {
         </div>
       </section>
 
-      {/* Latest Stories Section */}
       <section className="py-24 bg-secondary/10">
         <div className="container mx-auto px-6 md:px-32">
           <div className="flex items-center gap-4 mb-12">
@@ -87,23 +83,21 @@ const StoriesPage = () => {
             <h2 className="text-4xl font-black uppercase tracking-tighter">Latest from Journal</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {(latestStories && latestStories.length > 0 ? latestStories : staticArticles.filter(a => a.type === 'story').slice(0, 4)).map((story: any) => (
+            {(latestStories && latestStories.length > 0 ? latestStories : allStories.slice(0, 4)).map((story: any) => (
               <ArticleCard key={story.id || story.slug} article={story} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Categories Grid */}
       <section className="py-2 container mx-auto px-6 md:px-32">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
           {categoryData.map((cat) => {
             const catConfigImg = config?.categoryImages?.[cat.categoryName];
-            
             let catPlaceholderId = 'mountain-prau';
-            if (cat.id === 'sejarah') catPlaceholderId = 'candi-arjuna';
-            if (cat.id === 'sosial') catPlaceholderId = 'ritual';
-            if (cat.id === 'geografis') catPlaceholderId = 'misty-valley';
+            if (cat.id === 'history') catPlaceholderId = 'candi-arjuna';
+            if (cat.id === 'people') catPlaceholderId = 'ritual';
+            if (cat.id === 'geography') catPlaceholderId = 'misty-valley';
             
             const catPlaceholder = PlaceHolderImages.find(img => img.id === catPlaceholderId)?.imageUrl;
             const catImg = (catConfigImg && catConfigImg.trim() !== "") ? catConfigImg : (catPlaceholder || `https://picsum.photos/seed/${cat.id}/800/1000`);
@@ -129,7 +123,6 @@ const StoriesPage = () => {
         </div>
       </section>
 
-      {/* Categorized Content Feed */}
       <div className="py-32 container mx-auto px-6 md:px-32 space-y-32">
         {categoryData.map((cat) => {
           const filtered = allStories.filter(s => s.category === cat.categoryName);

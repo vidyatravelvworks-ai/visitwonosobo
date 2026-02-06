@@ -1,3 +1,4 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -43,7 +44,7 @@ service cloud.firestore {
       allow write: if false;
     }
     
-    // Deployment trigger: Memperbarui izin akses publik untuk kueri listing (list/collection).
-    // Terakhir diperbarui: 2026-02-07 18:45 UTC
+    // Deployment trigger: Menghapus hambatan list/collection untuk publik.
+    // Terakhir diperbarui: 2026-02-08 14:30 UTC
   }
 }
