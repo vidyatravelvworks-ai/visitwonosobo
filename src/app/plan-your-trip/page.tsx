@@ -1,21 +1,24 @@
 
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { 
   Clock, Loader2, Grid, MapPin, 
-  CarFront, Activity, ShieldAlert, Footprints, ThermometerSnowflake
+  CarFront, Activity, ShieldAlert, Footprints, ThermometerSnowflake, X
 } from 'lucide-react';
 import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { staticPackages } from '@/data/packages';
 import { cn } from '@/lib/utils';
+import { Dialog, DialogContent, DialogTitle, DialogHeader } from '@/components/ui/dialog';
 
 const PlanYourTripPage = () => {
   const db = useFirestore();
+  const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   const packagesQ = useMemoFirebase(() => db ? query(collection(db, 'trip_packages'), orderBy('title', 'asc')) : null, [db]);
   const galleryQ = useMemoFirebase(() => db ? query(collection(db, 'gallery'), orderBy('order', 'asc')) : null, [db]);
@@ -79,8 +82,32 @@ const PlanYourTripPage = () => {
     }
   ];
 
+  const handleImageClick = (item: any) => {
+    setSelectedImage(item);
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="bg-white">
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-5xl p-0 border-none bg-transparent shadow-none outline-none">
+          <DialogTitle className="sr-only">Full Image Preview</DialogTitle>
+          {selectedImage && (
+            <div className="relative w-full aspect-[4/3] md:aspect-[16/9] flex items-center justify-center">
+              <Image 
+                src={selectedImage.url} 
+                alt={selectedImage.caption || "Trip Preview"} 
+                fill 
+                className="object-contain"
+              />
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 px-6 py-2 backdrop-blur-md">
+                <p className="text-white text-[10px] font-black uppercase tracking-widest">{selectedImage.caption}</p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <section className="relative h-[45vh] w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image src={heroImage} alt="Hero Background" fill className="object-cover" priority />
@@ -88,7 +115,7 @@ const PlanYourTripPage = () => {
         </div>
         <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10 text-center">
           <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-4">Plan Your Journey</h1>
-          <p className="text-white/80 font-medium text-[10px] md:text-xs mt-4 max-w-lg mx-auto">
+          <p className="text-white/80 font-medium text-xs mt-4 max-w-lg mx-auto">
             Pastikan perjalanan Anda aman dan berkesan dengan memilih layanan dan paket yang tepat sesuai kebutuhan Anda.
           </p>
         </div>
@@ -153,7 +180,7 @@ const PlanYourTripPage = () => {
                   <div className="grid grid-rows-3 grid-flow-col gap-1 h-[600px] md:h-[800px] shrink-0">
                     {galleryItems.map((item, idx) => {
                       const pattern = idx % 7;
-                      let classNames = "relative overflow-hidden group bg-secondary/10";
+                      let classNames = "relative overflow-hidden group bg-secondary/10 cursor-pointer";
                       
                       if (pattern === 0) classNames += " row-span-2 w-[300px] md:w-[450px]";
                       else if (pattern === 1) classNames += " row-span-1 w-[300px] md:w-[450px]";
@@ -164,7 +191,7 @@ const PlanYourTripPage = () => {
                       else classNames += " row-span-1 w-[280px] md:w-[400px]";
 
                       return (
-                        <div key={item.id} className={classNames}>
+                        <div key={item.id} className={classNames} onClick={() => handleImageClick(item)}>
                           {item.url && (
                             <Image 
                               src={item.url} 
@@ -184,7 +211,7 @@ const PlanYourTripPage = () => {
                   <div className="grid grid-rows-3 grid-flow-col gap-1 h-[600px] md:h-[800px] shrink-0 ml-1" aria-hidden="true">
                     {galleryItems.map((item, idx) => {
                       const pattern = idx % 7;
-                      let classNames = "relative overflow-hidden group bg-secondary/10";
+                      let classNames = "relative overflow-hidden group bg-secondary/10 cursor-pointer";
                       
                       if (pattern === 0) classNames += " row-span-2 w-[300px] md:w-[450px]";
                       else if (pattern === 1) classNames += " row-span-1 w-[300px] md:w-[450px]";
@@ -195,7 +222,7 @@ const PlanYourTripPage = () => {
                       else classNames += " row-span-1 w-[280px] md:w-[400px]";
 
                       return (
-                        <div key={`dup-${item.id}`} className={classNames}>
+                        <div key={`dup-${item.id}`} className={classNames} onClick={() => handleImageClick(item)}>
                           {item.url && (
                             <Image 
                               src={item.url} 
