@@ -163,9 +163,14 @@ export default function Home() {
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-3">Plan Your Trip</h3>
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Essential Information</h2>
             </div>
-            <Button variant="outline" className="border-primary text-primary rounded-none h-14 px-8 font-black uppercase text-[10px]" asChild>
-              <Link href="/plan-your-trip">Lihat Detail Paket</Link>
-            </Button>
+            <div className="flex flex-col items-start md:items-end gap-3">
+              <Button variant="outline" className="border-primary text-primary rounded-none h-14 px-8 font-black uppercase text-[10px]" asChild>
+                <Link href="/plan-your-trip">Lihat Detail Paket</Link>
+              </Button>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground text-left md:text-right max-w-[200px] leading-relaxed">
+                Pilih layanan pemandu dan paket wisata yang sesuai dengan kebutuhan perjalanan Anda.
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12 gap-x-12 mb-20">
