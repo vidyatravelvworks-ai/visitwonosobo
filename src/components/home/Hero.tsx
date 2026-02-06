@@ -65,7 +65,7 @@ const Hero = ({ config: externalConfig, isLoading: externalLoading }: HeroProps)
               <a href="#services">Explore Experiences</a>
             </Button>
             <Button size="lg" variant="outline" className="text-primary border-primary hover:bg-primary hover:text-white font-bold uppercase px-12 py-8 rounded-none tracking-widest text-[10px]" asChild>
-              <a href="/stories">Travel Stories</a>
+              <a href="/stories">Town Stories</a>
             </Button>
           </div>
         </div>
