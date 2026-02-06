@@ -86,7 +86,7 @@ export default function Home() {
       
       <Services />
 
-      <section className="py-24 bg-secondary">
+      <section className="py-24 bg-neutral-200">
         <div className="container mx-auto px-6 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-10">
             <div className="flex flex-col md:flex-row md:items-end gap-10">
@@ -161,7 +161,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-8">
             <div className="max-w-2xl">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-3">Plan Your Trip</h3>
-              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Essential Information</h2>
+              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Essential Information</h2>
             </div>
             <Button variant="outline" className="border-primary text-primary rounded-none h-14 px-8 font-black uppercase text-[10px]" asChild>
               <Link href="/plan-your-trip">Lihat Detail Paket</Link>
