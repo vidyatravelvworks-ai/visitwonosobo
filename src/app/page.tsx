@@ -86,9 +86,9 @@ export default function Home() {
       
       <Services />
 
-      <section className="py-16 bg-secondary/20 px-6">
-        <div className="container mx-auto px-0 md:px-8 lg:px-32">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-10">
+      <section className="py-24 bg-secondary/20">
+        <div className="container mx-auto px-6 md:px-8 lg:px-32">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-10">
             <div className="flex flex-col md:flex-row md:items-end gap-10">
               <div className="max-w-2xl">
                 <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Discover More</h3>
@@ -156,9 +156,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 bg-white border-b px-6">
-        <div className="container mx-auto px-0 md:px-8 lg:px-32">
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-8">
+      <section className="py-24 bg-white border-b">
+        <div className="container mx-auto px-6 md:px-8 lg:px-32">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-8">
             <div className="max-w-2xl">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-3">Plan Your Trip</h3>
               <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Essential Information</h2>
@@ -168,7 +168,7 @@ export default function Home() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12 gap-x-12 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12 gap-x-12 mb-20">
             {essentialPoints.map((point, idx) => (
               <div key={idx} className="group space-y-4 border-l border-primary/20 pl-6 hover:border-primary transition-all">
                 <div className="p-3 bg-secondary w-fit text-primary group-hover:bg-primary group-hover:text-white transition-colors">{point.icon}</div>
@@ -178,8 +178,8 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="pt-10 border-t">
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-6">
+          <div className="pt-20 border-t">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Paket Wisata</h2>
               <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-primary pl-4">Layanan Guide &amp; Rental Lokal Terbaik</p>
             </div>
@@ -222,7 +222,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-24 bg-black relative overflow-hidden px-6 text-center">
+      <section className="py-32 bg-black relative overflow-hidden px-6 text-center">
         <div className="absolute inset-0 opacity-30">
           {!isConfigLoading && heroImage && <img src={heroImage} alt="CTA" className="w-full h-full object-cover" />}
         </div>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -41,8 +42,8 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="pt-16 pb-32 bg-white">
-      <div className="container mx-auto px-4 md:px-32">
+    <section id="services" className="py-24 bg-white">
+      <div className="container mx-auto px-6 md:px-8 lg:px-32">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-10">
           <div className="max-w-2xl">
             <h3 className="text-primary font-bold uppercase tracking-widest mb-4">See & Do</h3>
@@ -63,7 +64,7 @@ const Services = () => {
                 className="object-cover opacity-100 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-90"
               />
               
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-[5]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent z-[5]" />
 
               <div className="absolute top-0 left-8 p-6 bg-primary text-white z-20">
                 {cat.icon}
