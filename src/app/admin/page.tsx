@@ -50,7 +50,11 @@ const AdminDashboard = () => {
     heroStories: '',
     catNature: '',
     catHeritage: '',
-    catFood: ''
+    catFood: '',
+    catHistory: '',
+    catPeople: '',
+    catGeo: '',
+    catTips: ''
   });
 
   useEffect(() => {
@@ -61,7 +65,11 @@ const AdminDashboard = () => {
         heroStories: websiteConfig.heroImages?.stories || '',
         catNature: websiteConfig.categoryImages?.['Nature & Adventure'] || '',
         catHeritage: websiteConfig.categoryImages?.['Heritage & Culture'] || '',
-        catFood: websiteConfig.categoryImages?.['Food & Drink'] || ''
+        catFood: websiteConfig.categoryImages?.['Food & Drink'] || '',
+        catHistory: websiteConfig.categoryImages?.['History & Heritage'] || '',
+        catPeople: websiteConfig.categoryImages?.['People & Culture'] || '',
+        catGeo: websiteConfig.categoryImages?.['Geography & Landscape'] || '',
+        catTips: websiteConfig.categoryImages?.['Travel Tips'] || ''
       });
     }
   }, [websiteConfig]);
@@ -79,7 +87,11 @@ const AdminDashboard = () => {
         categoryImages: {
           'Nature & Adventure': configForm.catNature,
           'Heritage & Culture': configForm.catHeritage,
-          'Food & Drink': configForm.catFood
+          'Food & Drink': configForm.catFood,
+          'History & Heritage': configForm.catHistory,
+          'People & Culture': configForm.catPeople,
+          'Geography & Landscape': configForm.catGeo,
+          'Travel Tips': configForm.catTips
         },
         updatedAt: serverTimestamp()
       }, { merge: true });
@@ -169,7 +181,7 @@ const AdminDashboard = () => {
 
       <main className="flex-grow ml-64 p-12">
         {currentView === 'settings' ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl pb-20">
             <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
               <div className="border-b pb-4">
                 <h3 className="text-lg font-black uppercase tracking-tight">Main Hero Configuration</h3>
@@ -195,14 +207,38 @@ const AdminDashboard = () => {
 
             <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
               <div className="border-b pb-4">
-                <h3 className="text-lg font-black uppercase tracking-tight">Category Covers</h3>
-                <p className="text-[10px] font-bold uppercase text-muted-foreground">Visuals for See & Do categories.</p>
+                <h3 className="text-lg font-black uppercase tracking-tight">See & Do Categories</h3>
+                <p className="text-[10px] font-bold uppercase text-muted-foreground">Covers for primary exploration categories.</p>
               </div>
               <div className="space-y-4">
                 {[
                   { label: 'Nature & Adventure', key: 'catNature', value: configForm.catNature },
                   { label: 'Heritage & Culture', key: 'catHeritage', value: configForm.catHeritage },
                   { label: 'Food & Drink', key: 'catFood', value: configForm.catFood }
+                ].map((field) => (
+                  <div key={field.key} className="space-y-1">
+                    <Label className="text-[10px] font-black uppercase">{field.label}</Label>
+                    <Input 
+                      value={field.value} 
+                      onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} 
+                      className="rounded-none border-2 h-10 text-xs" 
+                    />
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6 lg:col-span-2">
+              <div className="border-b pb-4">
+                <h3 className="text-lg font-black uppercase tracking-tight">Stories Categories</h3>
+                <p className="text-[10px] font-bold uppercase text-muted-foreground">Visuals for Journal/Stories sections.</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[
+                  { label: 'History & Heritage', key: 'catHistory', value: configForm.catHistory },
+                  { label: 'People & Culture', key: 'catPeople', value: configForm.catPeople },
+                  { label: 'Geography & Landscape', key: 'catGeo', value: configForm.catGeo },
+                  { label: 'Travel Tips', key: 'catTips', value: configForm.catTips }
                 ].map((field) => (
                   <div key={field.key} className="space-y-1">
                     <Label className="text-[10px] font-black uppercase">{field.label}</Label>
@@ -225,13 +261,9 @@ const AdminDashboard = () => {
         ) : currentView === 'gallery' ? (
           <div className="space-y-8">
             <Card className="rounded-none border-2 shadow-xl bg-white p-8">
-              <div className="border-b pb-4 mb-6">
-                <h3 className="text-lg font-black uppercase tracking-tight">Gallery Quick Add</h3>
-                <p className="text-[10px] font-bold uppercase text-muted-foreground">Add new photos to the trip gallery instantly.</p>
-              </div>
-              <div className="flex gap-6 items-end">
-                {/* Preview Box - Square, aligned vertically from URL input top to Save button bottom */}
-                <div className="w-36 h-36 bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0">
+              <div className="flex gap-8">
+                {/* Preview Box - Left Aligned, Squares from URL top to Save bottom */}
+                <div className="w-32 h-32 bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0 mt-6">
                   {galleryForm.url && galleryForm.url.trim() !== "" ? (
                     <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
                   ) : (
@@ -242,7 +274,7 @@ const AdminDashboard = () => {
                   )}
                 </div>
 
-                <div className="flex-grow space-y-3">
+                <div className="flex-grow space-y-4">
                   <div className="space-y-1">
                     <Label className="text-[10px] font-black uppercase">Image URL</Label>
                     <Input 
@@ -267,7 +299,7 @@ const AdminDashboard = () => {
               </div>
             </Card>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 pb-20">
                {isGalleryLoading ? (
                  <div className="col-span-full py-20 flex justify-center"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
                ) : allGallery?.length === 0 ? (
@@ -295,7 +327,7 @@ const AdminDashboard = () => {
                 </Link>
               </Button>
             </div>
-            <Card className="rounded-none border-2 shadow-xl overflow-hidden bg-white">
+            <Card className="rounded-none border-2 shadow-xl overflow-hidden bg-white mb-20">
               {isLoading ? <div className="p-20 flex justify-center"><Loader2 className="animate-spin text-primary h-10 w-10" /></div> : (
                 <Table>
                   <TableHeader className="bg-secondary/50">

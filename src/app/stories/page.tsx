@@ -1,11 +1,12 @@
+
 "use client";
 
 import React from 'react';
 import Image from 'next/image';
 import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
-import { collection, query, where, doc } from 'firebase/firestore';
+import { collection, query, where, doc, orderBy, limit } from 'firebase/firestore';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { History, Users, Globe, Info, ArrowRight, Loader2 } from 'lucide-react';
+import { History, Users, Globe, Info, ArrowRight, Loader2, Bookmark } from 'lucide-react';
 import ArticleCard from '@/components/article/ArticleCard';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,20 +21,19 @@ import { articles as staticArticles } from '@/data/articles';
 const StoriesPage = () => {
   const db = useFirestore();
   
-  const articlesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story')) : null, [db]);
+  // Ambil semua artikel tipe story dari database
+  const articlesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story'), orderBy('updatedAt', 'desc')) : null, [db]);
+  const latestStoriesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story'), orderBy('updatedAt', 'desc'), limit(4)) : null, [db]);
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
 
-  const { data: dbStories, isLoading } = useCollection(articlesQ);
+  const { data: dbStories, isLoading: isStoriesLoading } = useCollection(articlesQ);
+  const { data: latestStories, isLoading: isLatestLoading } = useCollection(latestStoriesQ);
   const { data: config } = useDoc(configRef);
   
-  const stories = React.useMemo(() => {
-    const staticStories = staticArticles.filter(a => a.type === 'story');
-    if (!dbStories || dbStories.length === 0) return staticStories;
-    
-    // Gabungkan, utamakan yang dari DB jika slug sama
-    const dbSlugs = new Set(dbStories.map(s => s.slug));
-    const uniqueStatic = staticStories.filter(s => !dbSlugs.has(s.slug));
-    return [...dbStories, ...uniqueStatic];
+  // Gabungkan database dengan statis hanya jika database kosong sama sekali
+  const allStories = React.useMemo(() => {
+    if (dbStories && dbStories.length > 0) return dbStories;
+    return staticArticles.filter(a => a.type === 'story');
   }, [dbStories]);
   
   const storiesConfigHero = config?.heroImages?.stories;
@@ -53,7 +53,7 @@ const StoriesPage = () => {
     return pairs;
   };
 
-  if (isLoading) {
+  if (isStoriesLoading && isLatestLoading) {
     return (
       <div className="h-screen flex items-center justify-center">
         <Loader2 className="animate-spin text-primary h-12 w-12" />
@@ -63,22 +63,37 @@ const StoriesPage = () => {
 
   return (
     <div className="bg-white">
+      {/* Hero Section */}
       <section className="relative h-[45vh] w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          {heroImage && (
-            <Image src={heroImage} alt="Hero" fill className="object-cover" priority />
-          )}
+          <Image src={heroImage} alt="Hero" fill className="object-cover" priority />
           <div className="absolute inset-0 bg-black/50" />
         </div>
         <div className="container mx-auto px-6 md:px-32 relative z-10 text-center">
           <h1 className="text-4xl md:text-8xl font-black uppercase tracking-tighter text-white">Stories</h1>
+          <p className="text-white/70 text-xs font-bold uppercase tracking-[0.3em] mt-4">Exploring the Deep Soul of Java</p>
         </div>
       </section>
 
-      <section className="pt-2 pb-24 md:pb-32 container mx-auto px-6 md:px-32">
+      {/* Latest Stories Section (Highlighting DB Content) */}
+      <section className="py-24 bg-secondary/10">
+        <div className="container mx-auto px-6 md:px-32">
+          <div className="flex items-center gap-4 mb-12">
+            <Bookmark className="text-primary h-6 w-6" />
+            <h2 className="text-4xl font-black uppercase tracking-tighter">Latest from Journal</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {(latestStories || staticArticles.filter(a => a.type === 'story').slice(0, 4)).map((story: any) => (
+              <ArticleCard key={story.id || story.slug} article={story} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Categories Grid (Images from Admin Config) */}
+      <section className="py-2 container mx-auto px-6 md:px-32">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
           {categoryData.map((cat) => {
-            // Cek di config admin (WebsiteConfig -> categoryImages)
             const catConfigImg = config?.categoryImages?.[cat.categoryName];
             
             // Fallback placeholder berdasarkan kategori
@@ -92,19 +107,17 @@ const StoriesPage = () => {
 
             return (
               <div key={cat.id} className="group relative aspect-[4/5] overflow-hidden bg-black">
-                {catImg && (
-                  <Image
-                    src={catImg}
-                    alt={cat.title}
-                    fill
-                    className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
-                  />
-                )}
+                <Image
+                  src={catImg}
+                  alt={cat.title}
+                  fill
+                  className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
+                />
                 <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
                   <div className="mb-4 p-2 bg-primary w-fit">{cat.icon}</div>
                   <h3 className="text-2xl font-black uppercase mb-2 tracking-tight">{cat.title}</h3>
                   <Button variant="link" className="text-white p-0 w-fit font-bold uppercase tracking-widest text-[10px] hover:text-primary" asChild>
-                    <a href={`#${cat.id}`}>Explore Stories <ArrowRight className="ml-2 h-3 w-3" /></a>
+                    <a href={`#${cat.id}`}>Explore Category <ArrowRight className="ml-2 h-3 w-3" /></a>
                   </Button>
                 </div>
               </div>
@@ -113,9 +126,10 @@ const StoriesPage = () => {
         </div>
       </section>
 
-      <div className="pb-32 container mx-auto px-6 md:px-32 space-y-32">
+      {/* Categorized Content Feed */}
+      <div className="py-32 container mx-auto px-6 md:px-32 space-y-32">
         {categoryData.map((cat) => {
-          const filtered = stories.filter(s => s.category === cat.categoryName);
+          const filtered = allStories.filter(s => s.category === cat.categoryName);
           if (filtered.length === 0) return null;
           const pairs = chunkIntoPairs(filtered);
           return (
