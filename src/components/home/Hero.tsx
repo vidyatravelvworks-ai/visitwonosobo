@@ -55,7 +55,7 @@ const Hero = ({ config: externalConfig, isLoading: externalLoading }: HeroProps)
             The Soul <br /> <span className="text-white underline decoration-primary decoration-[12px] underline-offset-[16px]">of Java</span>
           </h1>
           
-          <p className="text-white/80 text-[10px] md:text-xs font-bold tracking-[0.3em] max-w-xl mx-auto leading-relaxed mt-10 animate-in fade-in slide-in-from-bottom duration-1000 delay-300">
+          <p className="text-white/90 text-sm md:text-lg max-w-2xl mx-auto leading-relaxed mt-10 animate-in fade-in slide-in-from-bottom duration-1000 delay-300">
             Eksplorasi keajaiban alam, warisan budaya, dan cerita otentik Wonosobo bersama pemandu lokal terbaik.
           </p>
 
