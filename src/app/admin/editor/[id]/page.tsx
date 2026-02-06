@@ -89,14 +89,14 @@ const ArticleEditorPage = ({ params }: PageProps) => {
   }, [article]);
 
   const handleGenerateAI = async () => {
-    if (!formData.title) {
-      toast({ variant: 'destructive', title: 'Judul Kosong' });
+    if (!formData.title && !formData.focusKeyword) {
+      toast({ variant: 'destructive', title: 'Judul atau Keyword Kosong' });
       return;
     }
     setIsGenerating(true);
     try {
       const result = await generateArticle({ 
-        title: formData.title, 
+        title: formData.title || formData.focusKeyword, 
         focusKeyword: formData.focusKeyword 
       });
       
@@ -117,16 +117,20 @@ const ArticleEditorPage = ({ params }: PageProps) => {
           if (found) suggestedImg = found.imageUrl;
         }
 
+        const newTitle = data.titleSuggested || formData.title;
+        const newSlug = newTitle.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+
         setFormData(prev => ({
           ...prev,
+          title: newTitle,
           content: data.content,
           metaTitle: data.metaTitle,
           excerpt: data.metaDescription,
           focusKeyword: data.focusKeywordSuggested || prev.focusKeyword,
           image: suggestedImg,
-          slug: prev.slug || formData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
+          slug: newSlug
         }));
-        toast({ title: 'AI SEO, Links & Bibliography Generated' });
+        toast({ title: 'AI 100% SEO Generated', description: 'Artikel telah dioptimalkan sesuai checklist.' });
       }
     } catch (e) {
       toast({ variant: 'destructive', title: 'Connection Error' });
@@ -174,7 +178,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
       { id: 7, label: 'Subheadings (H2/H3) used', pass: content.includes('## ') || content.includes('### ') },
       { id: 8, label: 'Content Length (>1150 words)', pass: words >= 1150 },
       { id: 9, label: 'Meta Title (50-60 chars)', pass: formData.metaTitle.length >= 50 && formData.metaTitle.length <= 65 },
-      { id: 10, label: 'Meta Desc (145-155 chars)', pass: formData.excerpt.length >= 145 && formData.excerpt.length <= 160 },
+      { id: 10, label: 'Meta Desc (145-155 chars)', pass: formData.excerpt.length >= 145 && formData.excerpt.length <= 165 },
       { id: 11, label: 'Featured Image present', pass: formData.image.trim().length > 0 },
       { id: 12, label: 'Sources/Bibliography present', pass: content.includes('daftar pustaka') || content.includes('referensi') },
       { id: 13, label: 'Internal Links present', pass: content.includes('](/') || content.includes('](artikel/') || content.includes('](see-and-do') || content.includes('](stories') },

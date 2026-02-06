@@ -3,7 +3,7 @@
 /**
  * @fileOverview Flow untuk menghasilkan artikel ilmiah populer dengan standar SEO Senior.
  * Dioptimalkan untuk mencapai skor SEO 100% secara otomatis sesuai checklist editor.
- * Menambahkan instruksi untuk menyertakan sumber ilmiah, daftar pustaka, serta link internal & eksternal.
+ * Menambahkan instruksi ketat untuk keyword placement, internal/external links, dan bibliografi.
  */
 
 import { ai } from '@/ai/genkit';
@@ -16,6 +16,7 @@ const GenerateArticleInputSchema = z.object({
 export type GenerateArticleInput = z.infer<typeof GenerateArticleInputSchema>;
 
 const GenerateArticleOutputSchema = z.object({
+  titleSuggested: z.string().describe('Judul artikel yang dioptimalkan dengan focus keyword'),
   content: z.string().describe('Konten artikel utama (minimal 1200 kata) dalam format Markdown'),
   metaTitle: z.string().describe('Judul untuk SEO (Meta Title) antara 50-60 karakter'),
   metaDescription: z.string().describe('Deskripsi singkat untuk SEO (Meta Description) antara 145-155 karakter'),
@@ -43,23 +44,32 @@ const prompt = ai.definePrompt({
   name: 'generateArticlePrompt',
   input: { schema: GenerateArticleInputSchema },
   output: { schema: GenerateArticleOutputSchema },
-  prompt: `Bertindaklah sebagai Senior Content Strategist dan Pakar SEO Internasional.
-Tugas Anda adalah menulis artikel otoritas tinggi yang dirancang untuk menduduki peringkat #1 Google untuk topik: "{{title}}".
+  prompt: `Bertindaklah sebagai Senior SEO Content Specialist dan Ahli Geografi Wonosobo.
+Tugas Anda adalah menulis artikel otoritas tinggi yang dirancang untuk mendapatkan skor SEO 100%.
 
-ANDA WAJIB MEMENUHI SEMUA KRITERIA BERIKUT:
-1. PANJANG KONTEN: Minimal 1200 kata. Berikan detail mendalam dan wawasan lokal yang unik tentang Wonosobo.
-2. OPTIMASI KATA KUNCI (Focus Keyword: {{focusKeyword}}):
-   - WAJIB masukkan "{{focusKeyword}}" di KALIMAT PERTAMA.
-   - Gunakan "{{focusKeyword}}" setidaknya 6-10 kali secara natural.
-   - Masukkan "{{focusKeyword}}" di setidaknya satu Sub-judul (H2 atau H3).
-3. SUMBER ILMIAH & REFERENSI: WAJIB sertakan sumber ilmiah, data statistik, atau referensi otoritas yang relevan di dalam artikel untuk meningkatkan kredibilitas.
-4. DAFTAR PUSTAKA: Di akhir artikel, buatlah bagian "Daftar Pustaka" dengan penulisan standar (format APA) yang mencantumkan sumber-sumber yang digunakan.
-5. INTERNAL LINKS: Masukkan setidaknya 2 link internal ke halaman lain (contoh format: [Lihat Destinasi](/see-and-do) atau [Jurnal Cerita](/stories)).
-6. EXTERNAL LINKS: Masukkan setidaknya 2 link external ke sumber otoritas (seperti Wikipedia, situs berita, atau jurnal ilmiah).
-7. METADATA: metaTitle (50-60 karakter) dan metaDescription (145-155 karakter) WAJIB mengandung "{{focusKeyword}}".
-8. GAMBAR: Pilih satu ID gambar paling relevan dari daftar: hero-sikunir, candi-arjuna, mie-ongklok, telaga-warna, kawah-sikidang, kebun-teh, waterfall, carica, coffee, cave, mountain-prau.
+TOPIK: "{{title}}"
+KATA KUNCI FOKUS: "{{focusKeyword}}"
 
-Tulis dalam Bahasa Indonesia yang profesional, akademis namun tetap populer, persuasif, dan sangat informatif.`,
+ANDA WAJIB MEMATUHI ATURAN KETAT BERIKUT UNTUK MENCAPAI SKOR 100%:
+1. JUDUL (titleSuggested): Harus mengandung "{{focusKeyword}}" dan menarik perhatian.
+2. PANJANG KONTEN: Wajib minimal 1200 kata. Berikan detail teknis, sejarah, dan panduan praktis yang mendalam.
+3. PENEMPATAN KATA KUNCI:
+   - Masukkan "{{focusKeyword}}" di KALIMAT PERTAMA pada paragraf pertama.
+   - Gunakan "{{focusKeyword}}" sebanyak 8-12 kali di seluruh badan artikel (kepadatan optimal).
+   - Masukkan "{{focusKeyword}}" di setidaknya satu Sub-judul H2 atau H3.
+4. STRUKTUR MARKDOWN:
+   - Gunakan H2 untuk poin utama dan H3 untuk sub-poin.
+   - Gunakan bullet points atau penomoran untuk memudahkan pembaca.
+5. INTERNAL LINKS: Masukkan setidaknya 2-3 link internal ke halaman berikut dalam format markdown: [Nama Halaman](/nama-halaman).
+   Contoh: [Rencana Perjalanan](/plan-your-trip), [Lihat Destinasi](/see-and-do), atau [Jurnal Cerita](/stories).
+6. EXTERNAL LINKS: Masukkan setidaknya 2 link eksternal ke situs otoritas (contoh: Wikipedia, situs resmi pariwisata Indonesia, atau jurnal geografi).
+7. REFERENSI & DAFTAR PUSTAKA: Di akhir artikel, buat bagian "Daftar Pustaka" dengan format standar ilmiah (APA/MLA) yang mencantumkan sumber riset Anda.
+8. METADATA: 
+   - metaTitle: 50-60 karakter, Wajib ada "{{focusKeyword}}".
+   - metaDescription: 145-155 karakter, Wajib ada "{{focusKeyword}}".
+9. GAMBAR: Pilih satu ID gambar paling relevan: hero-sikunir, candi-arjuna, mie-ongklok, telaga-warna, kawah-sikidang, kebun-teh, waterfall, carica, coffee, cave, mountain-prau.
+
+Tulis dalam Bahasa Indonesia yang berwibawa, informatif, dan menginspirasi pembaca untuk berkunjung ke Wonosobo.`,
 });
 
 const generateArticleFlow = ai.defineFlow(
