@@ -10,11 +10,12 @@ import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, Search } from 'lucide-react';
+import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, Search, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { getAuth, signOut } from 'firebase/auth';
 import { cn } from '@/lib/utils';
+import { deleteDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 
 type DashboardView = 'see-and-do' | 'stories' | 'packages' | 'gallery' | 'settings';
 
@@ -116,6 +117,12 @@ const AdminDashboard = () => {
     } catch (err) {
       toast({ variant: 'destructive', title: 'Error' });
     }
+  };
+
+  const handleDeleteGallery = (id: string) => {
+    if (!db) return;
+    deleteDocumentNonBlocking(doc(db, 'gallery', id));
+    toast({ title: 'Deleted', description: 'Image removed from gallery.' });
   };
 
   const getCategoryLabel = (cat: string) => {
@@ -260,9 +267,9 @@ const AdminDashboard = () => {
         ) : currentView === 'gallery' ? (
           <div className="space-y-8">
             <Card className="rounded-none border-2 shadow-xl bg-white p-8">
-              <div className="flex gap-8">
-                {/* Square Preview - Matches total height from top of URL to bottom of Button */}
-                <div className="w-[152px] h-[152px] bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0">
+              <div className="flex gap-8 items-start">
+                {/* Square Preview - Matches total height from top of URL input to bottom of Button */}
+                <div className="w-[152px] h-[152px] bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0 mt-6">
                   {galleryForm.url && galleryForm.url.trim() !== "" ? (
                     <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
                   ) : (
@@ -275,9 +282,7 @@ const AdminDashboard = () => {
 
                 <div className="flex-grow space-y-4">
                   <div className="space-y-1">
-                    <div className="flex justify-between">
-                      <Label className="text-[10px] font-black uppercase">Image URL</Label>
-                    </div>
+                    <Label className="text-[10px] font-black uppercase">Image URL</Label>
                     <Input 
                       value={galleryForm.url} 
                       onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 
@@ -311,6 +316,12 @@ const AdminDashboard = () => {
                       <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />
                     )}
                     <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
+                      <button 
+                        onClick={() => handleDeleteGallery(g.id)}
+                        className="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-none hover:bg-red-700 transition-colors"
+                      >
+                        <X size={12} />
+                      </button>
                       <p className="text-[9px] font-black text-white uppercase tracking-tighter leading-tight mb-2">{g.caption}</p>
                       <div className="text-[8px] font-bold text-primary uppercase">Order: {g.order}</div>
                     </div>

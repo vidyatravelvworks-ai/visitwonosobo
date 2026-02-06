@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -31,7 +30,13 @@ export default function Home() {
   const { data: config, isLoading: isConfigLoading } = useDoc(configRef);
 
   const tourPackages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticTripPackages.slice(0, 3);
-  const latestStories = (dbStories && dbStories.length > 0) ? dbStories : staticArticles.filter(a => a.type === 'story').slice(0, 3);
+  
+  const latestStories = React.useMemo(() => {
+    if (!dbStories || dbStories.length === 0) {
+      return staticArticles.filter(a => a.type === 'story').slice(0, 3);
+    }
+    return dbStories;
+  }, [dbStories]);
 
   const configHomeHero = config?.heroImages?.home;
   const placeholderHomeHero = PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl || 'https://picsum.photos/seed/wonosobo-home/1200/800';
@@ -41,27 +46,27 @@ export default function Home() {
     { 
       title: "Fisik & Aklimatisasi", 
       icon: <Activity className="h-6 w-6" />, 
-      content: "Dieng berada di ketinggian >2.000 mdpl. Udara tipis dapat memicu Altitude Sickness. Istirahat cukup and hindari aktivitas berat di jam pertama." 
+      content: "Dieng berada di ketinggian >2.000 mdpl. Udara tipis dapat memicu Altitude Sickness. Istirahat cukup dan hindari aktivitas berat di jam pertama." 
     },
     { 
       title: "Etika & Budaya", 
       icon: <ShieldAlert className="h-6 w-6" />, 
-      content: "Gunakan masker di kawah untuk hindari gas belerang. Hormati situs candi and jangan menyentuh kepala anak rambut gimbal yang sakral." 
+      content: "Gunakan masker di kawah untuk hindari gas belerang. Hormati situs candi dan jangan menyentuh kepala anak rambut gimbal yang sakral." 
     },
     { 
       title: "Persiapan Kendaraan", 
       icon: <CarFront className="h-6 w-6" />, 
-      content: "Jalur Dieng memiliki tanjakan ekstrem 15%. Pastikan rem and kopling prima. Driver lokal kami ahli dalam teknik engine brake di medan ini." 
+      content: "Jalur Dieng memiliki tanjakan ekstrem 15%. Pastikan rem dan kopling prima. Driver lokal kami ahli dalam teknik engine brake di medan ini." 
     },
     { 
       title: "Perlengkapan Khusus", 
       icon: <Footprints className="h-6 w-6" />, 
-      content: "Bawa obat anti-mabuk jalanan berkelok, sepatu anti-slip untuk trekking Sikunir yang licin, and uang tunai untuk transaksi di pelosok." 
+      content: "Bawa obat anti-mabuk jalanan berkelok, sepatu anti-slip untuk trekking Sikunir yang licin, dan uang tunai untuk transaksi di pelosok." 
     },
     { 
       title: "Manajemen Waktu", 
       icon: <Clock className="h-6 w-6" />, 
-      content: "Weekend sering macet total. Berangkatlah lebih awal (misal 02.30 pagi untuk Sikunir) guna menghindari kerumunan and kemacetan." 
+      content: "Weekend sering macet total. Berangkatlah lebih awal (misal 02.30 pagi untuk Sikunir) guna menghindari kerumunan dan kemacetan." 
     },
     { 
       title: "Cuaca & Suhu Ekstrem", 

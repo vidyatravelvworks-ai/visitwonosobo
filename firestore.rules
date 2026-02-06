@@ -13,7 +13,6 @@ service cloud.firestore {
     }
 
     // Aturan untuk Artikel (Blog & Destinasi)
-    // Diizinkan untuk dibaca secara publik (get & list)
     match /articles/{articleId} {
       allow read: if true;
       allow write: if isAdmin();
@@ -44,8 +43,7 @@ service cloud.firestore {
       allow write: if false;
     }
     
-    // Deployment trigger: Memperbarui aturan akses publik untuk kueri list di halaman Stories.
-    // Terakhir diperbarui: 2026-02-07 15:30 UTC
-    // Memastikan izin baca publik (get & list) aktif sepenuhnya untuk pengguna anonim.
+    // Deployment trigger: Memperbarui izin baca publik untuk koleksi konten.
+    // Terakhir diperbarui: 2026-02-07 16:30 UTC
   }
 }

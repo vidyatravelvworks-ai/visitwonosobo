@@ -32,7 +32,7 @@ const PlanYourTripPage = () => {
 
   const packages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticPackages;
 
-  const defaultGalleryItems = Array.from({ length: 12 }).map((_, i) => ({
+  const defaultGalleryItems = Array.from({ length: 8 }).map((_, i) => ({
     id: `dummy-${i}`,
     url: `https://picsum.photos/seed/trip-${i + 20}/800/800`,
     caption: `Experience Wonosobo ${i + 1}`,
@@ -40,12 +40,12 @@ const PlanYourTripPage = () => {
   }));
 
   const rawGalleryItems = (dbGalleryItems && dbGalleryItems.length > 0) 
-    ? [...dbGalleryItems, ...defaultGalleryItems].slice(0, 20)
+    ? [...dbGalleryItems, ...defaultGalleryItems]
     : defaultGalleryItems;
 
   // CRITICAL: Filter out any items with empty or null URLs to prevent src="" errors
   const galleryItems = React.useMemo(() => {
-    return rawGalleryItems.filter(item => item.url && item.url.trim() !== "");
+    return rawGalleryItems.filter(item => item && item.url && item.url.trim() !== "");
   }, [rawGalleryItems]);
 
   return (
@@ -118,7 +118,9 @@ const PlanYourTripPage = () => {
                   <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px] shrink-0 pr-4">
                     {galleryItems.map((item, idx) => (
                       <div key={item.id} className="relative overflow-hidden group border-2 border-black/5 shadow-md w-[300px] md:w-[400px] h-full">
-                        <Image src={item.url} alt={item.caption || "Trip Photo"} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                        {item.url && (
+                          <Image src={item.url} alt={item.caption || "Trip Photo"} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                        )}
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6"><p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p></div>
                       </div>
                     ))}
@@ -126,7 +128,9 @@ const PlanYourTripPage = () => {
                   <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px] shrink-0 pr-4">
                     {galleryItems.map((item, idx) => (
                       <div key={`dup-${item.id}`} className="relative overflow-hidden group border-2 border-black/5 shadow-md w-[300px] md:w-[400px] h-full">
-                        <Image src={item.url} alt={item.caption || "Trip Photo"} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                        {item.url && (
+                          <Image src={item.url} alt={item.caption || "Trip Photo"} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                        )}
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6"><p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p></div>
                       </div>
                     ))}
