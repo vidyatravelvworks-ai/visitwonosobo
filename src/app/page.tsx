@@ -233,6 +233,7 @@ export default function Home() {
         </div>
         <div className="container mx-auto relative z-10">
           <h2 className="text-5xl md:text-8xl font-black text-white uppercase leading-none tracking-tighter mb-8">Ready to <span className="text-primary">Explore?</span></h2>
+          <p className="text-white/60 font-bold uppercase tracking-widest text-xs mb-12">Bergabunglah dengan petualangan tak terlupakan di jantung Pulau Jawa.</p>
           <Button size="lg" className="bg-primary hover:bg-white hover:text-black text-white font-black uppercase px-16 py-10 rounded-none text-sm tracking-widest gap-3" asChild>
             <a href={whatsappLink} target="_blank"><MessageCircle size={20} /> Hubungi Kami</a>
           </Button>
