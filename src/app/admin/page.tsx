@@ -229,38 +229,40 @@ const AdminDashboard = () => {
                 <h3 className="text-lg font-black uppercase tracking-tight">Gallery Quick Add</h3>
                 <p className="text-[10px] font-bold uppercase text-muted-foreground">Add new photos to the trip gallery instantly.</p>
               </div>
-              <div className="flex flex-col space-y-4">
-                <div className="space-y-1">
-                  <Label className="text-[10px] font-black uppercase">Image URL</Label>
-                  <div className="flex gap-4 items-stretch">
-                    <div className="w-[136px] h-[136px] bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0">
-                      {galleryForm.url && galleryForm.url.trim() !== "" ? (
-                        <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
-                      ) : (
-                        <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2 px-2 text-center">
-                          <ImageIcon size={24} className="opacity-20" />
-                          <span className="text-[8px]">No Preview</span>
-                        </div>
-                      )}
+              <div className="flex gap-6 items-end">
+                {/* Preview Box - Square, aligned vertically from URL input top to Save button bottom */}
+                <div className="w-36 h-36 bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0">
+                  {galleryForm.url && galleryForm.url.trim() !== "" ? (
+                    <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
+                  ) : (
+                    <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2 px-2 text-center">
+                      <ImageIcon size={20} className="opacity-20" />
+                      <span className="text-[8px]">No Preview</span>
                     </div>
-                    <div className="flex-grow flex flex-col justify-between">
-                      <Input 
-                        value={galleryForm.url} 
-                        onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 
-                        className="rounded-none border-2 h-10 text-xs" 
-                        placeholder="https://..."
-                      />
-                      <Input 
-                        value={galleryForm.caption} 
-                        onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
-                        className="rounded-none border-2 h-10 text-xs" 
-                        placeholder="Description..."
-                      />
-                      <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-10 font-black uppercase text-[10px] tracking-widest gap-2">
-                        <Save size={14} /> Save Image
-                      </Button>
-                    </div>
+                  )}
+                </div>
+
+                <div className="flex-grow space-y-3">
+                  <div className="space-y-1">
+                    <Label className="text-[10px] font-black uppercase">Image URL</Label>
+                    <Input 
+                      value={galleryForm.url} 
+                      onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 
+                      className="rounded-none border-2 h-10 text-xs" 
+                      placeholder="https://..."
+                    />
                   </div>
+                  <div className="space-y-1">
+                    <Input 
+                      value={galleryForm.caption} 
+                      onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
+                      className="rounded-none border-2 h-10 text-xs" 
+                      placeholder="Image Description / Caption..."
+                    />
+                  </div>
+                  <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-10 font-black uppercase text-[10px] tracking-widest gap-2">
+                    <Save size={14} /> Save Image
+                  </Button>
                 </div>
               </div>
             </Card>
@@ -272,7 +274,9 @@ const AdminDashboard = () => {
                  <div className="col-span-full py-20 text-center text-[10px] font-black uppercase text-muted-foreground">No images in gallery yet.</div>
                ) : allGallery?.map(g => (
                  <div key={g.id} className="relative group aspect-square bg-gray-100 border overflow-hidden">
-                    {g.url && g.url.trim() !== "" && <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />}
+                    {g.url && g.url.trim() !== "" && (
+                      <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />
+                    )}
                     <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
                       <p className="text-[9px] font-black text-white uppercase tracking-tighter leading-tight mb-2">{g.caption}</p>
                       <div className="text-[8px] font-bold text-primary uppercase">Order: {g.order}</div>

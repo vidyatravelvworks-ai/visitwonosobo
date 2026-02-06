@@ -9,7 +9,7 @@ import {
   Clock, Loader2, Grid, MapPin, 
   CheckCircle2, XCircle, CarFront, ArrowRight,
   Activity, ShieldAlert, ThermometerSnowflake, Footprints,
-  MessageCircle, Home as HomeIcon, Settings2
+  MessageCircle
 } from 'lucide-react';
 import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
@@ -44,40 +44,10 @@ const PlanYourTripPage = () => {
     ? [...dbGalleryItems, ...defaultGalleryItems].slice(0, 20)
     : defaultGalleryItems;
 
-  const galleryItems = rawGalleryItems.filter(item => item.url && item.url.trim() !== "");
-
-  const essentialPoints = [
-    { 
-      title: "Fisik & Aklimatisasi", 
-      icon: <Activity className="h-6 w-6" />, 
-      content: "Dieng berada di ketinggian >2.000 mdpl. Udara tipis dapat memicu Altitude Sickness. Istirahat cukup dan hindari aktivitas berat di jam pertama." 
-    },
-    { 
-      title: "Etika & Budaya", 
-      icon: <ShieldAlert className="h-6 w-6" />, 
-      content: "Gunakan masker di kawah untuk hindari gas belerang. Hormati situs candi dan jangan menyentuh kepala anak rambut gimbal yang sakral." 
-    },
-    { 
-      title: "Persiapan Kendaraan", 
-      icon: <CarFront className="h-6 w-6" />, 
-      content: "Jalur Dieng memiliki tanjakan ekstrem 15%. Pastikan rem dan kopling prima. Driver lokal kami ahli dalam teknik engine brake di medan ini." 
-    },
-    { 
-      title: "Perlengkapan Khusus", 
-      icon: <Footprints className="h-6 w-6" />, 
-      content: "Bawa obat anti-mabuk jalanan berkelok, sepatu anti-slip untuk trekking Sikunir yang licin, dan uang tunai untuk transaksi di pelosok." 
-    },
-    { 
-      title: "Manajemen Waktu", 
-      icon: <Clock className="h-6 w-6" />, 
-      content: "Weekend sering macet total. Berangkatlah lebih awal (misal 02.30 pagi untuk Sikunir) guna menghindari kerumunan dan kemacetan." 
-    },
-    { 
-      title: "Cuaca & Suhu Ekstrem", 
-      icon: <ThermometerSnowflake className="h-6 w-6" />, 
-      content: "Suhu bisa -5°C (Embun Upas) pada Juli-Sept. Waspadai kabut tebal mendadak; keahlian driver lokal sangat krusial di kondisi ini." 
-    }
-  ];
+  // CRITICAL: Ensure we only map items with a non-empty URL to prevent src="" error in Image component
+  const galleryItems = React.useMemo(() => {
+    return rawGalleryItems.filter(item => item.url && item.url.trim() !== "");
+  }, [rawGalleryItems]);
 
   return (
     <div className="bg-white">
@@ -148,7 +118,7 @@ const PlanYourTripPage = () => {
                 <div className="flex animate-marquee hover:[animation-play-state:paused] whitespace-nowrap">
                   <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px] shrink-0 pr-4">
                     {galleryItems.map((item, idx) => (
-                      <div key={item.id} className="relative overflow-hidden group border-2 border-black/5 shadow-md w-[300px] md:w-[400px]">
+                      <div key={item.id} className="relative overflow-hidden group border-2 border-black/5 shadow-md w-[300px] md:w-[400px] h-full">
                         <Image src={item.url} alt={item.caption || "Trip Photo"} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6"><p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p></div>
                       </div>
@@ -156,7 +126,7 @@ const PlanYourTripPage = () => {
                   </div>
                   <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px] shrink-0 pr-4">
                     {galleryItems.map((item, idx) => (
-                      <div key={`dup-${item.id}`} className="relative overflow-hidden group border-2 border-black/5 shadow-md w-[300px] md:w-[400px]">
+                      <div key={`dup-${item.id}`} className="relative overflow-hidden group border-2 border-black/5 shadow-md w-[300px] md:w-[400px] h-full">
                         <Image src={item.url} alt={item.caption || "Trip Photo"} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6"><p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p></div>
                       </div>
