@@ -21,11 +21,22 @@ import { articles as staticArticles } from '@/data/articles';
 const StoriesPage = () => {
   const db = useFirestore();
   
-  const articlesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story')) : null, [db]);
-  const latestStoriesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story'), orderBy('updatedAt', 'desc'), limit(4)) : null, [db]);
+  // Query untuk semua artikel bertipe story
+  const articlesQ = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'articles'), where('type', '==', 'story'));
+  }, [db]);
+
+  // Query untuk artikel terbaru (opsional, bisa fallback ke list utama jika gagal)
+  const latestStoriesQ = useMemoFirebase(() => {
+    if (!db) return null;
+    // Gunakan query yang lebih sederhana jika orderBy menyebabkan masalah index saat awal
+    return query(collection(db, 'articles'), where('type', '==', 'story'), limit(4));
+  }, [db]);
+
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
 
-  const { data: dbStories, isLoading: isStoriesLoading } = useCollection(articlesQ);
+  const { data: dbStories, isLoading: isStoriesLoading, error: storiesError } = useCollection(articlesQ);
   const { data: latestStories, isLoading: isLatestLoading } = useCollection(latestStoriesQ);
   const { data: config } = useDoc(configRef);
   
@@ -53,7 +64,7 @@ const StoriesPage = () => {
     return pairs;
   };
 
-  if (isStoriesLoading && isLatestLoading) {
+  if (isStoriesLoading && !storiesError) {
     return (
       <div className="h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center gap-4">
