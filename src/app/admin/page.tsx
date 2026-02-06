@@ -271,29 +271,42 @@ const AdminDashboard = () => {
 
       <main className="flex-grow ml-64 p-12">
         {currentView === 'display' ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl pb-20">
-            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
+          <div className="grid grid-cols-1 gap-8 max-w-6xl pb-20">
+            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-8">
               <div className="border-b pb-4">
                 <h3 className="text-lg font-black uppercase tracking-tight">Main Hero Configuration</h3>
               </div>
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[
                   { label: 'Home Hero', key: 'heroHome', value: configForm.heroHome },
                   { label: 'See & Do Hero', key: 'heroSeeDo', value: configForm.heroSeeDo },
                   { label: 'Stories Hero', key: 'heroStories', value: configForm.heroStories }
                 ].map((field) => (
-                  <div key={field.key} className="space-y-1">
+                  <div key={field.key} className="flex flex-col gap-3">
                     <Label className="text-[10px] font-black uppercase">{field.label}</Label>
-                    <Input value={field.value} onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} className="rounded-none border-2 h-10 text-xs" />
+                    <div className="aspect-video w-full bg-secondary/20 border-2 overflow-hidden shrink-0 flex items-center justify-center relative">
+                      {field.value ? (
+                        <img src={field.value} className="w-full h-full object-cover" alt={field.label} />
+                      ) : (
+                        <span className="text-[8px] font-black text-muted-foreground uppercase">No Image Preview</span>
+                      )}
+                    </div>
+                    <Input 
+                      value={field.value} 
+                      onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} 
+                      className="rounded-none border-2 h-10 text-[10px] font-mono" 
+                      placeholder="Paste image URL here..."
+                    />
                   </div>
                 ))}
               </div>
             </Card>
+
             <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
                <div className="border-b pb-4">
                 <h3 className="text-lg font-black uppercase tracking-tight">Category Images</h3>
               </div>
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
                   { label: 'Nature & Adventure', key: 'catNature', value: configForm.catNature },
                   { label: 'Heritage & Culture', key: 'catHeritage', value: configForm.catHeritage },
@@ -305,12 +318,12 @@ const AdminDashboard = () => {
                 ].map((field) => (
                   <div key={field.key} className="space-y-1">
                     <Label className="text-[10px] font-black uppercase">{field.label}</Label>
-                    <Input value={field.value} onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} className="rounded-none border-2 h-10 text-xs" />
+                    <Input value={field.value} onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} className="rounded-none border-2 h-10 text-[10px] font-mono" />
                   </div>
                 ))}
               </div>
             </Card>
-            <div className="lg:col-span-2">
+            <div className="flex justify-start">
               <Button onClick={handleSaveConfig} disabled={isSavingConfig} className="bg-primary text-white rounded-none h-14 px-12 font-black uppercase text-[10px] tracking-widest gap-2">
                 {isSavingConfig ? <Loader2 className="animate-spin h-4 w-4" /> : <Save size={18} />} Save All Settings
               </Button>

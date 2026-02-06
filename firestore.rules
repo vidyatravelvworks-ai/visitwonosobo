@@ -39,7 +39,7 @@ service cloud.firestore {
       allow write: if false;
     }
     
-    // Deployment trigger: Memastikan sinkronisasi akses publik artikel.
-    // Terakhir diperbarui: 2026-02-10 14:00 UTC
+    // Deployment trigger: Memperbarui akses dashboard display dan pratinjau hero.
+    // Terakhir diperbarui: 2026-02-11 09:00 UTC
   }
 }
