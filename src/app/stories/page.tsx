@@ -27,10 +27,9 @@ const StoriesPage = () => {
     return query(collection(db, 'articles'), where('type', '==', 'story'));
   }, [db]);
 
-  // Query untuk artikel terbaru (opsional, bisa fallback ke list utama jika gagal)
+  // Query untuk artikel terbaru
   const latestStoriesQ = useMemoFirebase(() => {
     if (!db) return null;
-    // Gunakan query yang lebih sederhana jika orderBy menyebabkan masalah index saat awal
     return query(collection(db, 'articles'), where('type', '==', 'story'), limit(4));
   }, [db]);
 
@@ -93,7 +92,7 @@ const StoriesPage = () => {
             <h1 className="text-6xl md:text-[120px] font-black uppercase tracking-tighter text-white leading-[0.85]">
               Stories <br /> <span className="text-primary italic">of Java</span>
             </h1>
-            <p className="text-white/80 text-sm md:text-lg font-medium max-w-2xl mx-auto leading-relaxed mt-10">
+            <p className="text-white/80 text-xs md:text-sm font-medium max-w-2xl mx-auto leading-relaxed mt-10">
               Menyelami kedalaman budaya, sejarah, dan bentang alam Wonosobo melalui kacamata warga lokal.
             </p>
           </div>
