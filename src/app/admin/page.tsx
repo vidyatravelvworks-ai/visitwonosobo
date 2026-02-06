@@ -28,7 +28,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-type DashboardView = 'see-and-do' | 'stories' | 'packages' | 'gallery' | 'settings';
+type DashboardView = 'see-and-do' | 'stories' | 'packages' | 'gallery' | 'display';
 
 const AdminDashboard = () => {
   const { user, isUserLoading } = useUser();
@@ -197,7 +197,7 @@ const AdminDashboard = () => {
             { id: 'stories', icon: BookOpen, label: 'Stories' },
             { id: 'packages', icon: Package, label: 'Packages' },
             { id: 'gallery', icon: ImageIcon, label: 'Gallery' },
-            { id: 'settings', icon: Settings, label: 'Settings' }
+            { id: 'display', icon: Settings, label: 'Display' }
           ].map((item) => (
             <Button 
               key={item.id} 
@@ -215,7 +215,7 @@ const AdminDashboard = () => {
       </aside>
 
       <main className="flex-grow ml-64 p-12">
-        {currentView === 'settings' ? (
+        {currentView === 'display' ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl pb-20">
             <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
               <div className="border-b pb-4">
