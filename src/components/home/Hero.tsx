@@ -49,14 +49,14 @@ const Hero = ({ config: externalConfig, isLoading: externalLoading }: HeroProps)
         </div>
       )}
 
-      <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10 pt-32">
+      <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10 pt-20">
         <div className="max-w-5xl mx-auto space-y-8">
           <h2 className="text-white text-xs md:text-sm font-bold uppercase tracking-[0.4em] animate-in slide-in-from-top duration-700">Welcome to Wonosobo</h2>
           <h1 className="text-5xl md:text-9xl font-black text-white uppercase leading-none tracking-tighter">
             The Soul <br /> <span className="text-white underline decoration-primary decoration-[12px] underline-offset-[16px]">of Java</span>
           </h1>
           
-          <p className="text-white/90 text-sm md:text-lg max-w-2xl mx-auto leading-relaxed mt-10 animate-in fade-in slide-in-from-bottom duration-1000 delay-300">
+          <p className="text-white/90 text-[10px] md:text-xs max-w-xl mx-auto leading-relaxed mt-10 animate-in fade-in slide-in-from-bottom duration-1000 delay-300">
             Eksplorasi keajaiban alam, warisan budaya, dan cerita otentik Wonosobo bersama pemandu lokal terbaik.
           </p>
 
@@ -71,7 +71,7 @@ const Hero = ({ config: externalConfig, isLoading: externalLoading }: HeroProps)
         </div>
       </div>
 
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white animate-bounce hidden md:block opacity-50">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white animate-bounce hidden md:block opacity-50">
         <ChevronDown className="h-8 w-8" />
       </div>
     </section>
