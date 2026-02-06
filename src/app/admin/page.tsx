@@ -206,7 +206,12 @@ const AdminDashboard = () => {
                   key={item.id} 
                   variant="ghost" 
                   onClick={() => setCurrentView(item.id as DashboardView)} 
-                  className={cn("w-full justify-start rounded-none h-11 gap-3 px-4 transition-all", currentView === item.id ? "bg-primary text-white" : "hover:bg-white/10")}
+                  className={cn(
+                    "w-full justify-start rounded-none h-11 gap-3 px-4 transition-all", 
+                    currentView === item.id 
+                      ? "bg-primary text-white" 
+                      : "hover:bg-white/10 hover:text-white"
+                  )}
                 >
                   <item.icon size={16} /> <span className="text-[10px] font-black uppercase tracking-widest">{item.label}</span>
                 </Button>
@@ -219,7 +224,12 @@ const AdminDashboard = () => {
             <Button 
               variant="ghost" 
               onClick={() => setCurrentView('gallery')} 
-              className={cn("w-full justify-start rounded-none h-11 gap-3 px-4 transition-all", currentView === 'gallery' ? "bg-primary text-white" : "hover:bg-white/10")}
+              className={cn(
+                "w-full justify-start rounded-none h-11 gap-3 px-4 transition-all", 
+                currentView === 'gallery' 
+                  ? "bg-primary text-white" 
+                  : "hover:bg-white/10 hover:text-white"
+              )}
             >
               <ImageIcon size={16} /> <span className="text-[10px] font-black uppercase tracking-widest">Manage Assets</span>
             </Button>
@@ -230,7 +240,12 @@ const AdminDashboard = () => {
             <Button 
               variant="ghost" 
               onClick={() => setCurrentView('display')} 
-              className={cn("w-full justify-start rounded-none h-11 gap-3 px-4 transition-all", currentView === 'display' ? "bg-primary text-white" : "hover:bg-white/10")}
+              className={cn(
+                "w-full justify-start rounded-none h-11 gap-3 px-4 transition-all", 
+                currentView === 'display' 
+                  ? "bg-primary text-white" 
+                  : "hover:bg-white/10 hover:text-white"
+              )}
             >
               <Settings size={16} /> <span className="text-[10px] font-black uppercase tracking-widest">Site Config</span>
             </Button>
