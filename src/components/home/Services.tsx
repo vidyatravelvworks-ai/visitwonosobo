@@ -48,6 +48,9 @@ const Services = () => {
             <h3 className="text-primary font-bold uppercase tracking-widest mb-4">See & Do</h3>
             <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Discover New Experiences</h2>
           </div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-primary pl-4 max-w-xs mb-2 leading-relaxed">
+            Jelajahi keajaiban tersembunyi Wonosobo melalui aktivitas yang dirancang untuk membangkitkan jiwa petualang Anda.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
