@@ -88,7 +88,7 @@ const PlanYourTripPage = () => {
         </div>
         <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10 text-center">
           <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-4">Plan Your Journey</h1>
-          <p className="text-white/80 font-medium text-xs mt-4 max-w-lg mx-auto">
+          <p className="text-white/80 font-medium text-[10px] md:text-xs mt-4 max-w-lg mx-auto">
             Pastikan perjalanan Anda aman dan berkesan dengan memilih layanan dan paket yang tepat sesuai kebutuhan Anda.
           </p>
         </div>
@@ -150,64 +150,66 @@ const PlanYourTripPage = () => {
               <div className="relative overflow-hidden">
                 <div className="flex animate-marquee hover:[animation-play-state:paused] whitespace-nowrap">
                   {/* Container 1 */}
-                  <div className="grid grid-rows-3 grid-flow-col gap-3 h-[600px] md:h-[800px] shrink-0 pr-3">
-                    {galleryItems.map((item, idx) => (
-                      <div 
-                        key={item.id} 
-                        className={cn(
-                          "relative overflow-hidden group border-2 border-black shadow-md bg-secondary/10",
-                          idx % 7 === 0 ? "row-span-2 w-[300px] md:w-[450px]" : 
-                          idx % 7 === 1 ? "row-span-1 w-[200px] md:w-[300px]" : 
-                          idx % 7 === 2 ? "row-span-1 w-[250px] md:w-[350px]" : 
-                          idx % 7 === 3 ? "row-span-2 w-[350px] md:w-[500px]" : 
-                          idx % 7 === 4 ? "row-span-1 w-[280px] md:w-[400px]" :
-                          idx % 7 === 5 ? "row-span-1 w-[220px] md:w-[320px]" :
-                          "row-span-1 w-[300px] md:w-[450px]"
-                        )}
-                      >
-                        {item.url && (
-                          <Image 
-                            src={item.url} 
-                            alt={item.caption || "Trip Photo"} 
-                            fill 
-                            className="object-cover transition-transform duration-700 group-hover:scale-110" 
-                          />
-                        )}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                          <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
+                  <div className="grid grid-rows-3 grid-flow-col gap-1 h-[600px] md:h-[800px] shrink-0">
+                    {galleryItems.map((item, idx) => {
+                      const pattern = idx % 7;
+                      let classNames = "relative overflow-hidden group bg-secondary/10";
+                      
+                      if (pattern === 0) classNames += " row-span-2 w-[300px] md:w-[450px]";
+                      else if (pattern === 1) classNames += " row-span-1 w-[300px] md:w-[450px]";
+                      else if (pattern === 2) classNames += " row-span-1 w-[250px] md:w-[350px]";
+                      else if (pattern === 3) classNames += " row-span-2 w-[250px] md:w-[350px]";
+                      else if (pattern === 4) classNames += " row-span-1 w-[280px] md:w-[400px]";
+                      else if (pattern === 5) classNames += " row-span-1 w-[280px] md:w-[400px]";
+                      else classNames += " row-span-1 w-[280px] md:w-[400px]";
+
+                      return (
+                        <div key={item.id} className={classNames}>
+                          {item.url && (
+                            <Image 
+                              src={item.url} 
+                              alt={item.caption || "Trip Photo"} 
+                              fill 
+                              className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                            />
+                          )}
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                            <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
-                  {/* Duplicate Container for infinite loop - Must match Container 1 exactly */}
-                  <div className="grid grid-rows-3 grid-flow-col gap-3 h-[600px] md:h-[800px] shrink-0 pr-3" aria-hidden="true">
-                    {galleryItems.map((item, idx) => (
-                      <div 
-                        key={`dup-${item.id}`} 
-                        className={cn(
-                          "relative overflow-hidden group border-2 border-black shadow-md bg-secondary/10",
-                          idx % 7 === 0 ? "row-span-2 w-[300px] md:w-[450px]" : 
-                          idx % 7 === 1 ? "row-span-1 w-[200px] md:w-[300px]" : 
-                          idx % 7 === 2 ? "row-span-1 w-[250px] md:w-[350px]" : 
-                          idx % 7 === 3 ? "row-span-2 w-[350px] md:w-[500px]" : 
-                          idx % 7 === 4 ? "row-span-1 w-[280px] md:w-[400px]" :
-                          idx % 7 === 5 ? "row-span-1 w-[220px] md:w-[320px]" :
-                          "row-span-1 w-[300px] md:w-[450px]"
-                        )}
-                      >
-                        {item.url && (
-                          <Image 
-                            src={item.url} 
-                            alt={item.caption || "Trip Photo"} 
-                            fill 
-                            className="object-cover transition-transform duration-700 group-hover:scale-110" 
-                          />
-                        )}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                          <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
+                  {/* Duplicate Container for infinite loop */}
+                  <div className="grid grid-rows-3 grid-flow-col gap-1 h-[600px] md:h-[800px] shrink-0 ml-1" aria-hidden="true">
+                    {galleryItems.map((item, idx) => {
+                      const pattern = idx % 7;
+                      let classNames = "relative overflow-hidden group bg-secondary/10";
+                      
+                      if (pattern === 0) classNames += " row-span-2 w-[300px] md:w-[450px]";
+                      else if (pattern === 1) classNames += " row-span-1 w-[300px] md:w-[450px]";
+                      else if (pattern === 2) classNames += " row-span-1 w-[250px] md:w-[350px]";
+                      else if (pattern === 3) classNames += " row-span-2 w-[250px] md:w-[350px]";
+                      else if (pattern === 4) classNames += " row-span-1 w-[280px] md:w-[400px]";
+                      else if (pattern === 5) classNames += " row-span-1 w-[280px] md:w-[400px]";
+                      else classNames += " row-span-1 w-[280px] md:w-[400px]";
+
+                      return (
+                        <div key={`dup-${item.id}`} className={classNames}>
+                          {item.url && (
+                            <Image 
+                              src={item.url} 
+                              alt={item.caption || "Trip Photo"} 
+                              fill 
+                              className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                            />
+                          )}
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                            <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
