@@ -5,8 +5,9 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '@/firebase';
+import { useAuth, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -23,6 +24,10 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const auth = useAuth();
   const router = useRouter();
+  
+  const db = useFirestore();
+  const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
+  const { data: config } = useDoc(configRef);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,15 +48,17 @@ const LoginPage = () => {
     }
   };
 
-  const bgImage = PlaceHolderImages.find(img => img.id === 'mountain-prau');
+  const dynamicBg = config?.loginBackground;
+  const placeholderBg = PlaceHolderImages.find(img => img.id === 'mountain-prau')?.imageUrl;
+  const bgUrl = (dynamicBg && dynamicBg.trim() !== '') ? dynamicBg : placeholderBg;
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center px-6">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
-        {bgImage && (
+        {bgUrl && (
           <Image
-            src={bgImage.imageUrl}
+            src={bgUrl}
             alt="Wonosobo Mountains"
             fill
             className="object-cover"

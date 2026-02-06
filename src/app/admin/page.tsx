@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -66,7 +67,8 @@ const AdminDashboard = () => {
     catHistory: '',
     catPeople: '',
     catGeo: '',
-    catTips: ''
+    catTips: '',
+    loginBackground: ''
   });
 
   useEffect(() => {
@@ -81,7 +83,8 @@ const AdminDashboard = () => {
         catHistory: websiteConfig.categoryImages?.['History & Heritage'] || '',
         catPeople: websiteConfig.categoryImages?.['People & Culture'] || '',
         catGeo: websiteConfig.categoryImages?.['Geography & Landscape'] || '',
-        catTips: websiteConfig.categoryImages?.['Travel Tips'] || ''
+        catTips: websiteConfig.categoryImages?.['Travel Tips'] || '',
+        loginBackground: websiteConfig.loginBackground || ''
       });
     }
   }, [websiteConfig]);
@@ -105,6 +108,7 @@ const AdminDashboard = () => {
           'Geography & Landscape': configForm.catGeo,
           'Travel Tips': configForm.catTips
         },
+        loginBackground: configForm.loginBackground,
         updatedAt: serverTimestamp()
       }, { merge: true });
       toast({ title: 'Success', description: 'Website configuration updated.' });
@@ -292,12 +296,34 @@ const AdminDashboard = () => {
                     </div>
                     <Input 
                       value={field.value} 
-                      onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} 
+                      onChange={e => setConfigForm({...configForm, [field.key as keyof typeof configForm]: e.target.value})} 
                       className="rounded-none border-2 h-10 text-[10px] font-mono" 
                       placeholder="Paste image URL here..."
                     />
                   </div>
                 ))}
+              </div>
+            </Card>
+
+            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-8">
+              <div className="border-b pb-4">
+                <h3 className="text-lg font-black uppercase tracking-tight text-primary">Login Page Background</h3>
+              </div>
+              <div className="flex flex-col gap-3">
+                <Label className="text-[10px] font-black uppercase">Background Image URL</Label>
+                <div className="aspect-video w-full max-w-md bg-secondary/20 border-2 overflow-hidden flex items-center justify-center relative">
+                  {configForm.loginBackground ? (
+                    <img src={configForm.loginBackground} className="w-full h-full object-cover" alt="Login Background" />
+                  ) : (
+                    <span className="text-[8px] font-black text-muted-foreground uppercase">No Image Preview</span>
+                  )}
+                </div>
+                <Input 
+                  value={configForm.loginBackground} 
+                  onChange={e => setConfigForm({...configForm, loginBackground: e.target.value})} 
+                  className="rounded-none border-2 h-10 text-[10px] font-mono" 
+                  placeholder="Paste login background image URL here..."
+                />
               </div>
             </Card>
 
@@ -322,7 +348,7 @@ const AdminDashboard = () => {
                     </div>
                     <Input 
                       value={field.value} 
-                      onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} 
+                      onChange={e => setConfigForm({...configForm, [field.key as keyof typeof configForm]: e.target.value})} 
                       className="rounded-none border-2 h-10 text-[10px] font-mono" 
                       placeholder="Image URL"
                     />
@@ -353,7 +379,7 @@ const AdminDashboard = () => {
                     </div>
                     <Input 
                       value={field.value} 
-                      onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} 
+                      onChange={e => setConfigForm({...configForm, [field.key as keyof typeof configForm]: e.target.value})} 
                       className="rounded-none border-2 h-10 text-[10px] font-mono" 
                       placeholder="Image URL"
                     />

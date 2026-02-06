@@ -51,6 +51,7 @@
           "type": "object",
           "additionalProperties": { "type": "string" }
         },
+        "loginBackground": { "type": "string", "description": "Dynamic background for the login page." },
         "packageDesign": {
           "type": "object",
           "properties": {
