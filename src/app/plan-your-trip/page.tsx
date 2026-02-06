@@ -114,7 +114,7 @@ const PlanYourTripPage = () => {
         </div>
         <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10 text-center">
           <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-4">Plan Your Journey</h1>
-          <p className="text-white/80 font-medium text-[10px] md:text-xs mt-4 max-w-lg mx-auto">
+          <p className="text-white/80 font-medium text-xs mt-4 max-w-lg mx-auto">
             Pastikan perjalanan Anda aman dan berkesan dengan memilih layanan dan paket yang tepat sesuai kebutuhan Anda.
           </p>
         </div>
@@ -274,6 +274,27 @@ const PlanYourTripPage = () => {
                 <p className="text-xs text-muted-foreground leading-relaxed">{point.content}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 bg-black text-white relative overflow-hidden">
+        <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12 bg-white/5 p-12 md:p-20 border border-white/10">
+            <div className="max-w-2xl space-y-6">
+              <h3 className="text-primary font-bold uppercase tracking-widest text-xs">Extra Services</h3>
+              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">Pemesanan Penginapan & Antar Jemput</h2>
+              <p className="text-white/60 text-sm md:text-base leading-relaxed">
+                Butuh bantuan mencari homestay terbaik di Dieng atau transportasi dari luar kota? Kami melayani reservasi akomodasi dan antar jemput dari Bandara/Stasiun Yogyakarta, Semarang, Purwokerto, dan kota lainnya.
+              </p>
+            </div>
+            <div className="shrink-0">
+              <Button size="lg" className="bg-primary hover:bg-white hover:text-black text-white font-black uppercase px-12 py-10 rounded-none text-sm tracking-widest gap-3" asChild>
+                <a href="https://wa.me/6281230939128?text=Halo%20saya%20butuh%20layanan%20penginapan%20/%20antar%20jemput%20luar%20kota" target="_blank">
+                  Hubungi Admin
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
