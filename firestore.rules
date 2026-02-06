@@ -45,7 +45,7 @@ service cloud.firestore {
     }
     
     // Deployment trigger: Memperbarui aturan akses publik eksplisit (read = get/list)
-    // Terakhir diperbarui: 2026-02-07 10:45 UTC
+    // Terakhir diperbarui: 2026-02-07 11:30 UTC
     // Memastikan izin baca publik aktif untuk sinkronisasi kueri di halaman Stories dan Home.
   }
 }
