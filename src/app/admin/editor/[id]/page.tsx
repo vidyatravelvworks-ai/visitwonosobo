@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, use } from 'react';
@@ -246,7 +247,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
                 <div className="col-span-5">
                   <Button onClick={handleGenerateAI} disabled={isGenerating} className="w-full bg-black text-white h-12 rounded-none text-[10px] font-black uppercase gap-2 hover:bg-primary transition-all">
                     {isGenerating ? <Loader2 className="animate-spin h-4 w-4" /> : <Sparkles size={14} />} 
-                    AI SEO + Bibliography
+                    AI Write 100% SEO + Bibliography
                   </Button>
                 </div>
               </div>

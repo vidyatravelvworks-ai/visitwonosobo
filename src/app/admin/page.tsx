@@ -11,7 +11,7 @@ import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, Search, X } from 'lucide-react';
+import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, Search, X, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { getAuth, signOut } from 'firebase/auth';
@@ -126,6 +126,14 @@ const AdminDashboard = () => {
     toast({ title: 'Deleted', description: 'Image removed from gallery.' });
   };
 
+  const handleDeleteArticle = (articleId: string) => {
+    if (!db) return;
+    if (confirm('Apakah Anda yakin ingin menghapus artikel ini?')) {
+      deleteDocumentNonBlocking(doc(db, 'articles', articleId));
+      toast({ title: 'Deleted', description: 'Artikel telah dihapus.' });
+    }
+  };
+
   const getCategoryLabel = (cat: string) => {
     const map: Record<string, string> = {
       'Alam': 'Nature & Adventure',
@@ -143,8 +151,7 @@ const AdminDashboard = () => {
 
   const filteredArticles = allArticles?.filter(a => {
     const matchesSearch = a.title?.toLowerCase().includes(tableSearch.toLowerCase()) || 
-                         a.category?.toLowerCase().includes(tableSearch.toLowerCase()) ||
-                         getCategoryLabel(a.category)?.toLowerCase().includes(tableSearch.toLowerCase());
+                         a.category?.toLowerCase().includes(tableSearch.toLowerCase());
     if (currentView === 'see-and-do') return a.type === 'destination' && matchesSearch;
     if (currentView === 'stories') return a.type === 'story' && matchesSearch;
     return false;
@@ -203,7 +210,7 @@ const AdminDashboard = () => {
             </Card>
             <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
                <div className="border-b pb-4">
-                <h3 className="text-lg font-black uppercase tracking-tight">Category Icons/Images</h3>
+                <h3 className="text-lg font-black uppercase tracking-tight">Category Images</h3>
               </div>
               <div className="space-y-3">
                 {[
@@ -231,9 +238,9 @@ const AdminDashboard = () => {
         ) : currentView === 'gallery' ? (
           <div className="space-y-8">
             <Card className="rounded-none border-2 shadow-xl bg-white p-8">
-              <div className="flex flex-col md:flex-row gap-8 items-start">
-                <div className="w-full md:w-[240px] aspect-square bg-secondary/10 border-2 border-black/10 flex items-center justify-center overflow-hidden shrink-0">
-                  {galleryForm.url && galleryForm.url.trim() !== "" ? (
+              <div className="flex flex-col md:flex-row gap-8 items-stretch">
+                <div className="w-[240px] aspect-square bg-secondary/10 border-2 border-black/10 flex items-center justify-center overflow-hidden shrink-0">
+                  {galleryForm.url ? (
                     <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
                   ) : (
                     <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2 px-4 text-center">
@@ -243,26 +250,28 @@ const AdminDashboard = () => {
                   )}
                 </div>
 
-                <div className="flex-grow flex flex-col gap-4 w-full h-[240px]">
-                  <div className="space-y-1">
-                    <Label className="text-[10px] font-black uppercase text-left block">Image URL</Label>
-                    <Input 
-                      value={galleryForm.url} 
-                      onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 
-                      className="rounded-none border-2 h-10 text-xs" 
-                      placeholder="https://..."
-                    />
+                <div className="flex-grow flex flex-col justify-between py-1">
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] font-black uppercase text-left block">Image URL</Label>
+                      <Input 
+                        value={galleryForm.url} 
+                        onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 
+                        className="rounded-none border-2 h-10 text-xs" 
+                        placeholder="https://..."
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[10px] font-black uppercase text-left block">Caption</Label>
+                      <Input 
+                        value={galleryForm.caption} 
+                        onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
+                        className="rounded-none border-2 h-10 text-xs" 
+                        placeholder="Image Description..."
+                      />
+                    </div>
                   </div>
-                  <div className="space-y-1">
-                    <Label className="text-[10px] font-black uppercase text-left block">Caption</Label>
-                    <Input 
-                      value={galleryForm.caption} 
-                      onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
-                      className="rounded-none border-2 h-10 text-xs" 
-                      placeholder="Image Description..."
-                    />
-                  </div>
-                  <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-12 font-black uppercase text-[10px] tracking-widest gap-2 mt-auto">
+                  <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-12 font-black uppercase text-[10px] tracking-widest gap-2">
                     <Save size={14} /> Save Image
                   </Button>
                 </div>
@@ -276,9 +285,7 @@ const AdminDashboard = () => {
                  <div className="col-span-full py-20 text-center text-[10px] font-black uppercase text-muted-foreground">No images in gallery yet.</div>
                ) : allGallery?.map(g => (
                  <div key={g.id} className="relative group aspect-square bg-gray-100 border overflow-hidden">
-                    {g.url && g.url.trim() !== "" && (
-                      <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />
-                    )}
+                    <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />
                     <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
                       <button onClick={() => handleDeleteGallery(g.id)} className="absolute top-2 right-2 p-1 bg-red-600 text-white hover:bg-red-700"><X size={12} /></button>
                       <p className="text-[9px] font-black text-white uppercase leading-tight mb-2">{g.caption}</p>
@@ -334,7 +341,17 @@ const AdminDashboard = () => {
                           <TableCell className="py-2 px-6"><Badge className="rounded-none text-[8px] uppercase font-black px-2">{getCategoryLabel(a.category)}</Badge></TableCell>
                           <TableCell className="py-2 px-6 text-right">
                             <div className="flex justify-end gap-2">
-                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild><Link href={`/admin/editor/${a.id}`}><Edit size={14}/></Link></Button>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild>
+                                <Link href={`/admin/editor/${a.id}`}><Edit size={14}/></Link>
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="h-8 w-8 hover:bg-red-50 text-red-600" 
+                                onClick={() => handleDeleteArticle(a.id)}
+                              >
+                                <Trash2 size={14}/>
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
