@@ -87,7 +87,7 @@ const PlanYourTripPage = () => {
           <div className="absolute inset-0 bg-black/50" />
         </div>
         <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10 text-center">
-          <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white">Plan Your <span className="text-primary">Journey</span></h1>
+          <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-4">Plan Your Journey</h1>
           <p className="text-white/80 font-medium text-[10px] md:text-xs mt-4 max-w-lg mx-auto">
             Pastikan perjalanan Anda aman dan berkesan dengan memilih layanan dan paket yang tepat sesuai kebutuhan Anda.
           </p>
@@ -149,13 +149,63 @@ const PlanYourTripPage = () => {
             ) : (
               <div className="relative overflow-hidden">
                 <div className="flex animate-marquee hover:[animation-play-state:paused] whitespace-nowrap">
-                  <div className="grid grid-rows-2 grid-flow-col gap-4 h-[500px] md:h-[650px] shrink-0 pr-4">
+                  {/* Container 1 */}
+                  <div className="grid grid-rows-3 grid-flow-col gap-3 h-[600px] md:h-[800px] shrink-0 pr-3">
                     {galleryItems.map((item, idx) => (
-                      <div key={item.id} className="relative overflow-hidden group border-2 border-black/5 shadow-md w-[300px] md:w-[400px] h-full">
-                        {item.url && (
-                          <Image src={item.url} alt={item.caption || "Trip Photo"} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                      <div 
+                        key={item.id} 
+                        className={cn(
+                          "relative overflow-hidden group border-2 border-black shadow-md bg-secondary/10",
+                          idx % 7 === 0 ? "row-span-2 w-[300px] md:w-[450px]" : 
+                          idx % 7 === 1 ? "row-span-1 w-[200px] md:w-[300px]" : 
+                          idx % 7 === 2 ? "row-span-1 w-[250px] md:w-[350px]" : 
+                          idx % 7 === 3 ? "row-span-2 w-[350px] md:w-[500px]" : 
+                          idx % 7 === 4 ? "row-span-1 w-[280px] md:w-[400px]" :
+                          idx % 7 === 5 ? "row-span-1 w-[220px] md:w-[320px]" :
+                          "row-span-1 w-[300px] md:w-[450px]"
                         )}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6"><p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p></div>
+                      >
+                        {item.url && (
+                          <Image 
+                            src={item.url} 
+                            alt={item.caption || "Trip Photo"} 
+                            fill 
+                            className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                          <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Duplicate Container for infinite loop */}
+                  <div className="grid grid-rows-3 grid-flow-col gap-3 h-[600px] md:h-[800px] shrink-0 pr-3" aria-hidden="true">
+                    {galleryItems.map((item, idx) => (
+                      <div 
+                        key={`dup-${item.id}`} 
+                        className={cn(
+                          "relative overflow-hidden group border-2 border-black shadow-md bg-secondary/10",
+                          idx % 7 === 0 ? "row-span-2 w-[300px] md:w-[450px]" : 
+                          idx % 7 === 1 ? "row-span-1 w-[200px] md:w-[300px]" : 
+                          idx % 7 === 2 ? "row-span-1 w-[250px] md:w-[350px]" : 
+                          idx % 7 === 3 ? "row-span-2 w-[350px] md:w-[500px]" : 
+                          idx % 7 === 4 ? "row-span-1 w-[280px] md:w-[400px]" :
+                          idx % 7 === 5 ? "row-span-1 w-[220px] md:w-[320px]" :
+                          "row-span-1 w-[300px] md:w-[450px]"
+                        )}
+                      >
+                        {item.url && (
+                          <Image 
+                            src={item.url} 
+                            alt={item.caption || "Trip Photo"} 
+                            fill 
+                            className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                          <p className="text-white text-[10px] font-black uppercase tracking-widest">{item.caption}</p>
+                        </div>
                       </div>
                     ))}
                   </div>
