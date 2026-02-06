@@ -14,25 +14,25 @@ service cloud.firestore {
 
     // Aturan untuk Artikel (Blog & Destinasi)
     match /articles/{articleId} {
-      allow read: if true;
+      allow get, list: if true;
       allow write: if isAdmin();
     }
 
     // Aturan untuk Paket Wisata
     match /trip_packages/{packageId} {
-      allow read: if true;
+      allow get, list: if true;
       allow write: if isAdmin();
     }
 
     // Aturan untuk Galeri Foto
     match /gallery/{imageId} {
-      allow read: if true;
+      allow get, list: if true;
       allow write: if isAdmin();
     }
 
     // Aturan untuk Konfigurasi Website (Hero Images, dll)
     match /config/{configId} {
-      allow read: if true;
+      allow get, list: if true;
       allow write: if isAdmin();
     }
 
@@ -43,7 +43,7 @@ service cloud.firestore {
       allow write: if false;
     }
     
-    // Deployment trigger: Memastikan akses baca publik global untuk konten dinamis
-    // Terakhir diperbarui: 2024-02-06 07:15 UTC untuk memperbaiki error perizinan pada list /articles
+    // Deployment trigger: Memperbarui aturan akses publik eksplisit (get/list)
+    // Terakhir diperbarui: 2026-02-07 09:30 UTC untuk memperbaiki error perizinan pada listing koleksi /articles
   }
 }
