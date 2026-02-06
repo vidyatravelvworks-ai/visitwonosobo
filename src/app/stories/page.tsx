@@ -26,7 +26,15 @@ const StoriesPage = () => {
   const { data: dbStories, isLoading } = useCollection(articlesQ);
   const { data: config } = useDoc(configRef);
   
-  const stories = (dbStories && dbStories.length > 0) ? dbStories : staticArticles.filter(a => a.type === 'story');
+  const stories = React.useMemo(() => {
+    const staticStories = staticArticles.filter(a => a.type === 'story');
+    if (!dbStories || dbStories.length === 0) return staticStories;
+    
+    // Gabungkan, utamakan yang dari DB jika slug sama
+    const dbSlugs = new Set(dbStories.map(s => s.slug));
+    const uniqueStatic = staticStories.filter(s => !dbSlugs.has(s.slug));
+    return [...dbStories, ...uniqueStatic];
+  }, [dbStories]);
   
   const storiesConfigHero = config?.heroImages?.stories;
   const storiesPlaceholderHero = PlaceHolderImages.find(img => img.id === 'mountain-prau')?.imageUrl || 'https://picsum.photos/seed/wonosobo-stories/1200/600';
@@ -70,8 +78,16 @@ const StoriesPage = () => {
       <section className="pt-2 pb-24 md:pb-32 container mx-auto px-6 md:px-32">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
           {categoryData.map((cat) => {
+            // Cek di config admin (WebsiteConfig -> categoryImages)
             const catConfigImg = config?.categoryImages?.[cat.categoryName];
-            const catPlaceholder = PlaceHolderImages.find(img => img.id === 'mountain-prau')?.imageUrl;
+            
+            // Fallback placeholder berdasarkan kategori
+            let catPlaceholderId = 'mountain-prau';
+            if (cat.id === 'sejarah') catPlaceholderId = 'candi-arjuna';
+            if (cat.id === 'sosial') catPlaceholderId = 'ritual';
+            if (cat.id === 'geografis') catPlaceholderId = 'misty-valley';
+            
+            const catPlaceholder = PlaceHolderImages.find(img => img.id === catPlaceholderId)?.imageUrl;
             const catImg = (catConfigImg && catConfigImg.trim() !== "") ? catConfigImg : (catPlaceholder || `https://picsum.photos/seed/${cat.id}/800/1000`);
 
             return (
