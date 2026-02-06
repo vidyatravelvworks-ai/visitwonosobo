@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -262,8 +261,8 @@ const AdminDashboard = () => {
           <div className="space-y-8">
             <Card className="rounded-none border-2 shadow-xl bg-white p-8">
               <div className="flex gap-8">
-                {/* Preview Box - Left Aligned, Squares from URL top to Save bottom */}
-                <div className="w-32 h-32 bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0 mt-6">
+                {/* Square Preview - Matches total height from top of URL to bottom of Button */}
+                <div className="w-[152px] h-[152px] bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0">
                   {galleryForm.url && galleryForm.url.trim() !== "" ? (
                     <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
                   ) : (
@@ -276,7 +275,9 @@ const AdminDashboard = () => {
 
                 <div className="flex-grow space-y-4">
                   <div className="space-y-1">
-                    <Label className="text-[10px] font-black uppercase">Image URL</Label>
+                    <div className="flex justify-between">
+                      <Label className="text-[10px] font-black uppercase">Image URL</Label>
+                    </div>
                     <Input 
                       value={galleryForm.url} 
                       onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 

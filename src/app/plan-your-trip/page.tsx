@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -44,7 +43,7 @@ const PlanYourTripPage = () => {
     ? [...dbGalleryItems, ...defaultGalleryItems].slice(0, 20)
     : defaultGalleryItems;
 
-  // CRITICAL: Ensure we only map items with a non-empty URL to prevent src="" error in Image component
+  // CRITICAL: Filter out any items with empty or null URLs to prevent src="" errors
   const galleryItems = React.useMemo(() => {
     return rawGalleryItems.filter(item => item.url && item.url.trim() !== "");
   }, [rawGalleryItems]);

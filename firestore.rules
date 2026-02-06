@@ -45,7 +45,7 @@ service cloud.firestore {
     }
     
     // Deployment trigger: Memperbarui aturan akses publik untuk kueri list di halaman Stories.
-    // Terakhir diperbarui: 2026-02-07 12:45 UTC
-    // Memastikan sinkronisasi izin baca publik aktif sepenuhnya di backend.
+    // Terakhir diperbarui: 2026-02-07 15:30 UTC
+    // Memastikan izin baca publik (get & list) aktif sepenuhnya untuk pengguna anonim.
   }
 }

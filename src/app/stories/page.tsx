@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -21,7 +20,7 @@ import { articles as staticArticles } from '@/data/articles';
 const StoriesPage = () => {
   const db = useFirestore();
   
-  // Ambil semua artikel tipe story dari database
+  // Fetch stories from DB with ordering
   const articlesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story'), orderBy('updatedAt', 'desc')) : null, [db]);
   const latestStoriesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story'), orderBy('updatedAt', 'desc'), limit(4)) : null, [db]);
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
@@ -30,10 +29,15 @@ const StoriesPage = () => {
   const { data: latestStories, isLoading: isLatestLoading } = useCollection(latestStoriesQ);
   const { data: config } = useDoc(configRef);
   
-  // Gabungkan database dengan statis hanya jika database kosong sama sekali
+  // Combine DB stories with static ones, prioritizing DB
   const allStories = React.useMemo(() => {
-    if (dbStories && dbStories.length > 0) return dbStories;
-    return staticArticles.filter(a => a.type === 'story');
+    if (!dbStories) return staticArticles.filter(a => a.type === 'story');
+    
+    // Create a set of slugs already in DB to avoid duplicates
+    const dbSlugs = new Set(dbStories.map(s => s.slug || s.id));
+    const filteredStatic = staticArticles.filter(a => a.type === 'story' && !dbSlugs.has(a.slug));
+    
+    return [...dbStories, ...filteredStatic];
   }, [dbStories]);
   
   const storiesConfigHero = config?.heroImages?.stories;
@@ -75,7 +79,7 @@ const StoriesPage = () => {
         </div>
       </section>
 
-      {/* Latest Stories Section (Highlighting DB Content) */}
+      {/* Latest Stories Section */}
       <section className="py-24 bg-secondary/10">
         <div className="container mx-auto px-6 md:px-32">
           <div className="flex items-center gap-4 mb-12">
@@ -83,20 +87,19 @@ const StoriesPage = () => {
             <h2 className="text-4xl font-black uppercase tracking-tighter">Latest from Journal</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {(latestStories || staticArticles.filter(a => a.type === 'story').slice(0, 4)).map((story: any) => (
+            {(latestStories && latestStories.length > 0 ? latestStories : staticArticles.filter(a => a.type === 'story').slice(0, 4)).map((story: any) => (
               <ArticleCard key={story.id || story.slug} article={story} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Categories Grid (Images from Admin Config) */}
+      {/* Categories Grid */}
       <section className="py-2 container mx-auto px-6 md:px-32">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
           {categoryData.map((cat) => {
             const catConfigImg = config?.categoryImages?.[cat.categoryName];
             
-            // Fallback placeholder berdasarkan kategori
             let catPlaceholderId = 'mountain-prau';
             if (cat.id === 'sejarah') catPlaceholderId = 'candi-arjuna';
             if (cat.id === 'sosial') catPlaceholderId = 'ritual';
