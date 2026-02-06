@@ -60,7 +60,7 @@ const Services = () => {
                 src={cat.image || 'https://picsum.photos/seed/wonosobo/800/1000'}
                 alt={cat.title}
                 fill
-                className="object-cover opacity-80 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-60"
+                className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-40"
               />
               <div className="absolute inset-0 p-10 flex flex-col justify-end text-white">
                 <div className="mb-4 p-2 bg-primary w-fit">{cat.icon}</div>
