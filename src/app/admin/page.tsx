@@ -1,16 +1,17 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser, useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
-import { collection, doc, query, orderBy, setDoc, serverTimestamp, writeBatch, getDocs } from 'firebase/firestore';
+import { collection, doc, query, orderBy, setDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, Search, X, Trash2, LayoutDashboard } from 'lucide-react';
+import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, Search, X, Trash2, User as UserIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { getAuth, signOut } from 'firebase/auth';
@@ -193,7 +194,6 @@ const AdminDashboard = () => {
         </div>
         
         <nav className="flex-grow space-y-8">
-          {/* Group: ARTICLE */}
           <div className="space-y-4">
             <h4 className="px-4 text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Article</h4>
             <div className="space-y-1">
@@ -214,7 +214,6 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Group: GALLERY */}
           <div className="space-y-4">
             <h4 className="px-4 text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Gallery</h4>
             <Button 
@@ -226,7 +225,6 @@ const AdminDashboard = () => {
             </Button>
           </div>
 
-          {/* Group: DISPLAY */}
           <div className="space-y-4">
             <h4 className="px-4 text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Display</h4>
             <Button 
@@ -239,7 +237,19 @@ const AdminDashboard = () => {
           </div>
         </nav>
 
-        <Button variant="destructive" onClick={() => signOut(auth)} className="mt-12 w-full rounded-none h-12 gap-3 font-black text-[10px] uppercase">
+        <div className="mt-8 pt-8 border-t border-white/10 mb-4">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 bg-primary rounded-none flex items-center justify-center shrink-0">
+              <UserIcon size={16} className="text-white" />
+            </div>
+            <div className="flex flex-col min-w-0">
+              <span className="text-[10px] font-black uppercase tracking-widest leading-none">Administrator</span>
+              <span className="text-[8px] font-bold text-muted-foreground truncate">{user?.email}</span>
+            </div>
+          </div>
+        </div>
+
+        <Button variant="destructive" onClick={() => signOut(auth)} className="w-full rounded-none h-12 gap-3 font-black text-[10px] uppercase">
           <LogOut size={16} /> Sign Out
         </Button>
       </aside>
@@ -309,7 +319,7 @@ const AdminDashboard = () => {
                 <div className="flex-grow flex flex-col justify-between py-0">
                   <div className="space-y-4">
                     <div className="space-y-1 text-left">
-                      <Label className="text-[10px] font-black uppercase block">Image URL</Label>
+                      <Label className="text-[10px] font-black uppercase block text-left">Image URL</Label>
                       <Input 
                         value={galleryForm.url} 
                         onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 
@@ -318,7 +328,7 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div className="space-y-1 text-left">
-                      <Label className="text-[10px] font-black uppercase block">Caption</Label>
+                      <Label className="text-[10px] font-black uppercase block text-left">Caption</Label>
                       <Input 
                         value={galleryForm.caption} 
                         onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
