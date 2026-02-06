@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { 
   Clock, Loader2, Grid, MapPin, 
-  CarFront
+  CarFront, Activity, ShieldAlert, Footprints, ThermometerSnowflake
 } from 'lucide-react';
 import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
@@ -45,6 +45,39 @@ const PlanYourTripPage = () => {
   const galleryItems = React.useMemo(() => {
     return rawGalleryItems.filter(item => item && item.url && item.url.trim() !== "");
   }, [rawGalleryItems]);
+
+  const essentialPoints = [
+    { 
+      title: "Fisik & Aklimatisasi", 
+      icon: <Activity className="h-6 w-6" />, 
+      content: "Dieng berada di ketinggian >2.000 mdpl. Udara tipis dapat memicu Altitude Sickness. Istirahat cukup dan hindari aktivitas berat di jam pertama." 
+    },
+    { 
+      title: "Etika & Budaya", 
+      icon: <ShieldAlert className="h-6 w-6" />, 
+      content: "Gunakan masker di kawah untuk hindari gas belerang. Hormati situs candi dan jangan menyentuh kepala anak rambut gimbal yang sakral." 
+    },
+    { 
+      title: "Persiapan Kendaraan", 
+      icon: <CarFront className="h-6 w-6" />, 
+      content: "Jalur Dieng memiliki tanjakan ekstrem 15%. Pastikan rem dan kopling prima. Driver lokal kami ahli dalam teknik engine brake di medan ini." 
+    },
+    { 
+      title: "Perlengkapan Khusus", 
+      icon: <Footprints className="h-6 w-6" />, 
+      content: "Bawa obat anti-mabuk jalanan berkelok, sepatu anti-slip untuk trekking Sikunir yang licin, dan uang tunai untuk transaksi di pelosok." 
+    },
+    { 
+      title: "Manajemen Waktu", 
+      icon: <Clock className="h-6 w-6" />, 
+      content: "Weekend sering macet total. Berangkatlah lebih awal (misal 02.30 pagi untuk Sikunir) guna menghindari kerumunan dan kemacetan." 
+    },
+    { 
+      title: "Cuaca & Suhu Ekstrem", 
+      icon: <ThermometerSnowflake className="h-6 w-6" />, 
+      content: "Suhu bisa -5°C (Embun Upas) pada Juli-Sept. Waspadai kabut tebal mendadak; keahlian driver lokal sangat krusial di kondisi ini." 
+    }
+  ];
 
   return (
     <div className="bg-white">
@@ -126,6 +159,28 @@ const PlanYourTripPage = () => {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 bg-white border-t">
+        <div className="container mx-auto px-6 md:px-8 lg:px-32">
+          <div className="max-w-2xl mb-12">
+            <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-3">Travel Essentials</h3>
+            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Essential Information</h2>
+            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mt-4 leading-relaxed">
+              Pastikan perjalanan Anda aman dan berkesan dengan memperhatikan poin-poin krusial berikut.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12 gap-x-12">
+            {essentialPoints.map((point, idx) => (
+              <div key={idx} className="group space-y-4 border-l border-primary/20 pl-6 hover:border-primary transition-all">
+                <div className="p-3 bg-secondary w-fit text-primary group-hover:bg-primary group-hover:text-white transition-colors">{point.icon}</div>
+                <h4 className="font-bold uppercase text-xs tracking-widest">{point.title}</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">{point.content}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
