@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -14,7 +15,7 @@ import {
   Activity, ShieldAlert, CarFront, 
   Clock, ThermometerSnowflake, Loader2,
   Footprints, MapPin, ArrowRight, MessageCircle,
-  History, Users, Globe, Info
+  Hourglass, Users, Globe, Info
 } from 'lucide-react';
 import ArticleCard from '@/components/article/ArticleCard';
 import { cn } from '@/lib/utils';
@@ -104,7 +105,7 @@ export default function Home() {
           ) : (latestStories.length === 0) ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
               {[
-                { id: 'history', title: 'History & Heritage', icon: <History className="h-5 w-5" /> },
+                { id: 'history', title: 'History & Heritage', icon: <Hourglass className="h-5 w-5" /> },
                 { id: 'people', title: 'People & Culture', icon: <Users className="h-5 w-5" /> },
                 { id: 'geography', title: 'Geography & Landscape', icon: <Globe className="h-5 w-5" /> },
                 { id: 'tips', title: 'Travel Tips', icon: <Info className="h-5 w-5" /> }
@@ -152,7 +153,7 @@ export default function Home() {
 
       <section className="py-16 bg-white border-b px-6">
         <div className="container mx-auto px-0 md:px-8 lg:px-32">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-8">
             <div className="max-w-2xl">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-3">Plan Your Trip</h3>
               <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Essential Information</h2>

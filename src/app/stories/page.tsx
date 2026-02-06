@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -5,7 +6,7 @@ import Image from 'next/image';
 import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
 import { collection, query, where, doc, orderBy, limit } from 'firebase/firestore';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { History, Users, Globe, Info, ArrowRight, Loader2, Bookmark, Sparkles } from 'lucide-react';
+import { Hourglass, Users, Globe, Info, ArrowRight, Loader2, Bookmark, Sparkles } from 'lucide-react';
 import ArticleCard from '@/components/article/ArticleCard';
 import { Button } from '@/components/ui/button';
 import {
@@ -52,7 +53,7 @@ const StoriesPage = () => {
   const whatsappLink = config?.contact?.whatsapp || "https://wa.me/6281230939128";
 
   const categoryData = [
-    { id: 'history', title: 'History & Heritage', categoryName: 'History & Heritage', icon: <History className="h-5 w-5" />, desc: 'Membuka tabir sejarah peradaban tertua di Tanah Jawa.' },
+    { id: 'history', title: 'History & Heritage', categoryName: 'History & Heritage', icon: <Hourglass className="h-5 w-5" />, desc: 'Membuka tabir sejarah peradaban tertua di Tanah Jawa.' },
     { id: 'people', title: 'People & Culture', categoryName: 'People & Culture', icon: <Users className="h-5 w-5" />, desc: 'Kehangatan interaksi dan tradisi luhur masyarakat lokal.' },
     { id: 'geography', title: 'Geography & Landscape', categoryName: 'Geography & Landscape', icon: <Globe className="h-5 w-5" />, desc: 'Menjelajahi fenomena geologi unik di atap Jawa.' },
     { id: 'tips', title: 'Travel Tips', categoryName: 'Travel Tips', icon: <Info className="h-5 w-5" />, desc: 'Panduan praktis untuk petualangan yang tak terlupakan.' }
