@@ -44,7 +44,7 @@ service cloud.firestore {
       allow write: if false;
     }
     
-    // Deployment trigger: Menghapus hambatan list/collection untuk publik.
-    // Terakhir diperbarui: 2026-02-08 14:30 UTC
+    // Deployment trigger: Memastikan kueri list diizinkan secara publik.
+    // Terakhir diperbarui: 2026-02-09 10:00 UTC
   }
 }

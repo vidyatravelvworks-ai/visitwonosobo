@@ -30,12 +30,10 @@ const StoriesPage = () => {
   const { data: config } = useDoc(configRef);
   
   const allStories = React.useMemo(() => {
-    if (!dbStories || dbStories.length === 0) return staticArticles.filter(a => a.type === 'story');
-    
-    const dbSlugs = new Set(dbStories.map(s => s.slug || s.id));
+    const firestoreStories = dbStories || [];
+    const dbSlugs = new Set(firestoreStories.map(s => s.slug || s.id));
     const filteredStatic = staticArticles.filter(a => a.type === 'story' && !dbSlugs.has(a.slug));
-    
-    return [...dbStories, ...filteredStatic];
+    return [...firestoreStories, ...filteredStatic];
   }, [dbStories]);
   
   const storiesConfigHero = config?.heroImages?.stories;

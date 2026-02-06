@@ -150,11 +150,6 @@ const AdminDashboard = () => {
     return false;
   }) || [];
 
-  const filteredPackages = allPackages?.filter(p => {
-    return p.title?.toLowerCase().includes(tableSearch.toLowerCase()) || 
-           p.price?.toLowerCase().includes(tableSearch.toLowerCase());
-  }) || [];
-
   const isLoading = isArticlesLoading || isPkgsLoading || isGalleryLoading || isConfigLoading;
 
   return (
@@ -189,7 +184,6 @@ const AdminDashboard = () => {
       <main className="flex-grow ml-64 p-12">
         {currentView === 'settings' ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl pb-20">
-            {/* Settings content same as before */}
             <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
               <div className="border-b pb-4">
                 <h3 className="text-lg font-black uppercase tracking-tight">Main Hero Configuration</h3>
@@ -199,6 +193,27 @@ const AdminDashboard = () => {
                   { label: 'Home Hero', key: 'heroHome', value: configForm.heroHome },
                   { label: 'See & Do Hero', key: 'heroSeeDo', value: configForm.heroSeeDo },
                   { label: 'Stories Hero', key: 'heroStories', value: configForm.heroStories }
+                ].map((field) => (
+                  <div key={field.key} className="space-y-1">
+                    <Label className="text-[10px] font-black uppercase">{field.label}</Label>
+                    <Input value={field.value} onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} className="rounded-none border-2 h-10 text-xs" />
+                  </div>
+                ))}
+              </div>
+            </Card>
+            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
+               <div className="border-b pb-4">
+                <h3 className="text-lg font-black uppercase tracking-tight">Category Icons/Images</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { label: 'Nature & Adventure', key: 'catNature', value: configForm.catNature },
+                  { label: 'Heritage & Culture', key: 'catHeritage', value: configForm.catHeritage },
+                  { label: 'Food & Drink', key: 'catFood', value: configForm.catFood },
+                  { label: 'History & Heritage', key: 'catHistory', value: configForm.catHistory },
+                  { label: 'People & Culture', key: 'catPeople', value: configForm.catPeople },
+                  { label: 'Geography & Landscape', key: 'catGeo', value: configForm.catGeo },
+                  { label: 'Travel Tips', key: 'catTips', value: configForm.catTips }
                 ].map((field) => (
                   <div key={field.key} className="space-y-1">
                     <Label className="text-[10px] font-black uppercase">{field.label}</Label>
@@ -217,7 +232,7 @@ const AdminDashboard = () => {
           <div className="space-y-8">
             <Card className="rounded-none border-2 shadow-xl bg-white p-8">
               <div className="flex gap-8 items-stretch">
-                <div className="w-[180px] h-[180px] bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0">
+                <div className="w-[180px] aspect-square bg-secondary/10 border-2 border-black/10 flex items-center justify-center overflow-hidden shrink-0">
                   {galleryForm.url && galleryForm.url.trim() !== "" ? (
                     <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
                   ) : (
@@ -228,9 +243,9 @@ const AdminDashboard = () => {
                   )}
                 </div>
 
-                <div className="flex-grow flex flex-col justify-between space-y-4">
+                <div className="flex-grow flex flex-col gap-4">
                   <div className="space-y-1">
-                    <Label className="text-[10px] font-black uppercase">Image URL</Label>
+                    <Label className="text-[10px] font-black uppercase text-left block">Image URL</Label>
                     <Input 
                       value={galleryForm.url} 
                       onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 
@@ -239,7 +254,7 @@ const AdminDashboard = () => {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-[10px] font-black uppercase">Caption</Label>
+                    <Label className="text-[10px] font-black uppercase text-left block">Caption</Label>
                     <Input 
                       value={galleryForm.caption} 
                       onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
