@@ -83,7 +83,7 @@ const StoriesPage = () => {
               if (cat.id === 'people') catPlaceholderId = 'ritual';
               if (cat.id === 'geography') catPlaceholderId = 'misty-valley';
               
-              const catPlaceholder = PlaceHolderImages.find(img => img.id catPlaceholderId)?.imageUrl;
+              const catPlaceholder = PlaceHolderImages.find(img => img.id === catPlaceholderId)?.imageUrl;
               const catImg = (catConfigImg && catConfigImg.trim() !== "") ? catConfigImg : (catPlaceholder || `https://picsum.photos/seed/${cat.id}/800/1000`);
 
               return (
