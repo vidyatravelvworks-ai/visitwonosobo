@@ -146,11 +146,11 @@ const StoriesPage = () => {
                     src={catImg}
                     alt={cat.title}
                     fill
-                    className="object-cover opacity-80 transition-transform duration-1000 group-hover:scale-110 group-hover:opacity-90"
+                    className="object-cover opacity-100 transition-transform duration-1000 group-hover:scale-110 group-hover:opacity-90"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent z-[5]" />
-                  <div className="absolute inset-0 p-10 flex flex-col justify-end text-white z-10">
-                    <div className="absolute top-0 left-10 p-4 bg-primary text-white">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-[5]" />
+                  <div className="absolute inset-0 p-8 pt-32 flex flex-col justify-end text-white z-10">
+                    <div className="absolute top-0 left-8 p-4 bg-primary text-white z-20">
                       {cat.icon}
                     </div>
                     <h3 className="text-2xl font-black uppercase mb-3 tracking-tight leading-none">{cat.title}</h3>
