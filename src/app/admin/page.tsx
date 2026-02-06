@@ -11,7 +11,7 @@ import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, Search, X, Trash2, User as UserIcon } from 'lucide-react';
+import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, Search, X, Trash2, User as UserIcon, Phone } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { getAuth, signOut } from 'firebase/auth';
@@ -68,7 +68,9 @@ const AdminDashboard = () => {
     catPeople: '',
     catGeo: '',
     catTips: '',
-    loginBackground: ''
+    loginBackground: '',
+    contactPhone: '0812-3093-9128',
+    whatsappLink: 'https://wa.me/6281230939128'
   });
 
   useEffect(() => {
@@ -84,7 +86,9 @@ const AdminDashboard = () => {
         catPeople: websiteConfig.categoryImages?.['People & Culture'] || '',
         catGeo: websiteConfig.categoryImages?.['Geography & Landscape'] || '',
         catTips: websiteConfig.categoryImages?.['Travel Tips'] || '',
-        loginBackground: websiteConfig.loginBackground || ''
+        loginBackground: websiteConfig.loginBackground || '',
+        contactPhone: websiteConfig.contact?.phone || '0812-3093-9128',
+        whatsappLink: websiteConfig.contact?.whatsapp || 'https://wa.me/6281230939128'
       });
     }
   }, [websiteConfig]);
@@ -107,6 +111,10 @@ const AdminDashboard = () => {
           'People & Culture': configForm.catPeople,
           'Geography & Landscape': configForm.catGeo,
           'Travel Tips': configForm.catTips
+        },
+        contact: {
+          phone: configForm.contactPhone,
+          whatsapp: configForm.whatsappLink
         },
         loginBackground: configForm.loginBackground,
         updatedAt: serverTimestamp()
@@ -201,7 +209,7 @@ const AdminDashboard = () => {
             <h4 className="px-4 text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Article</h4>
             <div className="space-y-1">
               {[
-                { id: 'see-and-do', icon: Map, label: 'See & Do' },
+                { id: 'see-and-do', icon: Map, label: 'See &amp; Do' },
                 { id: 'stories', icon: BookOpen, label: 'Stories' },
                 { id: 'packages', icon: Package, label: 'Packages' },
               ].map((item) => (
@@ -282,7 +290,7 @@ const AdminDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[
                   { label: 'Home Hero', key: 'heroHome', value: configForm.heroHome },
-                  { label: 'See & Do Hero', key: 'heroSeeDo', value: configForm.heroSeeDo },
+                  { label: 'See &amp; Do Hero', key: 'heroSeeDo', value: configForm.heroSeeDo },
                   { label: 'Stories Hero', key: 'heroStories', value: configForm.heroStories }
                 ].map((field) => (
                   <div key={field.key} className="flex flex-col gap-3">
@@ -302,6 +310,34 @@ const AdminDashboard = () => {
                     />
                   </div>
                 ))}
+              </div>
+            </Card>
+
+            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-8">
+              <div className="border-b pb-4 flex items-center justify-between">
+                <h3 className="text-lg font-black uppercase tracking-tight text-primary">Global Contact Information</h3>
+                <Phone size={18} className="text-primary" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                  <Label className="text-[10px] font-black uppercase">Phone Number (Display Only)</Label>
+                  <Input 
+                    value={configForm.contactPhone} 
+                    onChange={e => setConfigForm({...configForm, contactPhone: e.target.value})} 
+                    className="rounded-none border-2 h-12 text-sm font-bold" 
+                    placeholder="e.g. 0812-3093-9128"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <Label className="text-[10px] font-black uppercase">WhatsApp Direct Link</Label>
+                  <Input 
+                    value={configForm.whatsappLink} 
+                    onChange={e => setConfigForm({...configForm, whatsappLink: e.target.value})} 
+                    className="rounded-none border-2 h-12 text-[10px] font-mono" 
+                    placeholder="https://wa.me/..."
+                  />
+                  <p className="text-[8px] font-bold text-muted-foreground uppercase">Full URL with country code: https://wa.me/62812...</p>
+                </div>
               </div>
             </Card>
 
@@ -329,7 +365,7 @@ const AdminDashboard = () => {
 
             <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-8">
                <div className="border-b pb-4">
-                <h3 className="text-lg font-black uppercase tracking-tight text-primary">See & Do Category Images</h3>
+                <h3 className="text-lg font-black uppercase tracking-tight text-primary">See &amp; Do Category Images</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[

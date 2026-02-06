@@ -8,12 +8,20 @@ import { Menu, X, Search, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import SearchOverlay from '@/components/search/SearchOverlay';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+
+  const db = useFirestore();
+  const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
+  const { data: config } = useDoc(configRef);
+
+  const whatsappLink = config?.contact?.whatsapp || "https://wa.me/6281230939128";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,7 +81,7 @@ const Navbar = () => {
                 "font-bold uppercase text-[10px] tracking-widest px-6 rounded-none",
                 scrolled ? "bg-primary text-white" : "bg-white text-black hover:bg-gray-200"
               )}>
-                <a href="https://wa.me/6281230939128" target="_blank">Book Now</a>
+                <a href={whatsappLink} target="_blank">Book Now</a>
               </Button>
             </div>
           </div>
@@ -123,7 +131,7 @@ const Navbar = () => {
                 </Link>
               ))}
               <Button asChild size="lg" className="w-full bg-primary text-white font-bold uppercase mt-10 rounded-none">
-                <a href="https://wa.me/6281230939128" target="_blank">Book Now</a>
+                <a href={whatsappLink} target="_blank">Book Now</a>
               </Button>
             </div>
           </div>

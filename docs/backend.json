@@ -37,7 +37,7 @@
     "WebsiteConfig": {
       "title": "Website Configuration",
       "type": "object",
-      "description": "Global settings for images and design.",
+      "description": "Global settings for images, design, and contact information.",
       "properties": {
         "heroImages": {
           "type": "object",
@@ -50,6 +50,13 @@
         "categoryImages": {
           "type": "object",
           "additionalProperties": { "type": "string" }
+        },
+        "contact": {
+          "type": "object",
+          "properties": {
+            "phone": { "type": "string", "description": "Displayed phone number." },
+            "whatsapp": { "type": "string", "description": "Full WhatsApp link or number." }
+          }
         },
         "loginBackground": { "type": "string", "description": "Dynamic background for the login page." },
         "packageDesign": {

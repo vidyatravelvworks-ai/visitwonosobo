@@ -50,6 +50,8 @@ const StoriesPage = () => {
   const storiesPlaceholderHero = PlaceHolderImages.find(img => img.id === 'mountain-prau')?.imageUrl || 'https://picsum.photos/seed/wonosobo-stories/1200/600';
   const heroImage = (storiesConfigHero && storiesConfigHero.trim() !== "") ? storiesConfigHero : storiesPlaceholderHero;
 
+  const whatsappLink = config?.contact?.whatsapp || "https://wa.me/6281230939128";
+
   const categoryData = [
     { id: 'history', title: 'History & Heritage', categoryName: 'History & Heritage', icon: <History className="h-5 w-5" />, desc: 'Membuka tabir sejarah peradaban tertua di Tanah Jawa.' },
     { id: 'people', title: 'People & Culture', categoryName: 'People & Culture', icon: <Users className="h-5 w-5" />, desc: 'Kehangatan interaksi dan tradisi luhur masyarakat lokal.' },
@@ -208,7 +210,7 @@ const StoriesPage = () => {
           <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter mb-8">Want to share your <span className="text-primary italic">own story?</span></h2>
           <p className="text-white/60 font-bold uppercase tracking-widest text-xs mb-12">Bergabunglah dengan komunitas penulis lokal kami.</p>
           <Button size="lg" className="bg-white text-black hover:bg-primary hover:text-white font-black uppercase px-16 py-10 rounded-none text-sm tracking-widest gap-3" asChild>
-            <a href="https://wa.me/6281230939128?text=Halo%20saya%20tertarik%20menjadi%20kontributor%20cerita" target="_blank">Become a Contributor</a>
+            <a href={`${whatsappLink}?text=Halo%20saya%20tertarik%20menjadi%20kontributor%20cerita`} target="_blank">Become a Contributor</a>
           </Button>
         </div>
       </section>

@@ -5,10 +5,18 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 const Footer = () => {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
+
+  const db = useFirestore();
+  const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
+  const { data: config } = useDoc(configRef);
+
+  const contactPhone = config?.contact?.phone || "0812-3093-9128";
 
   useEffect(() => {
     setMounted(true);
@@ -49,11 +57,11 @@ const Footer = () => {
 
           {/* Kolom 2: 20% */}
           <div className="col-span-1 md:col-span-1">
-            <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Destinations & Blogs</h4>
+            <h4 className="font-bold uppercase text-xs tracking-[0.2em] mb-8">Destinations &amp; Blogs</h4>
             <ul className="space-y-4 text-sm font-medium">
-              <li><Link href="/see-and-do#nature" className="hover:text-primary transition-colors">Nature & Adventure</Link></li>
-              <li><Link href="/see-and-do#culture" className="hover:text-primary transition-colors">Heritage & Culture</Link></li>
-              <li><Link href="/see-and-do#eat" className="hover:text-primary transition-colors">Food & Drink</Link></li>
+              <li><Link href="/see-and-do#nature" className="hover:text-primary transition-colors">Nature &amp; Adventure</Link></li>
+              <li><Link href="/see-and-do#culture" className="hover:text-primary transition-colors">Heritage &amp; Culture</Link></li>
+              <li><Link href="/see-and-do#eat" className="hover:text-primary transition-colors">Food &amp; Drink</Link></li>
               <li><Link href="/stories" className="hover:text-primary transition-colors">Stories (blog)</Link></li>
             </ul>
           </div>
@@ -77,7 +85,7 @@ const Footer = () => {
                 Co-working Space HIPMI Wonosobo<br />
                 Jl. Sindoro No.921, Kab. Wonosobo, Jawa Tengah 56311
               </li>
-              <li className="text-primary font-bold">0812-3093-9128</li>
+              <li className="text-primary font-bold">{contactPhone}</li>
             </ul>
           </div>
         </div>

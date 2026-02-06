@@ -45,6 +45,8 @@ export default function Home() {
   const placeholderHomeHero = PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl || 'https://picsum.photos/seed/wonosobo-home/1200/800';
   const heroImage = (configHomeHero && configHomeHero.trim() !== "") ? configHomeHero : placeholderHomeHero;
 
+  const whatsappLink = config?.contact?.whatsapp || "https://wa.me/6281230939128";
+
   const essentialPoints = [
     { 
       title: "Fisik & Aklimatisasi", 
@@ -171,7 +173,7 @@ export default function Home() {
           <div className="pt-10 border-t">
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-6">
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Paket Wisata</h2>
-              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-primary pl-4">Layanan Guide & Rental Lokal Terbaik</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-primary pl-4">Layanan Guide &amp; Rental Lokal Terbaik</p>
             </div>
             
             {isPkgsLoading ? (
@@ -202,7 +204,7 @@ export default function Home() {
                       </div>
                     </div>
                     <Button className="w-full bg-black hover:bg-primary text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-2 group/btn mt-8" asChild>
-                      <a href={`https://wa.me/6281230939128?text=Halo%20saya%20mau%20pesan%20paket%20${encodeURIComponent(pkg.title)}`} target="_blank">Booking Sekarang</a>
+                      <a href={`${whatsappLink}?text=Halo%20saya%20mau%20pesan%20paket%20${encodeURIComponent(pkg.title)}`} target="_blank">Booking Sekarang</a>
                     </Button>
                   </div>
                 ))}
@@ -219,7 +221,7 @@ export default function Home() {
         <div className="container mx-auto relative z-10">
           <h2 className="text-5xl md:text-8xl font-black text-white uppercase leading-none tracking-tighter mb-8">Ready to <span className="text-primary">Explore?</span></h2>
           <Button size="lg" className="bg-primary hover:bg-white hover:text-black text-white font-black uppercase px-16 py-10 rounded-none text-sm tracking-widest gap-3" asChild>
-            <a href="https://wa.me/6281230939128" target="_blank"><MessageCircle size={20} /> Hubungi Kami</a>
+            <a href={whatsappLink} target="_blank"><MessageCircle size={20} /> Hubungi Kami</a>
           </Button>
         </div>
       </section>
