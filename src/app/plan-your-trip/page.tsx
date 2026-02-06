@@ -122,9 +122,18 @@ const PlanYourTripPage = () => {
 
       <section className="relative pt-24 pb-24 overflow-hidden">
         <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10">
-          <div className="text-center mb-20 max-w-3xl mx-auto space-y-4">
-            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-primary">Paket Wisata Lokal</h2>
-            <p className="text-muted-foreground font-medium text-sm">Nikmati perjalanan tanpa hambatan dengan pemandu lokal berpengalaman.</p>
+          <div className="flex flex-col md:flex-row-reverse md:items-center justify-between mb-20 gap-8">
+            <div className="flex items-center gap-4 md:flex-row-reverse">
+              <div className="p-2 bg-primary text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <CarFront size={24} />
+              </div>
+              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter md:text-right">
+                Paket Wisata Lokal
+              </h2>
+            </div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-r-2 border-primary pr-4 md:text-right max-w-xs leading-relaxed">
+              Nikmati perjalanan tanpa hambatan dengan pemandu lokal berpengalaman.
+            </p>
           </div>
 
           {isPkgsLoading ? (
