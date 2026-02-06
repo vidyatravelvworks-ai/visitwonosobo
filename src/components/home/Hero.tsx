@@ -51,7 +51,13 @@ const Hero = ({ config: externalConfig, isLoading: externalLoading }: HeroProps)
 
       <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10 pt-20">
         <div className="max-w-5xl mx-auto space-y-8">
-          <h2 className="text-white text-xs md:text-sm font-bold uppercase tracking-[0.4em] animate-in slide-in-from-top duration-700">Welcome to Wonosobo</h2>
+          <h2 className="text-white text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] animate-in slide-in-from-top duration-700 flex flex-wrap items-center justify-center gap-3">
+            <span>Welcome to</span>
+            <span className="inline-block bg-primary text-white px-4 py-1.5 relative overflow-hidden shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)]">
+              Wonosobo
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_2.5s_infinite]"></span>
+            </span>
+          </h2>
           <h1 className="text-5xl md:text-9xl font-black text-white uppercase leading-none tracking-tighter">
             The Soul <br /> <span className="text-white underline decoration-primary decoration-[12px] underline-offset-[16px]">of Java</span>
           </h1>
@@ -71,7 +77,7 @@ const Hero = ({ config: externalConfig, isLoading: externalLoading }: HeroProps)
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white animate-bounce hidden md:block opacity-50">
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white animate-bounce hidden md:block opacity-50">
         <ChevronDown className="h-8 w-8" />
       </div>
     </section>
