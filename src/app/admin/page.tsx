@@ -10,7 +10,7 @@ import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, Search, X, Trash2, AlertTriangle } from 'lucide-react';
+import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, Search, X, Trash2, LayoutDashboard } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { getAuth, signOut } from 'firebase/auth';
@@ -187,29 +187,59 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-secondary/20 flex">
-      <aside className="w-64 bg-black text-white flex flex-col p-8 fixed h-full z-20">
+      <aside className="w-64 bg-black text-white flex flex-col p-8 fixed h-full z-20 overflow-y-auto no-scrollbar">
         <div className="mb-12">
           <span className="text-xl font-black uppercase text-primary tracking-tighter">visitwonosobo</span>
         </div>
-        <nav className="flex-grow space-y-2">
-          {[
-            { id: 'see-and-do', icon: Map, label: 'See & Do' },
-            { id: 'stories', icon: BookOpen, label: 'Stories' },
-            { id: 'packages', icon: Package, label: 'Packages' },
-            { id: 'gallery', icon: ImageIcon, label: 'Gallery' },
-            { id: 'display', icon: Settings, label: 'Display' }
-          ].map((item) => (
+        
+        <nav className="flex-grow space-y-8">
+          {/* Group: ARTICLE */}
+          <div className="space-y-4">
+            <h4 className="px-4 text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Article</h4>
+            <div className="space-y-1">
+              {[
+                { id: 'see-and-do', icon: Map, label: 'See & Do' },
+                { id: 'stories', icon: BookOpen, label: 'Stories' },
+                { id: 'packages', icon: Package, label: 'Packages' },
+              ].map((item) => (
+                <Button 
+                  key={item.id} 
+                  variant="ghost" 
+                  onClick={() => setCurrentView(item.id as DashboardView)} 
+                  className={cn("w-full justify-start rounded-none h-11 gap-3 px-4 transition-all", currentView === item.id ? "bg-primary text-white" : "hover:bg-white/10")}
+                >
+                  <item.icon size={16} /> <span className="text-[10px] font-black uppercase tracking-widest">{item.label}</span>
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          {/* Group: GALLERY */}
+          <div className="space-y-4">
+            <h4 className="px-4 text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Gallery</h4>
             <Button 
-              key={item.id} 
               variant="ghost" 
-              onClick={() => setCurrentView(item.id as DashboardView)} 
-              className={cn("w-full justify-start rounded-none h-12 gap-3 px-4", currentView === item.id && "bg-primary")}
+              onClick={() => setCurrentView('gallery')} 
+              className={cn("w-full justify-start rounded-none h-11 gap-3 px-4 transition-all", currentView === 'gallery' ? "bg-primary text-white" : "hover:bg-white/10")}
             >
-              <item.icon size={18} /> <span className="text-[10px] font-black uppercase tracking-widest">{item.label}</span>
+              <ImageIcon size={16} /> <span className="text-[10px] font-black uppercase tracking-widest">Manage Assets</span>
             </Button>
-          ))}
+          </div>
+
+          {/* Group: DISPLAY */}
+          <div className="space-y-4">
+            <h4 className="px-4 text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Display</h4>
+            <Button 
+              variant="ghost" 
+              onClick={() => setCurrentView('display')} 
+              className={cn("w-full justify-start rounded-none h-11 gap-3 px-4 transition-all", currentView === 'display' ? "bg-primary text-white" : "hover:bg-white/10")}
+            >
+              <Settings size={16} /> <span className="text-[10px] font-black uppercase tracking-widest">Site Config</span>
+            </Button>
+          </div>
         </nav>
-        <Button variant="destructive" onClick={() => signOut(auth)} className="mt-auto w-full rounded-none h-12 gap-3 font-black text-[10px] uppercase">
+
+        <Button variant="destructive" onClick={() => signOut(auth)} className="mt-12 w-full rounded-none h-12 gap-3 font-black text-[10px] uppercase">
           <LogOut size={16} /> Sign Out
         </Button>
       </aside>
