@@ -86,7 +86,7 @@ export default function Home() {
       
       <Services />
 
-      <section className="py-24 bg-secondary/50">
+      <section className="py-24 bg-secondary">
         <div className="container mx-auto px-6 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-10">
             <div className="flex flex-col md:flex-row md:items-end gap-10">
