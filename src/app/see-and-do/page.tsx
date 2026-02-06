@@ -33,9 +33,9 @@ const SeeAndDoPage = () => {
   const heroImage = (configHero && configHero.trim() !== "") ? configHero : placeholderHero;
 
   const categoryData = [
-    { id: 'nature', title: 'Nature & Adventure', categoryName: 'Nature & Adventure', icon: <Sunrise className="h-6 w-6" />, description: 'Witness the iconic Golden Sunrise at Sikunir.' },
-    { id: 'culture', title: 'Heritage & Culture', categoryName: 'Heritage & Culture', icon: <Map className="h-6 w-6" />, description: 'Explore ancient Arjuna Temple and mystical rituals.' },
-    { id: 'eat', title: 'Food & Drink', categoryName: 'Food & Drink', icon: <Utensils className="h-6 w-6" />, description: 'Taste the legendary Mie Ongklok and Carica.' }
+    { id: 'nature', title: 'Nature & Adventure', categoryName: 'Nature & Adventure', icon: <Sunrise className="h-6 w-6" />, description: 'Saksikan Golden Sunrise yang ikonik di Bukit Sikunir.' },
+    { id: 'culture', title: 'Heritage & Culture', categoryName: 'Heritage & Culture', icon: <Map className="h-6 w-6" />, description: 'Jelajahi Kompleks Candi Arjuna yang kuno dan ritual mistis.' },
+    { id: 'eat', title: 'Food & Drink', categoryName: 'Food & Drink', icon: <Utensils className="h-6 w-6" />, description: 'Cicipi Mie Ongklok legendaris dan manisan Carica.' }
   ];
 
   const chunkIntoPairs = (arr: any[]) => {
@@ -78,11 +78,11 @@ const SeeAndDoPage = () => {
                     src={catImg}
                     alt={cat.title}
                     fill
-                    className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
+                    className="object-cover opacity-40 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
                   />
                   
-                  {/* Icon Box - Enlarged and moved to top */}
-                  <div className="absolute top-0 left-0 p-6 bg-primary text-white z-10">
+                  {/* Icon Box - Enlarged, moved to top and aligned with text left (left-10) */}
+                  <div className="absolute top-0 left-10 p-6 bg-primary text-white z-10">
                     {cat.icon}
                   </div>
 

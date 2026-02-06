@@ -60,11 +60,11 @@ const Services = () => {
                 src={cat.image || 'https://picsum.photos/seed/wonosobo/800/1000'}
                 alt={cat.title}
                 fill
-                className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
+                className="object-cover opacity-40 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
               />
               
-              {/* Icon Box - Enlarged and moved to top */}
-              <div className="absolute top-0 left-0 p-6 bg-primary text-white z-10">
+              {/* Icon Box - Enlarged, moved to top and aligned with text left (left-10) */}
+              <div className="absolute top-0 left-10 p-6 bg-primary text-white z-10">
                 {cat.icon}
               </div>
 
