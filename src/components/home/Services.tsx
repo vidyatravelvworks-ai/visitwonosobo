@@ -18,7 +18,7 @@ const Services = () => {
       id: 'nature',
       title: 'Nature & Adventure',
       categoryName: 'Nature & Adventure',
-      description: 'Witness the iconic Golden Sunrise at Sikunir.',
+      description: 'Saksikan Golden Sunrise yang ikonik di Bukit Sikunir.',
       image: config?.categoryImages?.['Nature & Adventure'] || PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl,
       icon: <Sunrise className="h-5 w-5" />
     },
@@ -26,7 +26,7 @@ const Services = () => {
       id: 'culture',
       title: 'Heritage & Culture',
       categoryName: 'Heritage & Culture',
-      description: 'Explore ancient Arjuna Temple and mystical rituals.',
+      description: 'Jelajahi Kompleks Candi Arjuna yang kuno dan ritual mistis.',
       image: config?.categoryImages?.['Heritage & Culture'] || PlaceHolderImages.find(img => img.id === 'candi-arjuna')?.imageUrl,
       icon: <Map className="h-5 w-5" />
     },
@@ -34,7 +34,7 @@ const Services = () => {
       id: 'eat',
       title: 'Food & Drink',
       categoryName: 'Food & Drink',
-      description: 'Taste the legendary Mie Ongklok and Carica.',
+      description: 'Cicipi Mie Ongklok legendaris dan manisan Carica.',
       image: config?.categoryImages?.['Food & Drink'] || PlaceHolderImages.find(img => img.id === 'mie-ongklok')?.imageUrl,
       icon: <Utensils className="h-5 w-5" />
     }
