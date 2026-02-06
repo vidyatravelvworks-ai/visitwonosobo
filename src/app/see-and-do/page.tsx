@@ -33,9 +33,9 @@ const SeeAndDoPage = () => {
   const heroImage = (configHero && configHero.trim() !== "") ? configHero : placeholderHero;
 
   const categoryData = [
-    { id: 'nature', title: 'Nature & Adventure', categoryName: 'Nature & Adventure', icon: <Sunrise className="h-5 w-5" />, description: 'Witness the iconic Golden Sunrise at Sikunir.' },
-    { id: 'culture', title: 'Heritage & Culture', categoryName: 'Heritage & Culture', icon: <Map className="h-5 w-5" />, description: 'Explore ancient Arjuna Temple and mystical rituals.' },
-    { id: 'eat', title: 'Food & Drink', categoryName: 'Food & Drink', icon: <Utensils className="h-5 w-5" />, description: 'Taste the legendary Mie Ongklok and Carica.' }
+    { id: 'nature', title: 'Nature & Adventure', categoryName: 'Nature & Adventure', icon: <Sunrise className="h-6 w-6" />, description: 'Witness the iconic Golden Sunrise at Sikunir.' },
+    { id: 'culture', title: 'Heritage & Culture', categoryName: 'Heritage & Culture', icon: <Map className="h-6 w-6" />, description: 'Explore ancient Arjuna Temple and mystical rituals.' },
+    { id: 'eat', title: 'Food & Drink', categoryName: 'Food & Drink', icon: <Utensils className="h-6 w-6" />, description: 'Taste the legendary Mie Ongklok and Carica.' }
   ];
 
   const chunkIntoPairs = (arr: any[]) => {
@@ -78,10 +78,15 @@ const SeeAndDoPage = () => {
                     src={catImg}
                     alt={cat.title}
                     fill
-                    className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-40"
+                    className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
                   />
+                  
+                  {/* Icon Box - Enlarged and moved to top */}
+                  <div className="absolute top-0 left-0 p-6 bg-primary text-white z-10">
+                    {cat.icon}
+                  </div>
+
                   <div className="absolute inset-0 p-10 flex flex-col justify-end text-white">
-                    <div className="mb-4 p-2 bg-primary w-fit">{cat.icon}</div>
                     <h3 className="text-3xl font-black uppercase mb-2 tracking-tight">{cat.title}</h3>
                     <Button variant="link" className="text-white p-0 w-fit font-bold uppercase tracking-widest text-xs hover:text-primary" asChild>
                       <a href={`#${cat.id}`}>Explore Now <ArrowRight className="ml-2 h-4 w-4" /></a>
@@ -102,7 +107,7 @@ const SeeAndDoPage = () => {
           return (
             <div key={cat.id} id={cat.id} className="scroll-mt-32">
               <div className="flex items-center gap-6 mb-12">
-                <div className="p-2 bg-primary text-white">{cat.icon}</div>
+                <div className="p-4 bg-primary text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">{cat.icon}</div>
                 <h2 className="text-3xl font-black uppercase tracking-tight">{cat.title}</h2>
               </div>
               <Carousel className="w-full relative">

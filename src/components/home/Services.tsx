@@ -20,7 +20,7 @@ const Services = () => {
       categoryName: 'Nature & Adventure',
       description: 'Saksikan Golden Sunrise yang ikonik di Bukit Sikunir.',
       image: config?.categoryImages?.['Nature & Adventure'] || PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl,
-      icon: <Sunrise className="h-5 w-5" />
+      icon: <Sunrise className="h-6 w-6" />
     },
     {
       id: 'culture',
@@ -28,7 +28,7 @@ const Services = () => {
       categoryName: 'Heritage & Culture',
       description: 'Jelajahi Kompleks Candi Arjuna yang kuno dan ritual mistis.',
       image: config?.categoryImages?.['Heritage & Culture'] || PlaceHolderImages.find(img => img.id === 'candi-arjuna')?.imageUrl,
-      icon: <Map className="h-5 w-5" />
+      icon: <Map className="h-6 w-6" />
     },
     {
       id: 'eat',
@@ -36,7 +36,7 @@ const Services = () => {
       categoryName: 'Food & Drink',
       description: 'Cicipi Mie Ongklok legendaris dan manisan Carica.',
       image: config?.categoryImages?.['Food & Drink'] || PlaceHolderImages.find(img => img.id === 'mie-ongklok')?.imageUrl,
-      icon: <Utensils className="h-5 w-5" />
+      icon: <Utensils className="h-6 w-6" />
     }
   ];
 
@@ -60,10 +60,15 @@ const Services = () => {
                 src={cat.image || 'https://picsum.photos/seed/wonosobo/800/1000'}
                 alt={cat.title}
                 fill
-                className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-40"
+                className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
               />
+              
+              {/* Icon Box - Enlarged and moved to top */}
+              <div className="absolute top-0 left-0 p-6 bg-primary text-white z-10">
+                {cat.icon}
+              </div>
+
               <div className="absolute inset-0 p-10 flex flex-col justify-end text-white">
-                <div className="mb-4 p-2 bg-primary w-fit">{cat.icon}</div>
                 <h3 className="text-3xl font-black uppercase mb-2 tracking-tight">{cat.title}</h3>
                 <p className="text-white/80 mb-6 text-sm leading-relaxed">{cat.description}</p>
                 <Button variant="link" className="text-white p-0 w-fit font-bold uppercase tracking-widest text-xs hover:text-primary" asChild>
