@@ -67,7 +67,7 @@ const StoriesPage = () => {
         </div>
         <div className="container mx-auto px-6 md:px-32 relative z-10 text-center">
           <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white">Stories</h1>
-          <p className="text-white/80 font-medium text-sm md:text-base mt-4 max-w-lg mx-auto">
+          <p className="text-white/80 font-medium text-[10px] md:text-xs mt-4 max-w-lg mx-auto">
             Temukan wawasan terdalam mengenai Wonosobo melalui kacamata warga lokal.
           </p>
         </div>
