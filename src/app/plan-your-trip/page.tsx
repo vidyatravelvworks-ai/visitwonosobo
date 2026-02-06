@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -115,7 +114,7 @@ const PlanYourTripPage = () => {
         </div>
         <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10 text-center">
           <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-4">Plan Your Journey</h1>
-          <p className="text-white/80 font-medium text-xs mt-4 max-w-lg mx-auto">
+          <p className="text-white/80 font-medium text-[10px] md:text-xs mt-4 max-w-lg mx-auto">
             Pastikan perjalanan Anda aman dan berkesan dengan memilih layanan dan paket yang tepat sesuai kebutuhan Anda.
           </p>
         </div>
@@ -164,11 +163,14 @@ const PlanYourTripPage = () => {
           )}
 
           <div className="mt-32">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
               <div className="flex items-center gap-4">
                 <div className="p-2 bg-primary text-white"><Grid size={24} /></div>
                 <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Trip Gallery</h2>
               </div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-primary pl-4 max-w-xs leading-relaxed">
+                Kumpulan momen autentik dari perjalanan para penjelajah di Wonosobo.
+              </p>
             </div>
             
             {isGalleryLoading ? (
