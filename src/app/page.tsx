@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -90,7 +89,7 @@ export default function Home() {
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Discover More</h3>
               <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Town Stories</h2>
             </div>
-            <Button variant="link" className="text-black font-black uppercase text-[10px] tracking-widest p-0 flex items-center gap-2 group" asChild>
+            <Button variant="link" className="text-primary font-black uppercase text-[10px] tracking-widest p-0 flex items-center gap-2 group" asChild>
               <Link href="/stories">
                 Lihat Semua Cerita <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>

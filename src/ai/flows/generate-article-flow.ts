@@ -2,6 +2,7 @@
 /**
  * @fileOverview Flow untuk menghasilkan artikel ilmiah populer dengan standar SEO Senior.
  * Dioptimalkan untuk mencapai skor SEO 100% secara otomatis sesuai checklist editor.
+ * Menambahkan instruksi untuk menyertakan sumber ilmiah dan daftar pustaka.
  */
 
 import { ai } from '@/ai/genkit';
@@ -24,7 +25,6 @@ export type GenerateArticleOutput = z.infer<typeof GenerateArticleOutputSchema>;
 
 /**
  * Wrapper function for the AI flow.
- * Menggunakan pola result object agar tidak memicu global error overlay di NextJS saat kuota habis.
  */
 export async function generateArticle(input: GenerateArticleInput): Promise<{ data?: GenerateArticleOutput; error?: string }> {
   try {
@@ -45,22 +45,18 @@ const prompt = ai.definePrompt({
   prompt: `Bertindaklah sebagai Senior Content Strategist dan Pakar SEO Internasional.
 Tugas Anda adalah menulis artikel otoritas tinggi yang dirancang untuk menduduki peringkat #1 Google untuk topik: "{{title}}".
 
-ANDA WAJIB MEMENUHI SEMUA KRITERIA SEO BERIKUT (SANGAT KETAT):
-1. PANJANG KONTEN: Minimal 1200 kata. Berikan detail mendalam, panduan langkah demi langkah, dan wawasan lokal yang unik tentang Wonosobo. Jangan memberikan konten pendek.
+ANDA WAJIB MEMENUHI SEMUA KRITERIA BERIKUT:
+1. PANJANG KONTEN: Minimal 1200 kata. Berikan detail mendalam dan wawasan lokal yang unik tentang Wonosobo.
 2. OPTIMASI KATA KUNCI (Focus Keyword: {{focusKeyword}}):
-   - WAJIB masukkan "{{focusKeyword}}" di KALIMAT PERTAMA pada paragraf pertama.
-   - Gunakan "{{focusKeyword}}" setidaknya 6-10 kali di seluruh isi artikel secara natural (Keyword Density).
+   - WAJIB masukkan "{{focusKeyword}}" di KALIMAT PERTAMA.
+   - Gunakan "{{focusKeyword}}" setidaknya 6-10 kali secara natural.
    - Masukkan "{{focusKeyword}}" di setidaknya satu Sub-judul (H2 atau H3).
-3. METADATA PRESISI:
-   - metaTitle: Buat judul SEO yang menarik, panjangnya HARUS antara 50-60 karakter, dan WAJIB mengandung "{{focusKeyword}}".
-   - metaDescription: Buat deskripsi yang mendorong klik (CTR), panjangnya HARUS antara 145-155 karakter, dan WAJIB mengandung "{{focusKeyword}}".
-4. STRUKTUR & LINKING:
-   - Gunakan struktur Markdown lengkap: H1 (Judul Utama), beberapa H2, dan beberapa H3.
-   - Gunakan bullet points atau daftar untuk memecah teks.
-   - WAJIB masukkan setidaknya 2 link markdown yang relevan (misal: [Eksplorasi Dieng](https://visitwonosobo.tours/destinasi) atau [Paket Wisata Wonosobo](https://visitwonosobo.tours/paket)).
-5. GAMBAR: Pilih satu ID gambar paling relevan dari daftar: hero-sikunir, candi-arjuna, mie-ongklok, telaga-warna, kawah-sikidang, kebun-teh, waterfall, carica, coffee, cave, mountain-prau.
+3. SUMBER ILMIAH & REFERENSI: WAJIB sertakan sumber ilmiah, data statistik, atau referensi otoritas yang relevan di dalam artikel untuk meningkatkan kredibilitas.
+4. DAFTAR PUSTAKA: Di akhir artikel, buatlah bagian "Daftar Pustaka" dengan penulisan standar (format APA atau sejenisnya) yang mencantumkan sumber-sumber yang digunakan.
+5. METADATA: metaTitle (50-60 karakter) dan metaDescription (145-155 karakter) WAJIB mengandung "{{focusKeyword}}".
+6. GAMBAR: Pilih satu ID gambar paling relevan dari daftar: hero-sikunir, candi-arjuna, mie-ongklok, telaga-warna, kawah-sikidang, kebun-teh, waterfall, carica, coffee, cave, mountain-prau.
 
-Tulis dalam Bahasa Indonesia yang profesional, persuasif, dan sangat informatif.`,
+Tulis dalam Bahasa Indonesia yang profesional, akademis namun tetap populer, persuasif, dan sangat informatif.`,
 });
 
 const generateArticleFlow = ai.defineFlow(

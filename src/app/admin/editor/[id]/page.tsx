@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect, use } from 'react';
@@ -70,19 +69,6 @@ const ArticleEditorPage = ({ params }: PageProps) => {
   const docRef = useMemoFirebase(() => db && !isNew ? doc(db, 'articles', id) : null, [db, id, isNew]);
   const { data: article, isLoading } = useDoc(docRef);
 
-  const getCategoryLabel = (cat: string) => {
-    const map: Record<string, string> = {
-      'Alam': 'Nature & Adventure',
-      'Budaya': 'Heritage & Culture',
-      'Kuliner': 'Food & Drink',
-      'Sejarah': 'History & Heritage',
-      'Sosial': 'People & Culture',
-      'Geografis': 'Geography & Landscape',
-      'Tips': 'Travel Tips'
-    };
-    return map[cat] || cat;
-  };
-
   useEffect(() => {
     if (article) {
       setFormData({
@@ -92,7 +78,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
         content: article.content || '',
         image: article.image || '',
         metaTitle: article.metaTitle || '',
-        category: getCategoryLabel(article.category || (article.type === 'destination' ? 'Nature & Adventure' : 'History & Heritage')),
+        category: article.category || (article.type === 'destination' ? 'Nature & Adventure' : 'History & Heritage'),
         type: article.type || 'destination',
         date: article.date || getTodayFormatted(),
         author: article.author || 'Admin Lokal',
@@ -139,7 +125,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
           image: suggestedImg,
           slug: prev.slug || formData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
         }));
-        toast({ title: 'SEO 100% Generated' });
+        toast({ title: 'AI SEO & Bibliography Generated' });
       }
     } catch (e) {
       toast({ variant: 'destructive', title: 'Connection Error' });
@@ -189,7 +175,7 @@ const ArticleEditorPage = ({ params }: PageProps) => {
       { id: 9, label: 'Meta Title (50-60 chars)', pass: formData.metaTitle.length >= 50 && formData.metaTitle.length <= 65 },
       { id: 10, label: 'Meta Desc (145-155 chars)', pass: formData.excerpt.length >= 145 && formData.excerpt.length <= 160 },
       { id: 11, label: 'Featured Image present', pass: formData.image.trim().length > 0 },
-      { id: 12, label: 'Links (Internal/External)', pass: content.includes('](') }
+      { id: 12, label: 'Sources/Bibliography present', pass: content.includes('daftar pustaka') || content.includes('referensi') }
     ];
     
     const score = Math.round((checks.filter(c => c.pass).length / checks.length) * 100);
@@ -253,13 +239,14 @@ const ArticleEditorPage = ({ params }: PageProps) => {
               </div>
 
               <div className="grid grid-cols-10 gap-3 items-end">
-                <div className="col-span-6 space-y-1">
+                <div className="col-span-5 space-y-1">
                   <Label className="text-[10px] font-black uppercase text-primary">Focus SEO Keyword</Label>
                   <Input value={formData.focusKeyword} onChange={e => setFormData({...formData, focusKeyword: e.target.value})} className="rounded-none h-12 text-xs border-primary/30" placeholder="e.g. Wisata Dieng" />
                 </div>
-                <div className="col-span-4">
+                <div className="col-span-5">
                   <Button onClick={handleGenerateAI} disabled={isGenerating} className="w-full bg-black text-white h-12 rounded-none text-[10px] font-black uppercase gap-2 hover:bg-primary transition-all">
-                    {isGenerating ? <Loader2 className="animate-spin h-4 w-4" /> : <Sparkles size={14} />} AI Write 100% SEO
+                    {isGenerating ? <Loader2 className="animate-spin h-4 w-4" /> : <Sparkles size={14} />} 
+                    AI SEO + Bibliography
                   </Button>
                 </div>
               </div>
