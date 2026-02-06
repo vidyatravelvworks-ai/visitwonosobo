@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -6,13 +7,15 @@ import Services from '@/components/home/Services';
 import { staticPackages as staticTripPackages } from '@/data/packages';
 import { articles as staticArticles } from '@/data/articles';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, limit, where, doc } from 'firebase/firestore';
 import { 
   Activity, ShieldAlert, CarFront, 
   Clock, ThermometerSnowflake, Loader2,
-  Footprints, MapPin, ArrowRight, MessageCircle
+  Footprints, MapPin, ArrowRight, MessageCircle,
+  History, Users, Globe, Info
 } from 'lucide-react';
 import ArticleCard from '@/components/article/ArticleCard';
 import { cn } from '@/lib/utils';
@@ -33,7 +36,7 @@ export default function Home() {
   
   const latestStories = React.useMemo(() => {
     if (!dbStories || dbStories.length === 0) {
-      return staticArticles.filter(a => a.type === 'story').slice(0, 3);
+      return [];
     }
     return dbStories;
   }, [dbStories]);
@@ -98,7 +101,41 @@ export default function Home() {
           {isStoriesLoading ? (
             <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
           ) : (latestStories.length === 0) ? (
-            <div className="py-20 text-center text-[10px] font-black uppercase text-muted-foreground border-2 border-dashed">Belum ada cerita. Buat di Dashboard Admin!</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+              {[
+                { id: 'history', title: 'History & Heritage', icon: <History className="h-5 w-5" /> },
+                { id: 'people', title: 'People & Culture', icon: <Users className="h-5 w-5" /> },
+                { id: 'geography', title: 'Geography & Landscape', icon: <Globe className="h-5 w-5" /> },
+                { id: 'tips', title: 'Travel Tips', icon: <Info className="h-5 w-5" /> }
+              ].map((cat) => {
+                const catConfigImg = config?.categoryImages?.[cat.title];
+                let catPlaceholderId = 'mountain-prau';
+                if (cat.id === 'history') catPlaceholderId = 'candi-arjuna';
+                if (cat.id === 'people') catPlaceholderId = 'ritual';
+                if (cat.id === 'geography') catPlaceholderId = 'misty-valley';
+                
+                const catPlaceholder = PlaceHolderImages.find(img => img.id === catPlaceholderId)?.imageUrl;
+                const catImg = (catConfigImg && catConfigImg.trim() !== "") ? catConfigImg : (catPlaceholder || `https://picsum.photos/seed/${cat.id}/800/1000`);
+
+                return (
+                  <Link key={cat.id} href={`/stories#${cat.id}`} className="group relative aspect-[4/5] overflow-hidden bg-black">
+                    <Image
+                      src={catImg}
+                      alt={cat.title}
+                      fill
+                      className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
+                    />
+                    <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
+                      <div className="mb-4 p-2 bg-primary w-fit">{cat.icon}</div>
+                      <h3 className="text-xl font-black uppercase mb-2 tracking-tight text-white">{cat.title}</h3>
+                      <div className="text-white p-0 w-fit font-bold uppercase tracking-widest text-[10px] group-hover:text-primary flex items-center gap-2 transition-colors">
+                        Explore <ArrowRight className="h-3 w-3" />
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
               {latestStories.map((story: any) => (
