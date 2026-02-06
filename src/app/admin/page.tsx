@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -112,7 +111,7 @@ const AdminDashboard = () => {
     try {
       const id = `img-${Date.now()}`;
       const newOrder = (allGallery?.length || 0) + 1;
-      await setDoc(doc(db, 'gallery', id), { ...galleryForm, id, order: newOrder, createdAt: serverTimestamp() });
+      await setDoc(doc(db, 'gallery', id), { ...galleryForm, id, order: newOrder, updatedAt: serverTimestamp() }, { merge: true });
       toast({ title: 'Success', description: 'Gallery image added.' });
       setGalleryForm({ url: '', caption: '' });
     } catch (err) {
@@ -239,18 +238,18 @@ const AdminDashboard = () => {
           <div className="space-y-8">
             <Card className="rounded-none border-2 shadow-xl bg-white p-8">
               <div className="flex flex-col md:flex-row gap-8 items-stretch">
-                <div className="w-[240px] aspect-square bg-secondary/10 border-2 border-black/10 flex items-center justify-center overflow-hidden shrink-0">
+                <div className="w-[200px] aspect-square bg-secondary/10 border-2 border-black/10 flex items-center justify-center overflow-hidden shrink-0">
                   {galleryForm.url ? (
                     <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
                   ) : (
                     <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2 px-4 text-center">
                       <ImageIcon size={20} className="opacity-20" />
-                      <span>Preview Square</span>
+                      <span>Square Preview</span>
                     </div>
                   )}
                 </div>
 
-                <div className="flex-grow flex flex-col justify-between py-1">
+                <div className="flex-grow flex flex-col justify-between py-0">
                   <div className="space-y-4">
                     <div className="space-y-1 text-left">
                       <Label className="text-[10px] font-black uppercase block">Image URL</Label>
@@ -272,7 +271,7 @@ const AdminDashboard = () => {
                     </div>
                   </div>
                   <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-12 font-black uppercase text-[10px] tracking-widest gap-2 mt-4">
-                    <Save size={14} /> Save Image
+                    <Save size={14} /> Save to Gallery
                   </Button>
                 </div>
               </div>
@@ -282,7 +281,7 @@ const AdminDashboard = () => {
                {isGalleryLoading ? (
                  <div className="col-span-full py-20 flex justify-center"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
                ) : (allGallery?.length === 0 || !allGallery) ? (
-                 <div className="col-span-full py-20 text-center text-[10px] font-black uppercase text-muted-foreground">No images in gallery yet.</div>
+                 <div className="col-span-full py-20 text-center text-[10px] font-black uppercase text-muted-foreground">Gallery is empty.</div>
                ) : allGallery?.map(g => (
                  <div key={g.id} className="relative group aspect-square bg-gray-100 border overflow-hidden">
                     <img src={g.url} className="w-full h-full object-cover" alt={g.caption} />
@@ -327,7 +326,7 @@ const AdminDashboard = () => {
                   <TableBody>
                     {(currentView === 'see-and-do' || currentView === 'stories') && (
                       filteredArticles.length === 0 ? (
-                        <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No articles found.</TableCell></TableRow>
+                        <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No records found.</TableCell></TableRow>
                       ) : filteredArticles.map(a => (
                         <TableRow key={a.id} className="hover:bg-secondary/10 border-b">
                           <TableCell className="p-0 flex items-center gap-4">

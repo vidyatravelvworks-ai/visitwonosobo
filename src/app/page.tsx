@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -13,8 +12,7 @@ import { collection, query, orderBy, limit, where, doc } from 'firebase/firestor
 import { 
   Activity, ShieldAlert, CarFront, 
   Clock, ThermometerSnowflake, Loader2,
-  Footprints, MapPin, ArrowRight, MessageCircle,
-  CheckCircle2, XCircle
+  Footprints, MapPin, ArrowRight, MessageCircle
 } from 'lucide-react';
 import ArticleCard from '@/components/article/ArticleCard';
 import { cn } from '@/lib/utils';
@@ -99,6 +97,8 @@ export default function Home() {
 
           {isStoriesLoading ? (
             <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
+          ) : (latestStories.length === 0) ? (
+            <div className="py-20 text-center text-[10px] font-black uppercase text-muted-foreground border-2 border-dashed">Belum ada cerita. Buat di Dashboard Admin!</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
               {latestStories.map((story: any) => (
@@ -177,7 +177,7 @@ export default function Home() {
 
       <section className="py-24 bg-black relative overflow-hidden px-6 text-center">
         <div className="absolute inset-0 opacity-30">
-          {!isConfigLoading && heroImage && <img src={heroImage} alt="CTA BG" className="w-full h-full object-cover" />}
+          {!isConfigLoading && heroImage && <img src={heroImage} alt="CTA" className="w-full h-full object-cover" />}
         </div>
         <div className="container mx-auto relative z-10">
           <h2 className="text-5xl md:text-8xl font-black text-white uppercase leading-none tracking-tighter mb-8">Ready to <span className="text-primary">Explore?</span></h2>
