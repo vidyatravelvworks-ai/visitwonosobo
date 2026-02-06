@@ -89,9 +89,14 @@ export default function Home() {
       <section className="py-16 bg-secondary/20 px-6">
         <div className="container mx-auto px-0 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-10">
-            <div className="max-w-2xl">
-              <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Discover More</h3>
-              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Town Stories</h2>
+            <div className="flex flex-col md:flex-row md:items-end gap-10">
+              <div className="max-w-2xl">
+                <h3 className="text-primary font-bold uppercase tracking-widest text-xs mb-4">Discover More</h3>
+                <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">Town Stories</h2>
+              </div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-primary pl-4 max-w-xs mb-2 leading-relaxed">
+                Temukan wawasan terdalam mengenai Wonosobo melalui kacamata warga lokal.
+              </p>
             </div>
             <Button variant="link" className="text-primary font-black uppercase text-[10px] tracking-widest p-0 flex items-center gap-2 group" asChild>
               <Link href="/stories">
