@@ -44,6 +44,7 @@ const PlanYourTripPage = () => {
     : defaultGalleryItems;
 
   // CRITICAL: Filter out any items with empty or null URLs to prevent src="" errors
+  // This handles the reported "empty string" error in NextJS console.
   const galleryItems = React.useMemo(() => {
     return rawGalleryItems.filter(item => item && item.url && item.url.trim() !== "");
   }, [rawGalleryItems]);

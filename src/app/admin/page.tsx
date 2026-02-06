@@ -268,8 +268,8 @@ const AdminDashboard = () => {
           <div className="space-y-8">
             <Card className="rounded-none border-2 shadow-xl bg-white p-8">
               <div className="flex gap-8 items-start">
-                {/* Square Preview - Matches total height from top of URL input to bottom of Button */}
-                <div className="w-[152px] h-[152px] bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0 mt-6">
+                {/* Square Preview - Matches exact stack height (152px) */}
+                <div className="w-[152px] h-[152px] bg-secondary/10 border-2 border-dashed border-black/10 flex items-center justify-center overflow-hidden shrink-0 mt-[22px]">
                   {galleryForm.url && galleryForm.url.trim() !== "" ? (
                     <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
                   ) : (
@@ -290,7 +290,7 @@ const AdminDashboard = () => {
                       placeholder="https://..."
                     />
                   </div>
-                  <div className="space-y-1">
+                  <div className="space-y-1 pt-[6px]">
                     <Input 
                       value={galleryForm.caption} 
                       onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
