@@ -87,7 +87,10 @@ const PlanYourTripPage = () => {
           <div className="absolute inset-0 bg-black/50" />
         </div>
         <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10 text-center">
-          <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-4">Plan Your <span className="text-primary">Journey</span></h1>
+          <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white">Plan Your <span className="text-primary">Journey</span></h1>
+          <p className="text-white/80 font-medium text-[10px] md:text-xs mt-4 max-w-lg mx-auto">
+            Pastikan perjalanan Anda aman dan berkesan dengan memilih layanan dan paket yang tepat sesuai kebutuhan Anda.
+          </p>
         </div>
       </section>
 
