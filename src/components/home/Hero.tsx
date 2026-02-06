@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -44,7 +45,7 @@ const Hero = ({ config: externalConfig, isLoading: externalLoading }: HeroProps)
             className="object-cover animate-in fade-in duration-1000"
             priority
           />
-          <div className="absolute inset-0 bg-black/30 bg-gradient-to-b from-black/50 via-transparent to-black/60" />
+          <div className="absolute inset-0 bg-black/60 bg-gradient-to-b from-black/70 via-transparent to-black/80" />
         </div>
       )}
 
