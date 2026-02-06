@@ -187,7 +187,6 @@ const PlanYourTripPage = () => {
             ) : (
               <div className="relative overflow-hidden">
                 <div className="flex animate-marquee hover:[animation-play-state:paused] whitespace-nowrap">
-                  {/* Container 1 */}
                   <div className="grid grid-rows-3 grid-flow-col gap-1 h-[600px] md:h-[800px] shrink-0">
                     {galleryItems.map((item, idx) => {
                       const pattern = idx % 7;
@@ -218,7 +217,6 @@ const PlanYourTripPage = () => {
                       );
                     })}
                   </div>
-                  {/* Duplicate Container for infinite loop */}
                   <div className="grid grid-rows-3 grid-flow-col gap-1 h-[600px] md:h-[800px] shrink-0 ml-1" aria-hidden="true">
                     {galleryItems.map((item, idx) => {
                       const pattern = idx % 7;
@@ -284,7 +282,7 @@ const PlanYourTripPage = () => {
             <div className="max-w-2xl space-y-6">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs">Extra Services</h3>
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">Pemesanan Penginapan & Antar Jemput</h2>
-              <p className="text-white/60 text-sm md:text-base leading-relaxed">
+              <p className="text-white/60 text-xs md:text-sm leading-relaxed">
                 Butuh bantuan mencari homestay terbaik di Dieng atau transportasi dari luar kota? Kami melayani reservasi akomodasi dan antar jemput dari Bandara/Stasiun Yogyakarta, Semarang, Purwokerto, dan kota lainnya.
               </p>
             </div>
