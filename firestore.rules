@@ -12,32 +12,38 @@ service cloud.firestore {
       );
     }
 
+    // Aturan untuk Artikel (Blog & Destinasi)
     match /articles/{articleId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
+    // Aturan untuk Paket Wisata
     match /trip_packages/{packageId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
+    // Aturan untuk Galeri Foto
     match /gallery/{imageId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
+    // Aturan untuk Konfigurasi Website (Hero Images, dll)
     match /config/{configId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
+    // Aturan untuk Roles Admin
     match /roles_admin/{userId} {
       allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
       allow list: if isAdmin();
       allow write: if false;
     }
     
-    // Deployment trigger: Ensure global public read access for contents
+    // Deployment trigger: Memastikan akses baca publik global untuk konten dinamis
+    // Terakhir diperbarui: 2024-02-06 untuk memperbaiki error 'Missing or insufficient permissions' pada list /articles
   }
 }
