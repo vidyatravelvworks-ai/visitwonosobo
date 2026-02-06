@@ -155,6 +155,12 @@ const AdminDashboard = () => {
     toast({ title: 'Deleted', description: 'Artikel telah dihapus.' });
   };
 
+  const handleDeletePackage = (packageId: string) => {
+    if (!db) return;
+    deleteDocumentNonBlocking(doc(db, 'trip_packages', packageId));
+    toast({ title: 'Deleted', description: 'Paket wisata telah dihapus.' });
+  };
+
   const handleDeleteAllArticles = async () => {
     if (!db || !allArticles || allArticles.length === 0) return;
     setIsDeletingAll(true);
@@ -195,6 +201,11 @@ const AdminDashboard = () => {
     return false;
   }) || [];
 
+  const filteredPackages = allPackages?.filter(p => 
+    p.title?.toLowerCase().includes(tableSearch.toLowerCase()) ||
+    p.price?.toLowerCase().includes(tableSearch.toLowerCase())
+  ) || [];
+
   const isLoading = isArticlesLoading || isPkgsLoading || isGalleryLoading || isConfigLoading;
 
   return (
@@ -209,14 +220,17 @@ const AdminDashboard = () => {
             <h4 className="px-4 text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Article</h4>
             <div className="space-y-1">
               {[
-                { id: 'see-and-do', icon: Map, label: 'See &amp; Do' },
+                { id: 'see-and-do', icon: Map, label: 'See & Do' },
                 { id: 'stories', icon: BookOpen, label: 'Stories' },
                 { id: 'packages', icon: Package, label: 'Packages' },
               ].map((item) => (
                 <Button 
                   key={item.id} 
                   variant="ghost" 
-                  onClick={() => setCurrentView(item.id as DashboardView)} 
+                  onClick={() => {
+                    setCurrentView(item.id as DashboardView);
+                    setTableSearch('');
+                  }} 
                   className={cn(
                     "w-full justify-start rounded-none h-11 gap-3 px-4 transition-all hover:text-white", 
                     currentView === item.id 
@@ -290,7 +304,7 @@ const AdminDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[
                   { label: 'Home Hero', key: 'heroHome', value: configForm.heroHome },
-                  { label: 'See &amp; Do Hero', key: 'heroSeeDo', value: configForm.heroSeeDo },
+                  { label: 'See & Do Hero', key: 'heroSeeDo', value: configForm.heroSeeDo },
                   { label: 'Stories Hero', key: 'heroStories', value: configForm.heroStories }
                 ].map((field) => (
                   <div key={field.key} className="flex flex-col gap-3">
@@ -365,7 +379,7 @@ const AdminDashboard = () => {
 
             <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-8">
                <div className="border-b pb-4">
-                <h3 className="text-lg font-black uppercase tracking-tight text-primary">See &amp; Do Category Images</h3>
+                <h3 className="text-lg font-black uppercase tracking-tight text-primary">See & Do Category Images</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[
@@ -569,6 +583,40 @@ const AdminDashboard = () => {
                                 size="icon" 
                                 className="h-8 w-8 hover:bg-red-50 text-red-600" 
                                 onClick={() => handleDeleteArticle(a.id)}
+                              >
+                                <Trash2 size={14}/>
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+
+                    {currentView === 'packages' && (
+                      filteredPackages.length === 0 ? (
+                        <TableRow><TableCell colSpan={3} className="text-center py-20 text-[10px] font-bold uppercase text-muted-foreground">No packages found.</TableCell></TableRow>
+                      ) : filteredPackages.map(pkg => (
+                        <TableRow key={pkg.id} className="hover:bg-secondary/10 border-b">
+                          <TableCell className="p-0 flex items-center gap-4">
+                            <div className="w-16 h-16 bg-primary/10 border flex items-center justify-center shrink-0">
+                               <Package size={20} className="text-primary opacity-40" />
+                            </div>
+                            <div className="flex flex-col justify-center max-w-md pr-4 py-2">
+                              <div className="font-black uppercase text-[11px] leading-tight truncate">{pkg.title}</div>
+                              <div className="text-[9px] font-bold text-muted-foreground mt-1">{pkg.price} • {pkg.time}</div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="py-2 px-6"><Badge variant="outline" className="rounded-none text-[8px] uppercase font-black px-2">Trip Package</Badge></TableCell>
+                          <TableCell className="py-2 px-6 text-right">
+                            <div className="flex justify-end gap-2">
+                              <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-secondary" asChild>
+                                <Link href={`/admin/plan-your-trip/editor/${pkg.id}`}><Edit size={14}/></Link>
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="h-8 w-8 hover:bg-red-50 text-red-600" 
+                                onClick={() => handleDeletePackage(pkg.id)}
                               >
                                 <Trash2 size={14}/>
                               </Button>
