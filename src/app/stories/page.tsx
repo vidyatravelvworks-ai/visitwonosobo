@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -68,7 +67,7 @@ const StoriesPage = () => {
         </div>
         <div className="container mx-auto px-6 md:px-32 relative z-10 text-center">
           <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white">Stories</h1>
-          <p className="text-white/80 font-bold uppercase tracking-[0.3em] text-[10px] md:text-xs mt-4 max-w-lg mx-auto">
+          <p className="text-white/80 font-medium text-sm md:text-base mt-4 max-w-lg mx-auto">
             Temukan wawasan terdalam mengenai Wonosobo melalui kacamata warga lokal.
           </p>
         </div>
@@ -84,7 +83,7 @@ const StoriesPage = () => {
               if (cat.id === 'people') catPlaceholderId = 'ritual';
               if (cat.id === 'geography') catPlaceholderId = 'misty-valley';
               
-              const catPlaceholder = PlaceHolderImages.find(img => img.id === catPlaceholderId)?.imageUrl;
+              const catPlaceholder = PlaceHolderImages.find(img => img.id catPlaceholderId)?.imageUrl;
               const catImg = (catConfigImg && catConfigImg.trim() !== "") ? catConfigImg : (catPlaceholder || `https://picsum.photos/seed/${cat.id}/800/1000`);
 
               return (
