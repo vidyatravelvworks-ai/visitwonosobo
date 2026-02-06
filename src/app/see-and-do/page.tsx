@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -61,6 +62,9 @@ const SeeAndDoPage = () => {
         </div>
         <div className="container mx-auto px-6 md:px-32 relative z-10 text-center">
           <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white">See & Do</h1>
+          <p className="text-white/80 font-bold uppercase tracking-[0.3em] text-[10px] md:text-xs mt-4 max-w-lg mx-auto">
+            Eksplorasi keajaiban tersembunyi Wonosobo melalui aktivitas yang dirancang untuk membangkitkan jiwa petualang Anda.
+          </p>
         </div>
       </section>
 
