@@ -3,7 +3,7 @@
 /**
  * @fileOverview Flow untuk menghasilkan artikel ilmiah populer dengan standar SEO Senior.
  * Dioptimalkan untuk mencapai skor SEO 100% secara otomatis sesuai checklist editor.
- * Menambahkan instruksi untuk menyertakan sumber ilmiah dan daftar pustaka.
+ * Menambahkan instruksi untuk menyertakan sumber ilmiah, daftar pustaka, serta link internal & eksternal.
  */
 
 import { ai } from '@/ai/genkit';
@@ -53,9 +53,11 @@ ANDA WAJIB MEMENUHI SEMUA KRITERIA BERIKUT:
    - Gunakan "{{focusKeyword}}" setidaknya 6-10 kali secara natural.
    - Masukkan "{{focusKeyword}}" di setidaknya satu Sub-judul (H2 atau H3).
 3. SUMBER ILMIAH & REFERENSI: WAJIB sertakan sumber ilmiah, data statistik, atau referensi otoritas yang relevan di dalam artikel untuk meningkatkan kredibilitas.
-4. DAFTAR PUSTAKA: Di akhir artikel, buatlah bagian "Daftar Pustaka" dengan penulisan standar (format APA atau sejenisnya) yang mencantumkan sumber-sumber yang digunakan.
-5. METADATA: metaTitle (50-60 karakter) dan metaDescription (145-155 karakter) WAJIB mengandung "{{focusKeyword}}".
-6. GAMBAR: Pilih satu ID gambar paling relevan dari daftar: hero-sikunir, candi-arjuna, mie-ongklok, telaga-warna, kawah-sikidang, kebun-teh, waterfall, carica, coffee, cave, mountain-prau.
+4. DAFTAR PUSTAKA: Di akhir artikel, buatlah bagian "Daftar Pustaka" dengan penulisan standar (format APA) yang mencantumkan sumber-sumber yang digunakan.
+5. INTERNAL LINKS: Masukkan setidaknya 2 link internal ke halaman lain (contoh format: [Lihat Destinasi](/see-and-do) atau [Jurnal Cerita](/stories)).
+6. EXTERNAL LINKS: Masukkan setidaknya 2 link external ke sumber otoritas (seperti Wikipedia, situs berita, atau jurnal ilmiah).
+7. METADATA: metaTitle (50-60 karakter) dan metaDescription (145-155 karakter) WAJIB mengandung "{{focusKeyword}}".
+8. GAMBAR: Pilih satu ID gambar paling relevan dari daftar: hero-sikunir, candi-arjuna, mie-ongklok, telaga-warna, kawah-sikidang, kebun-teh, waterfall, carica, coffee, cave, mountain-prau.
 
 Tulis dalam Bahasa Indonesia yang profesional, akademis namun tetap populer, persuasif, dan sangat informatif.`,
 });
