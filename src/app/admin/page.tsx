@@ -231,19 +231,19 @@ const AdminDashboard = () => {
         ) : currentView === 'gallery' ? (
           <div className="space-y-8">
             <Card className="rounded-none border-2 shadow-xl bg-white p-8">
-              <div className="flex gap-8 items-stretch">
-                <div className="w-[180px] aspect-square bg-secondary/10 border-2 border-black/10 flex items-center justify-center overflow-hidden shrink-0">
+              <div className="flex flex-col md:flex-row gap-8 items-start">
+                <div className="w-full md:w-[240px] aspect-square bg-secondary/10 border-2 border-black/10 flex items-center justify-center overflow-hidden shrink-0">
                   {galleryForm.url && galleryForm.url.trim() !== "" ? (
                     <img src={galleryForm.url} className="w-full h-full object-cover" alt="Preview" />
                   ) : (
-                    <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2 px-2 text-center">
+                    <div className="text-[10px] font-black uppercase text-muted-foreground flex flex-col items-center gap-2 px-4 text-center">
                       <ImageIcon size={20} className="opacity-20" />
-                      <span>No Preview</span>
+                      <span>Preview Square</span>
                     </div>
                   )}
                 </div>
 
-                <div className="flex-grow flex flex-col gap-4">
+                <div className="flex-grow flex flex-col gap-4 w-full h-[240px]">
                   <div className="space-y-1">
                     <Label className="text-[10px] font-black uppercase text-left block">Image URL</Label>
                     <Input 
