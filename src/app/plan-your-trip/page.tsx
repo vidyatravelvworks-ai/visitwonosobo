@@ -31,7 +31,7 @@ const PlanYourTripPage = () => {
 
   const packages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticPackages;
 
-  const defaultGalleryItems = Array.from({ length: 8 }).map((_, i) => ({
+  const defaultGalleryItems = Array.from({ length: 14 }).map((_, i) => ({
     id: `dummy-${i}`,
     url: `https://picsum.photos/seed/trip-${i + 20}/800/800`,
     caption: `Experience Wonosobo ${i + 1}`,
@@ -88,7 +88,7 @@ const PlanYourTripPage = () => {
         </div>
         <div className="container mx-auto px-6 md:px-8 lg:px-32 relative z-10 text-center">
           <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter text-white mb-4">Plan Your Journey</h1>
-          <p className="text-white/80 font-medium text-[10px] md:text-xs mt-4 max-w-lg mx-auto">
+          <p className="text-white/80 font-medium text-xs mt-4 max-w-lg mx-auto">
             Pastikan perjalanan Anda aman dan berkesan dengan memilih layanan dan paket yang tepat sesuai kebutuhan Anda.
           </p>
         </div>
@@ -179,7 +179,7 @@ const PlanYourTripPage = () => {
                       </div>
                     ))}
                   </div>
-                  {/* Duplicate Container for infinite loop */}
+                  {/* Duplicate Container for infinite loop - Must match Container 1 exactly */}
                   <div className="grid grid-rows-3 grid-flow-col gap-3 h-[600px] md:h-[800px] shrink-0 pr-3" aria-hidden="true">
                     {galleryItems.map((item, idx) => (
                       <div 
