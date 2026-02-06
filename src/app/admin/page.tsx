@@ -303,13 +303,40 @@ const AdminDashboard = () => {
 
             <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-8">
                <div className="border-b pb-4">
-                <h3 className="text-lg font-black uppercase tracking-tight">Category Images</h3>
+                <h3 className="text-lg font-black uppercase tracking-tight text-primary">See & Do Category Images</h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[
                   { label: 'Nature & Adventure', key: 'catNature', value: configForm.catNature },
                   { label: 'Heritage & Culture', key: 'catHeritage', value: configForm.catHeritage },
-                  { label: 'Food & Drink', key: 'catFood', value: configForm.catFood },
+                  { label: 'Food & Drink', key: 'catFood', value: configForm.catFood }
+                ].map((field) => (
+                  <div key={field.key} className="flex flex-col gap-3">
+                    <Label className="text-[10px] font-black uppercase">{field.label}</Label>
+                    <div className="aspect-square w-full bg-secondary/20 border-2 overflow-hidden shrink-0 flex items-center justify-center relative">
+                      {field.value ? (
+                        <img src={field.value} className="w-full h-full object-cover" alt={field.label} />
+                      ) : (
+                        <span className="text-[8px] font-black text-muted-foreground uppercase">No Image Preview</span>
+                      )}
+                    </div>
+                    <Input 
+                      value={field.value} 
+                      onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} 
+                      className="rounded-none border-2 h-10 text-[10px] font-mono" 
+                      placeholder="Image URL"
+                    />
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-8">
+               <div className="border-b pb-4">
+                <h3 className="text-lg font-black uppercase tracking-tight text-primary">Stories Category Images</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                {[
                   { label: 'History & Heritage', key: 'catHistory', value: configForm.catHistory },
                   { label: 'People & Culture', key: 'catPeople', value: configForm.catPeople },
                   { label: 'Geography & Landscape', key: 'catGeo', value: configForm.catGeo },
@@ -334,6 +361,7 @@ const AdminDashboard = () => {
                 ))}
               </div>
             </Card>
+
             <div className="flex justify-start">
               <Button onClick={handleSaveConfig} disabled={isSavingConfig} className="bg-primary text-white rounded-none h-14 px-12 font-black uppercase text-[10px] tracking-widest gap-2">
                 {isSavingConfig ? <Loader2 className="animate-spin h-4 w-4" /> : <Save size={18} />} Save All Settings
