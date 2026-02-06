@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -125,10 +124,13 @@ export default function Home() {
                       src={catImg}
                       alt={cat.title}
                       fill
-                      className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
+                      className="object-cover opacity-70 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-80"
                     />
-                    <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
-                      <div className="mb-4 p-2 bg-primary w-fit">{cat.icon}</div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-[5]" />
+                    <div className="absolute inset-0 p-8 flex flex-col justify-end text-white z-10">
+                      <div className="absolute top-0 left-8 p-4 bg-primary text-white">
+                        {cat.icon}
+                      </div>
                       <h3 className="text-xl font-black uppercase mb-2 tracking-tight text-white">{cat.title}</h3>
                       <div className="text-white p-0 w-fit font-bold uppercase tracking-widest text-[10px] group-hover:text-primary flex items-center gap-2 transition-colors">
                         Explore <ArrowRight className="h-3 w-3" />

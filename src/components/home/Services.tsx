@@ -60,14 +60,16 @@ const Services = () => {
                 src={cat.image || 'https://picsum.photos/seed/wonosobo/800/1000'}
                 alt={cat.title}
                 fill
-                className="object-cover opacity-20 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-30"
+                className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-70"
               />
               
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-[5]" />
+
               <div className="absolute top-0 left-10 p-6 bg-primary text-white z-10">
                 {cat.icon}
               </div>
 
-              <div className="absolute inset-0 p-10 pt-32 flex flex-col justify-end text-white">
+              <div className="absolute inset-0 p-10 pt-40 flex flex-col justify-end text-white z-10">
                 <h3 className="text-3xl font-black uppercase mb-2 tracking-tight">{cat.title}</h3>
                 <p className="text-white/80 mb-6 text-sm leading-relaxed">{cat.description}</p>
                 <Button variant="link" className="text-white p-0 w-fit font-bold uppercase tracking-widest text-xs hover:text-primary" asChild>

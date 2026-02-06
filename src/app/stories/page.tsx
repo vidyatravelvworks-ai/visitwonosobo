@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -95,7 +94,7 @@ const StoriesPage = () => {
               Stories <br /> <span className="text-primary italic">of Java</span>
             </h1>
             <p className="text-white/80 text-xs md:text-sm font-medium max-w-2xl mx-auto leading-relaxed mt-10">
-              Menyelami kedalaman budaya, sejarah, dan bentang alam Wonosobo melalui kacamata warga lokal.
+              Menyelami kedalaman budaya, sejarah, and bentang alam Wonosobo melalui kacamata warga lokal.
             </p>
           </div>
         </div>
@@ -147,10 +146,13 @@ const StoriesPage = () => {
                     src={catImg}
                     alt={cat.title}
                     fill
-                    className="object-cover opacity-60 transition-transform duration-1000 group-hover:scale-110 group-hover:opacity-40"
+                    className="object-cover opacity-70 transition-transform duration-1000 group-hover:scale-110 group-hover:opacity-80"
                   />
-                  <div className="absolute inset-0 p-10 flex flex-col justify-end text-white bg-gradient-to-t from-black/80 via-transparent to-transparent">
-                    <div className="mb-6 p-3 bg-primary w-fit group-hover:bg-white group-hover:text-primary transition-colors">{cat.icon}</div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-[5]" />
+                  <div className="absolute inset-0 p-10 flex flex-col justify-end text-white z-10">
+                    <div className="absolute top-0 left-10 p-4 bg-primary text-white">
+                      {cat.icon}
+                    </div>
                     <h3 className="text-2xl font-black uppercase mb-3 tracking-tight leading-none">{cat.title}</h3>
                     <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500 line-clamp-2">
                       {cat.desc}
