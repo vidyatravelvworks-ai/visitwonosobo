@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -207,10 +206,10 @@ const AdminDashboard = () => {
                   variant="ghost" 
                   onClick={() => setCurrentView(item.id as DashboardView)} 
                   className={cn(
-                    "w-full justify-start rounded-none h-11 gap-3 px-4 transition-all", 
+                    "w-full justify-start rounded-none h-11 gap-3 px-4 transition-all hover:text-white", 
                     currentView === item.id 
                       ? "bg-primary text-white" 
-                      : "hover:bg-white/10 hover:text-white"
+                      : "hover:bg-white/10"
                   )}
                 >
                   <item.icon size={16} /> <span className="text-[10px] font-black uppercase tracking-widest">{item.label}</span>
@@ -225,10 +224,10 @@ const AdminDashboard = () => {
               variant="ghost" 
               onClick={() => setCurrentView('gallery')} 
               className={cn(
-                "w-full justify-start rounded-none h-11 gap-3 px-4 transition-all", 
+                "w-full justify-start rounded-none h-11 gap-3 px-4 transition-all hover:text-white", 
                 currentView === 'gallery' 
                   ? "bg-primary text-white" 
-                  : "hover:bg-white/10 hover:text-white"
+                  : "hover:bg-white/10"
               )}
             >
               <ImageIcon size={16} /> <span className="text-[10px] font-black uppercase tracking-widest">Manage Assets</span>
@@ -241,10 +240,10 @@ const AdminDashboard = () => {
               variant="ghost" 
               onClick={() => setCurrentView('display')} 
               className={cn(
-                "w-full justify-start rounded-none h-11 gap-3 px-4 transition-all", 
+                "w-full justify-start rounded-none h-11 gap-3 px-4 transition-all hover:text-white", 
                 currentView === 'display' 
                   ? "bg-primary text-white" 
-                  : "hover:bg-white/10 hover:text-white"
+                  : "hover:bg-white/10"
               )}
             >
               <Settings size={16} /> <span className="text-[10px] font-black uppercase tracking-widest">Site Config</span>
@@ -302,11 +301,11 @@ const AdminDashboard = () => {
               </div>
             </Card>
 
-            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-6">
+            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-8">
                <div className="border-b pb-4">
                 <h3 className="text-lg font-black uppercase tracking-tight">Category Images</h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {[
                   { label: 'Nature & Adventure', key: 'catNature', value: configForm.catNature },
                   { label: 'Heritage & Culture', key: 'catHeritage', value: configForm.catHeritage },
@@ -316,9 +315,21 @@ const AdminDashboard = () => {
                   { label: 'Geography & Landscape', key: 'catGeo', value: configForm.catGeo },
                   { label: 'Travel Tips', key: 'catTips', value: configForm.catTips }
                 ].map((field) => (
-                  <div key={field.key} className="space-y-1">
+                  <div key={field.key} className="flex flex-col gap-3">
                     <Label className="text-[10px] font-black uppercase">{field.label}</Label>
-                    <Input value={field.value} onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} className="rounded-none border-2 h-10 text-[10px] font-mono" />
+                    <div className="aspect-square w-full bg-secondary/20 border-2 overflow-hidden shrink-0 flex items-center justify-center relative">
+                      {field.value ? (
+                        <img src={field.value} className="w-full h-full object-cover" alt={field.label} />
+                      ) : (
+                        <span className="text-[8px] font-black text-muted-foreground uppercase">No Image Preview</span>
+                      )}
+                    </div>
+                    <Input 
+                      value={field.value} 
+                      onChange={e => setConfigForm({...configForm, [field.key]: e.target.value})} 
+                      className="rounded-none border-2 h-10 text-[10px] font-mono" 
+                      placeholder="Image URL"
+                    />
                   </div>
                 ))}
               </div>
