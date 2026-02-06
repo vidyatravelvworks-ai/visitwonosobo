@@ -252,8 +252,8 @@ const AdminDashboard = () => {
 
                 <div className="flex-grow flex flex-col justify-between py-1">
                   <div className="space-y-4">
-                    <div className="space-y-1">
-                      <Label className="text-[10px] font-black uppercase text-left block">Image URL</Label>
+                    <div className="space-y-1 text-left">
+                      <Label className="text-[10px] font-black uppercase block">Image URL</Label>
                       <Input 
                         value={galleryForm.url} 
                         onChange={e => setGalleryForm({...galleryForm, url: e.target.value})} 
@@ -261,8 +261,8 @@ const AdminDashboard = () => {
                         placeholder="https://..."
                       />
                     </div>
-                    <div className="space-y-1">
-                      <Label className="text-[10px] font-black uppercase text-left block">Caption</Label>
+                    <div className="space-y-1 text-left">
+                      <Label className="text-[10px] font-black uppercase block">Caption</Label>
                       <Input 
                         value={galleryForm.caption} 
                         onChange={e => setGalleryForm({...galleryForm, caption: e.target.value})} 
@@ -271,7 +271,7 @@ const AdminDashboard = () => {
                       />
                     </div>
                   </div>
-                  <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-12 font-black uppercase text-[10px] tracking-widest gap-2">
+                  <Button onClick={handleAddGallery} className="w-full bg-primary text-white rounded-none h-12 font-black uppercase text-[10px] tracking-widest gap-2 mt-4">
                     <Save size={14} /> Save Image
                   </Button>
                 </div>
@@ -281,7 +281,7 @@ const AdminDashboard = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 pb-20">
                {isGalleryLoading ? (
                  <div className="col-span-full py-20 flex justify-center"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
-               ) : allGallery?.length === 0 ? (
+               ) : (allGallery?.length === 0 || !allGallery) ? (
                  <div className="col-span-full py-20 text-center text-[10px] font-black uppercase text-muted-foreground">No images in gallery yet.</div>
                ) : allGallery?.map(g => (
                  <div key={g.id} className="relative group aspect-square bg-gray-100 border overflow-hidden">
