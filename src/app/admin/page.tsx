@@ -1,11 +1,10 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser, useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
-import { collection, doc, query, orderBy, setDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
+import { collection, doc, query, orderBy, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
@@ -21,17 +20,6 @@ import { useToast } from '@/hooks/use-toast';
 import { getAuth, signOut } from 'firebase/auth';
 import { cn } from '@/lib/utils';
 import { deleteDocumentNonBlocking } from '@/firebase/non-blocking-updates';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 
 type DashboardView = 'see-and-do' | 'stories' | 'packages' | 'gallery' | 'display';
 
@@ -45,7 +33,6 @@ const AdminDashboard = () => {
   const [isSavingConfig, setIsSavingConfig] = useState(false);
   const [galleryForm, setGalleryForm] = useState({ url: '', caption: '' });
   const [tableSearch, setTableSearch] = useState('');
-  const [isDeletingAll, setIsDeletingAll] = useState(false);
 
   useEffect(() => {
     if (!isUserLoading && !user) router.push('/login');
@@ -163,23 +150,6 @@ const AdminDashboard = () => {
     if (!db) return;
     deleteDocumentNonBlocking(doc(db, 'trip_packages', packageId));
     toast({ title: 'Deleted', description: 'Paket wisata telah dihapus.' });
-  };
-
-  const handleDeleteAllArticles = async () => {
-    if (!db || !allArticles || allArticles.length === 0) return;
-    setIsDeletingAll(true);
-    try {
-      const batch = writeBatch(db);
-      allArticles.forEach((article) => {
-        batch.delete(doc(db, 'articles', article.id));
-      });
-      await batch.commit();
-      toast({ title: 'Success', description: 'Semua artikel telah dihapus.' });
-    } catch (err) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Gagal menghapus artikel.' });
-    } finally {
-      setIsDeletingAll(false);
-    }
   };
 
   const getCategoryLabel = (cat: string) => {
@@ -512,29 +482,6 @@ const AdminDashboard = () => {
             <div className="flex justify-between items-end mb-6">
               <div className="space-y-1">
                 <h1 className="text-4xl font-black uppercase tracking-tighter">{currentView.replace('-', ' ')}</h1>
-                {(currentView === 'see-and-do' || currentView === 'stories') && filteredArticles.length > 0 && (
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="link" className="text-red-600 font-black uppercase text-[10px] p-0 h-auto gap-2">
-                        <Trash2 size={12} /> Hapus Semua Artikel
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="rounded-none border-2">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="font-black uppercase tracking-tight">Hapus Semua Artikel?</AlertDialogTitle>
-                        <AlertDialogDescription className="text-xs font-medium">
-                          Tindakan ini akan menghapus seluruh artikel {currentView.replace('-', ' ')} dari database secara permanen. Anda tidak dapat membatalkan ini.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel className="rounded-none font-black uppercase text-[10px]">Batal</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDeleteAllArticles} className="bg-red-600 hover:bg-red-700 rounded-none font-black uppercase text-[10px]">
-                          Ya, Hapus Semua
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                )}
               </div>
               <Button asChild className="bg-primary text-white rounded-none h-14 px-8 font-black uppercase text-[10px] tracking-widest">
                 <Link href={currentView === 'packages' ? '/admin/plan-your-trip/editor/new' : `/admin/editor/new?type=${currentView === 'see-and-do' ? 'destination' : 'story'}`}>
