@@ -314,13 +314,40 @@ const AdminDashboard = () => {
 
             <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-8">
               <div className="border-b pb-4">
-                <h3 className="text-lg font-black uppercase tracking-tight">Category Images Configuration</h3>
+                <h3 className="text-lg font-black uppercase tracking-tight text-primary">See & Do Category Images</h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
                   { label: 'Nature & Adventure', key: 'catNature', value: configForm.catNature },
                   { label: 'Heritage & Culture', key: 'catHeritage', value: configForm.catHeritage },
-                  { label: 'Food & Drink', key: 'catFood', value: configForm.catFood },
+                  { label: 'Food & Drink', key: 'catFood', value: configForm.catFood }
+                ].map((field) => (
+                  <div key={field.key} className="flex flex-col gap-2">
+                    <Label className="text-[9px] font-black uppercase">{field.label}</Label>
+                    <div className="aspect-square w-full bg-secondary/20 border-2 overflow-hidden flex items-center justify-center relative">
+                      {field.value ? (
+                        <img src={field.value} className="w-full h-full object-cover" alt={field.label} />
+                      ) : (
+                        <span className="text-[8px] font-black text-muted-foreground uppercase">No Image</span>
+                      )}
+                    </div>
+                    <Input 
+                      value={field.value} 
+                      onChange={e => setConfigForm({...configForm, [field.key as keyof typeof configForm]: e.target.value})} 
+                      className="rounded-none border h-8 text-[9px] font-mono" 
+                      placeholder="Image URL..."
+                    />
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-8">
+              <div className="border-b pb-4">
+                <h3 className="text-lg font-black uppercase tracking-tight text-primary">Stories Category Images</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[
                   { label: 'History & Heritage', key: 'catHistory', value: configForm.catHistory },
                   { label: 'People & Culture', key: 'catPeople', value: configForm.catPeople },
                   { label: 'Geography & Landscape', key: 'catGeo', value: configForm.catGeo },
