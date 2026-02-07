@@ -160,7 +160,7 @@ const PlanYourTripPage = () => {
                   <div className="space-y-8 flex-grow">
                     <div>
                       <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-3">Destinasi Rute</p>
-                      <ul className="grid grid-cols-1 gap-2">
+                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
                         {pkg.spots?.map((spot: string, i: number) => (
                           <li key={i} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-tight">
                             <MapPin className="h-3 w-3 text-primary/40 shrink-0" /> <span className="truncate">{spot}</span>
@@ -169,7 +169,7 @@ const PlanYourTripPage = () => {
                       </ul>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-6 pt-6 border-t border-black/5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-black/5">
                       {pkg.includes && pkg.includes.length > 0 && (
                         <div>
                           <p className="text-[9px] font-black uppercase tracking-widest text-green-600 mb-3">Termasuk</p>
@@ -334,4 +334,3 @@ const PlanYourTripPage = () => {
 };
 
 export default PlanYourTripPage;
-

@@ -174,7 +174,7 @@ export default function Home() {
             {isPkgsLoading ? (
               <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {tourPackages.map((pkg: any, idx: number) => (
                   <div key={pkg.id || idx} className={cn("bg-white border-2 border-black/5 shadow-lg p-8 hover:shadow-2xl transition-all duration-500 group flex flex-col h-full hover:border-primary/50", pkg.color, pkg.borderColor)}>
                     <div className="flex justify-between items-start mb-10">
@@ -194,7 +194,7 @@ export default function Home() {
                     <div className="space-y-8 flex-grow">
                       <div>
                         <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-3">Destinasi Rute</p>
-                        <ul className="grid grid-cols-1 gap-2">
+                        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
                           {pkg.spots?.map((spot: string, i: number) => (
                             <li key={i} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-tight">
                               <MapPin className="h-3 w-3 text-primary/40 shrink-0" /> <span className="truncate">{spot}</span>
@@ -203,7 +203,7 @@ export default function Home() {
                         </ul>
                       </div>
 
-                      <div className="grid grid-cols-1 gap-6 pt-6 border-t border-black/5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-black/5">
                         {pkg.includes && pkg.includes.length > 0 && (
                           <div>
                             <p className="text-[9px] font-black uppercase tracking-widest text-green-600 mb-3">Termasuk</p>
