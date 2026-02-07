@@ -17,7 +17,6 @@ import {
   Footprints, MapPin, ArrowRight, MessageCircle,
   Hourglass, Users, Globe, Info, CheckCircle2, XCircle
 } from 'lucide-react';
-import ArticleCard from '@/components/article/ArticleCard';
 import { cn } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
@@ -25,27 +24,25 @@ export default function Home() {
   const db = useFirestore();
 
   const packagesQ = useMemoFirebase(() => db ? query(collection(db, 'trip_packages'), orderBy('title', 'asc'), limit(3)) : null, [db]);
-  const storiesQ = useMemoFirebase(() => db ? query(collection(db, 'articles'), where('type', '==', 'story'), limit(3)) : null, [db]);
   const configRef = useMemoFirebase(() => db ? doc(db, 'config', 'website') : null, [db]);
 
   const { data: dbPackages, isLoading: isPkgsLoading } = useCollection(packagesQ);
-  const { data: dbStories, isLoading: isStoriesLoading } = useCollection(storiesQ);
   const { data: config, isLoading: isConfigLoading } = useDoc(configRef);
 
   const tourPackages = (dbPackages && dbPackages.length > 0) ? dbPackages : staticTripPackages.slice(0, 3);
   
-  const latestStories = React.useMemo(() => {
-    if (!dbStories || dbStories.length === 0) {
-      return [];
-    }
-    return dbStories;
-  }, [dbStories]);
-
   const configHomeHero = config?.heroImages?.home;
   const placeholderHomeHero = PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl || 'https://picsum.photos/seed/wonosobo-home/1200/800';
   const heroImage = (configHomeHero && configHomeHero.trim() !== "") ? configHomeHero : placeholderHomeHero;
 
   const whatsappLink = config?.contact?.whatsapp || "https://wa.me/6281230939128";
+
+  const categories = [
+    { id: 'history', title: 'History & Heritage', icon: <Hourglass className="h-6 w-6" /> },
+    { id: 'people', title: 'People & Culture', icon: <Users className="h-6 w-6" /> },
+    { id: 'geography', title: 'Geography & Landscape', icon: <Globe className="h-6 w-6" /> },
+    { id: 'tips', title: 'Travel Tips', icon: <Info className="h-6 w-6" /> }
+  ];
 
   const essentialPoints = [
     { 
@@ -86,7 +83,7 @@ export default function Home() {
       
       <Services />
 
-      <section className="py-24 bg-neutral-200">
+      <section className="py-24 bg-neutral-100">
         <div className="container mx-auto px-6 md:px-8 lg:px-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-10">
             <div className="flex flex-col md:flex-row md:items-end gap-10">
@@ -105,54 +102,39 @@ export default function Home() {
             </Button>
           </div>
 
-          {isStoriesLoading ? (
-            <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
-          ) : (latestStories.length === 0) ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
-              {[
-                { id: 'history', title: 'History & Heritage', icon: <Hourglass className="h-5 w-5" /> },
-                { id: 'people', title: 'People & Culture', icon: <Users className="h-5 w-5" /> },
-                { id: 'geography', title: 'Geography & Landscape', icon: <Globe className="h-5 w-5" /> },
-                { id: 'tips', title: 'Travel Tips', icon: <Info className="h-5 w-5" /> }
-              ].map((cat) => {
-                const catConfigImg = config?.categoryImages?.[cat.title];
-                let catPlaceholderId = 'mountain-prau';
-                if (cat.id === 'history') catPlaceholderId = 'candi-arjuna';
-                if (cat.id === 'people') catPlaceholderId = 'ritual';
-                if (cat.id === 'geography') catPlaceholderId = 'misty-valley';
-                
-                const catPlaceholder = PlaceHolderImages.find(img => img.id === catPlaceholderId)?.imageUrl;
-                const catImg = (catConfigImg && catConfigImg.trim() !== "") ? catConfigImg : (catPlaceholder || `https://picsum.photos/seed/${cat.id}/800/1000`);
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+            {categories.map((cat) => {
+              const catConfigImg = config?.categoryImages?.[cat.title];
+              let catPlaceholderId = 'mountain-prau';
+              if (cat.id === 'history') catPlaceholderId = 'candi-arjuna';
+              if (cat.id === 'people') catPlaceholderId = 'ritual';
+              if (cat.id === 'geography') catPlaceholderId = 'misty-valley';
+              
+              const catPlaceholder = PlaceHolderImages.find(img => img.id === catPlaceholderId)?.imageUrl;
+              const catImg = (catConfigImg && catConfigImg.trim() !== "") ? catConfigImg : (catPlaceholder || `https://picsum.photos/seed/${cat.id}/800/1000`);
 
-                return (
-                  <Link key={cat.id} href={`/stories#${cat.id}`} className="group relative aspect-square overflow-hidden bg-black">
-                    <Image
-                      src={catImg}
-                      alt={cat.title}
-                      fill
-                      className="object-cover opacity-80 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-90"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent z-[5]" />
-                    <div className="absolute inset-0 p-8 flex flex-col justify-end text-white z-10">
-                      <div className="absolute top-0 left-8 p-4 bg-primary text-white">
-                        {cat.icon}
-                      </div>
-                      <h3 className="text-xl font-black uppercase mb-2 tracking-tight text-white">{cat.title}</h3>
-                      <div className="text-white p-0 w-fit font-bold uppercase tracking-widest text-[10px] group-hover:text-primary flex items-center gap-2 transition-colors">
-                        Explore <ArrowRight className="h-3 w-3" />
-                      </div>
+              return (
+                <Link key={cat.id} href={`/stories#${cat.id}`} className="group relative aspect-square overflow-hidden bg-black">
+                  <Image
+                    src={catImg}
+                    alt={cat.title}
+                    fill
+                    className="object-cover opacity-80 transition-transform duration-700 group-hover:scale-110 group-hover:opacity-90"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent z-[5]" />
+                  <div className="absolute inset-0 p-8 flex flex-col justify-end text-white z-10">
+                    <div className="absolute top-0 left-8 p-4 bg-primary text-white shadow-lg">
+                      {cat.icon}
                     </div>
-                  </Link>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-              {latestStories.map((story: any) => (
-                <ArticleCard key={story.id || story.slug} article={story} />
-              ))}
-            </div>
-          )}
+                    <h3 className="text-xl font-black uppercase mb-2 tracking-tight text-white">{cat.title}</h3>
+                    <div className="text-white p-0 w-fit font-bold uppercase tracking-widest text-[10px] group-hover:text-primary flex items-center gap-2 transition-colors">
+                      Explore Journal <ArrowRight className="h-3 w-3" />
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -274,4 +256,3 @@ export default function Home() {
     </div>
   );
 }
-
