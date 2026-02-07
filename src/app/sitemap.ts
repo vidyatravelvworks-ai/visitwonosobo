@@ -2,7 +2,7 @@
 import { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://visitwonosobo.com';
+  const baseUrl = 'https://visitwonosobo.tour-travel.id';
 
   const routes = ['', '/see-and-do', '/stories', '/plan-your-trip', '/artikel'].map(
     (route) => ({

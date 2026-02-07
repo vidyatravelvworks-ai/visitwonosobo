@@ -9,14 +9,14 @@ import { Toaster } from '@/components/ui/toaster';
 export const metadata: Metadata = {
   title: 'visitwonosobo - Eksplorasi Wonosobo dengan Lokal Guide Terbaik',
   description: 'Temukan keindahan alam Wonosobo, dari sunrise Sikunir hingga kuliner Mie Ongklok dengan pemandu lokal profesional.',
-  metadataBase: new URL('https://visitwonosobo.com'),
+  metadataBase: new URL('https://visitwonosobo.tour-travel.id'),
   verification: {
     google: 'googledef7515f3dd1b585',
   },
   openGraph: {
     title: 'visitwonosobo - Eksplorasi Wonosobo dengan Lokal Guide Terbaik',
     description: 'Temukan keindahan alam Wonosobo, dari sunrise Sikunir hingga kuliner Mie Ongklok dengan pemandu lokal profesional.',
-    url: 'https://visitwonosobo.com',
+    url: 'https://visitwonosobo.tour-travel.id',
     siteName: 'visitwonosobo',
     locale: 'id_ID',
     type: 'website',

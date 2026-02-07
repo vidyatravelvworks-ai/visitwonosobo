@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/admin/',
     },
-    sitemap: 'https://visitwonosobo.com/sitemap.xml',
+    sitemap: 'https://visitwonosobo.tour-travel.id/sitemap.xml',
   };
 }
