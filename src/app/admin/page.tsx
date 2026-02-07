@@ -11,7 +11,11 @@ import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, Image as ImageIcon, Settings, Save, Search, X, Trash2, User as UserIcon, Phone } from 'lucide-react';
+import { 
+  Plus, Edit, LogOut, Map, BookOpen, Loader2, Package, 
+  Image as ImageIcon, Settings, Save, Search, X, Trash2, 
+  User as UserIcon, Phone, Calendar 
+} from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { getAuth, signOut } from 'firebase/auth';
@@ -570,6 +574,14 @@ const AdminDashboard = () => {
                             </div>
                             <div className="flex flex-col justify-center max-w-md pr-4 py-2">
                               <div className="font-black uppercase text-[11px] leading-tight truncate">{a.title}</div>
+                              <div className="flex items-center gap-3 mt-1.5 opacity-60">
+                                <div className="flex items-center gap-1 text-[8px] font-black uppercase">
+                                  <Calendar size={10} className="text-primary" /> {a.date}
+                                </div>
+                                <div className="flex items-center gap-1 text-[8px] font-black uppercase">
+                                  <UserIcon size={10} className="text-primary" /> {a.author}
+                                </div>
+                              </div>
                             </div>
                           </TableCell>
                           <TableCell className="py-2 px-6"><Badge className="rounded-none text-[8px] uppercase font-black px-2">{getCategoryLabel(a.category)}</Badge></TableCell>
