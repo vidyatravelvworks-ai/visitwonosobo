@@ -38,12 +38,6 @@ const SeeAndDoPage = () => {
     { id: 'eat', title: 'Food & Drink', categoryName: 'Food & Drink', icon: <Utensils className="h-6 w-6" />, description: 'Cicipi Mie Ongklok legendaris dan manisan Carica.' }
   ];
 
-  const chunkIntoPairs = (arr: any[]) => {
-    const pairs = [];
-    for (let i = 0; i < arr.length; i += 2) pairs.push(arr.slice(i, i + 2));
-    return pairs;
-  };
-
   if (isLoading) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -107,7 +101,6 @@ const SeeAndDoPage = () => {
         {categoryData.map((cat) => {
           const filtered = destinations.filter(d => d.category === cat.categoryName);
           if (filtered.length === 0) return null;
-          const pairs = chunkIntoPairs(filtered);
           return (
             <div key={cat.id} id={cat.id} className="scroll-mt-32">
               <div className="flex items-center gap-6 mb-12">
@@ -116,13 +109,9 @@ const SeeAndDoPage = () => {
               </div>
               <Carousel className="w-full relative">
                 <CarouselContent className="-ml-12">
-                  {pairs.map((pair, idx) => (
-                    <CarouselItem key={idx} className="pl-12 basis-full md:basis-1/2 lg:basis-1/3">
-                      <div className="flex flex-col gap-12">
-                        {pair.map((article: any) => (
-                          <ArticleCard key={article.slug || article.id} article={article} />
-                        ))}
-                      </div>
+                  {filtered.map((article: any) => (
+                    <CarouselItem key={article.slug || article.id} className="pl-12 basis-full md:basis-1/2 lg:basis-1/3">
+                      <ArticleCard article={article} />
                     </CarouselItem>
                   ))}
                 </CarouselContent>

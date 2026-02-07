@@ -44,12 +44,6 @@ const StoriesPage = () => {
     { id: 'tips', title: 'Travel Tips', categoryName: 'Travel Tips', icon: <Info className="h-6 w-6" />, description: 'Panduan praktis untuk petualangan yang tak terlupakan.' }
   ];
 
-  const chunkIntoPairs = (arr: any[]) => {
-    const pairs = [];
-    for (let i = 0; i < arr.length; i += 2) pairs.push(arr.slice(i, i + 2));
-    return pairs;
-  };
-
   if (isLoading) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -118,7 +112,6 @@ const StoriesPage = () => {
         {categoryData.map((cat) => {
           const filtered = allStories.filter(s => s.category === cat.categoryName);
           if (filtered.length === 0) return null;
-          const pairs = chunkIntoPairs(filtered);
           return (
             <div key={cat.id} id={cat.id} className="scroll-mt-32">
               <div className="flex items-center gap-6 mb-12">
@@ -127,13 +120,9 @@ const StoriesPage = () => {
               </div>
               <Carousel className="w-full relative">
                 <CarouselContent className="-ml-12">
-                  {pairs.map((pair, idx) => (
-                    <CarouselItem key={idx} className="pl-12 basis-full md:basis-1/2 lg:basis-1/3">
-                      <div className="flex flex-col gap-12">
-                        {pair.map((article: any) => (
-                          <ArticleCard key={article.slug || article.id} article={article} />
-                        ))}
-                      </div>
+                  {filtered.map((article: any) => (
+                    <CarouselItem key={article.slug || article.id} className="pl-12 basis-full md:basis-1/2 lg:basis-1/3">
+                      <ArticleCard article={article} />
                     </CarouselItem>
                   ))}
                 </CarouselContent>
