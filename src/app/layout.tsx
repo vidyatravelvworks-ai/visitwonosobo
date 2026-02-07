@@ -9,6 +9,9 @@ import { Toaster } from '@/components/ui/toaster';
 export const metadata: Metadata = {
   title: 'visitwonosobo - Eksplorasi Wonosobo dengan Lokal Guide Terbaik',
   description: 'Temukan keindahan alam Wonosobo, dari sunrise Sikunir hingga kuliner Mie Ongklok dengan pemandu lokal profesional.',
+  verification: {
+    google: 'googledef7515f3dd1b585',
+  },
   openGraph: {
     title: 'visitwonosobo',
     description: 'Eksplorasi Wonosobo dengan Lokal Guide Terbaik',
