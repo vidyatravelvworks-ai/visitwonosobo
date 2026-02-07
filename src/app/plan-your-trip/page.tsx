@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from 'react';
@@ -6,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { 
   Clock, Loader2, Grid, MapPin, 
-  CarFront, Activity, ShieldAlert, Footprints, ThermometerSnowflake, X
+  CarFront, Activity, ShieldAlert, Footprints, ThermometerSnowflake, X, CheckCircle2, XCircle
 } from 'lucide-react';
 import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
@@ -150,17 +151,49 @@ const PlanYourTripPage = () => {
                     </div>
                   </div>
                   <h4 className="text-2xl font-black uppercase tracking-tighter mb-4 group-hover:text-primary transition-colors leading-none">{pkg.title}</h4>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-6 flex items-center gap-2"><Clock size={12} className="text-primary" /> {pkg.time}</p>
-                  <div className="space-y-6 flex-grow">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 flex items-center gap-2"><Clock size={12} className="text-primary" /> {pkg.time}</p>
+                  
+                  <p className="text-xs font-medium text-muted-foreground mb-6 leading-relaxed">
+                    {pkg.description}
+                  </p>
+
+                  <div className="space-y-8 flex-grow">
                     <div>
                       <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-3">Destinasi Rute</p>
-                      <ul className="space-y-2">
+                      <ul className="grid grid-cols-1 gap-2">
                         {pkg.spots?.map((spot: string, i: number) => (
                           <li key={i} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-tight">
-                            <MapPin className="h-3 w-3 text-muted-foreground shrink-0" /> <span className="truncate">{spot}</span>
+                            <MapPin className="h-3 w-3 text-primary/40 shrink-0" /> <span className="truncate">{spot}</span>
                           </li>
                         ))}
                       </ul>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-6 pt-6 border-t border-black/5">
+                      {pkg.includes && pkg.includes.length > 0 && (
+                        <div>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-green-600 mb-3">Termasuk</p>
+                          <ul className="space-y-2">
+                            {pkg.includes.map((item: string, i: number) => (
+                              <li key={i} className="flex items-start gap-2 text-[9px] font-bold uppercase text-muted-foreground leading-tight">
+                                <CheckCircle2 className="h-3 w-3 text-green-500 shrink-0 mt-0.5" /> {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {pkg.excludes && pkg.excludes.length > 0 && (
+                        <div>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-red-600 mb-3">Tidak Termasuk</p>
+                          <ul className="space-y-2">
+                            {pkg.excludes.map((item: string, i: number) => (
+                              <li key={i} className="flex items-start gap-2 text-[9px] font-bold uppercase text-muted-foreground leading-tight">
+                                <XCircle className="h-3 w-3 text-red-400 shrink-0 mt-0.5" /> {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <Button className="w-full bg-primary text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-2 group/btn mt-10" asChild>
@@ -282,7 +315,7 @@ const PlanYourTripPage = () => {
             <div className="max-w-2xl space-y-6">
               <h3 className="text-primary font-bold uppercase tracking-widest text-xs">Extra Services</h3>
               <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">Pemesanan Penginapan & Antar Jemput</h2>
-              <p className="text-white/60 text-xs md:text-sm leading-relaxed">
+              <p className="text-white/60 text-[10px] leading-relaxed">
                 Butuh bantuan mencari homestay terbaik di Dieng atau transportasi dari luar kota? Kami melayani reservasi akomodasi dan antar jemput dari Bandara/Stasiun Yogyakarta, Semarang, Purwokerto, dan kota lainnya.
               </p>
             </div>
@@ -301,3 +334,4 @@ const PlanYourTripPage = () => {
 };
 
 export default PlanYourTripPage;
+

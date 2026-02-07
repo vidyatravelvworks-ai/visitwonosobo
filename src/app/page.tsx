@@ -15,7 +15,7 @@ import {
   Activity, ShieldAlert, CarFront, 
   Clock, ThermometerSnowflake, Loader2,
   Footprints, MapPin, ArrowRight, MessageCircle,
-  Hourglass, Users, Globe, Info
+  Hourglass, Users, Globe, Info, CheckCircle2, XCircle
 } from 'lucide-react';
 import ArticleCard from '@/components/article/ArticleCard';
 import { cn } from '@/lib/utils';
@@ -203,20 +203,52 @@ export default function Home() {
                       </div>
                     </div>
                     <h4 className="text-2xl font-black uppercase tracking-tighter mb-4 group-hover:text-primary transition-colors leading-none">{pkg.title}</h4>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-6 flex items-center gap-2"><Clock size={12} className="text-primary" /> {pkg.time}</p>
-                    <div className="space-y-6 flex-grow">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 flex items-center gap-2"><Clock size={12} className="text-primary" /> {pkg.time}</p>
+                    
+                    <p className="text-xs font-medium text-muted-foreground mb-6 leading-relaxed">
+                      {pkg.description}
+                    </p>
+
+                    <div className="space-y-8 flex-grow">
                       <div>
-                        <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-3">Destinasi Utama</p>
-                        <ul className="space-y-2">
-                          {pkg.spots?.slice(0, 4).map((feature: string, i: number) => (
+                        <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-3">Destinasi Rute</p>
+                        <ul className="grid grid-cols-1 gap-2">
+                          {pkg.spots?.map((spot: string, i: number) => (
                             <li key={i} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-tight">
-                              <MapPin className="h-3 w-3 text-muted-foreground shrink-0" /> <span className="truncate">{feature}</span>
+                              <MapPin className="h-3 w-3 text-primary/40 shrink-0" /> <span className="truncate">{spot}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
+
+                      <div className="grid grid-cols-1 gap-6 pt-6 border-t border-black/5">
+                        {pkg.includes && pkg.includes.length > 0 && (
+                          <div>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-green-600 mb-3">Termasuk</p>
+                            <ul className="space-y-2">
+                              {pkg.includes.map((item: string, i: number) => (
+                                <li key={i} className="flex items-start gap-2 text-[9px] font-bold uppercase text-muted-foreground leading-tight">
+                                  <CheckCircle2 className="h-3 w-3 text-green-500 shrink-0 mt-0.5" /> {item}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {pkg.excludes && pkg.excludes.length > 0 && (
+                          <div>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-red-600 mb-3">Tidak Termasuk</p>
+                            <ul className="space-y-2">
+                              {pkg.excludes.map((item: string, i: number) => (
+                                <li key={i} className="flex items-start gap-2 text-[9px] font-bold uppercase text-muted-foreground leading-tight">
+                                  <XCircle className="h-3 w-3 text-red-400 shrink-0 mt-0.5" /> {item}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <Button className="w-full bg-black hover:bg-primary text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-2 group/btn mt-8" asChild>
+                    <Button className="w-full bg-black hover:bg-primary text-white rounded-none h-14 font-black uppercase tracking-[0.2em] text-[10px] gap-2 group/btn mt-10" asChild>
                       <a href={`${whatsappLink}?text=Halo%20saya%20mau%20pesan%20paket%20${encodeURIComponent(pkg.title)}`} target="_blank">Booking Sekarang</a>
                     </Button>
                   </div>
@@ -242,3 +274,4 @@ export default function Home() {
     </div>
   );
 }
+
