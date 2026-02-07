@@ -20,6 +20,16 @@ import { useToast } from '@/hooks/use-toast';
 import { getAuth, signOut } from 'firebase/auth';
 import { cn } from '@/lib/utils';
 import { deleteDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type DashboardView = 'see-and-do' | 'stories' | 'packages' | 'gallery' | 'display';
 
@@ -33,6 +43,7 @@ const AdminDashboard = () => {
   const [isSavingConfig, setIsSavingConfig] = useState(false);
   const [galleryForm, setGalleryForm] = useState({ url: '', caption: '' });
   const [tableSearch, setTableSearch] = useState('');
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string, type: 'article' | 'package' } | null>(null);
 
   useEffect(() => {
     if (!isUserLoading && !user) router.push('/login');
@@ -351,67 +362,6 @@ const AdminDashboard = () => {
               </div>
             </Card>
 
-            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-8">
-               <div className="border-b pb-4">
-                <h3 className="text-lg font-black uppercase tracking-tight text-primary">See & Do Category Images</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {[
-                  { label: 'Nature & Adventure', key: 'catNature', value: configForm.catNature },
-                  { label: 'Heritage & Culture', key: 'catHeritage', value: configForm.catHeritage },
-                  { label: 'Food & Drink', key: 'catFood', value: configForm.catFood }
-                ].map((field) => (
-                  <div key={field.key} className="flex flex-col gap-3">
-                    <Label className="text-[10px] font-black uppercase">{field.label}</Label>
-                    <div className="aspect-square w-full bg-secondary/20 border-2 overflow-hidden shrink-0 flex items-center justify-center relative">
-                      {field.value ? (
-                        <img src={field.value} className="w-full h-full object-cover" alt={field.label} />
-                      ) : (
-                        <span className="text-[8px] font-black text-muted-foreground uppercase">No Image Preview</span>
-                      )}
-                    </div>
-                    <Input 
-                      value={field.value} 
-                      onChange={e => setConfigForm({...configForm, [field.key as keyof typeof configForm]: e.target.value})} 
-                      className="rounded-none border-2 h-10 text-[10px] font-mono" 
-                      placeholder="Image URL"
-                    />
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            <Card className="rounded-none border-2 shadow-xl bg-white p-8 space-y-8">
-               <div className="border-b pb-4">
-                <h3 className="text-lg font-black uppercase tracking-tight text-primary">Stories Category Images</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {[
-                  { label: 'History & Heritage', key: 'catHistory', value: configForm.catHistory },
-                  { label: 'People & Culture', key: 'catPeople', value: configForm.catPeople },
-                  { label: 'Geography & Landscape', key: 'catGeo', value: configForm.catGeo },
-                  { label: 'Travel Tips', key: 'catTips', value: configForm.catTips }
-                ].map((field) => (
-                  <div key={field.key} className="flex flex-col gap-3">
-                    <Label className="text-[10px] font-black uppercase">{field.label}</Label>
-                    <div className="aspect-square w-full bg-secondary/20 border-2 overflow-hidden shrink-0 flex items-center justify-center relative">
-                      {field.value ? (
-                        <img src={field.value} className="w-full h-full object-cover" alt={field.label} />
-                      ) : (
-                        <span className="text-[8px] font-black text-muted-foreground uppercase">No Image Preview</span>
-                      )}
-                    </div>
-                    <Input 
-                      value={field.value} 
-                      onChange={e => setConfigForm({...configForm, [field.key as keyof typeof configForm]: e.target.value})} 
-                      className="rounded-none border-2 h-10 text-[10px] font-mono" 
-                      placeholder="Image URL"
-                    />
-                  </div>
-                ))}
-              </div>
-            </Card>
-
             <div className="flex justify-start">
               <Button onClick={handleSaveConfig} disabled={isSavingConfig} className="bg-primary text-white rounded-none h-14 px-12 font-black uppercase text-[10px] tracking-widest gap-2">
                 {isSavingConfig ? <Loader2 className="animate-spin h-4 w-4" /> : <Save size={18} />} Save All Settings
@@ -541,7 +491,7 @@ const AdminDashboard = () => {
                                 variant="ghost" 
                                 size="icon" 
                                 className="h-8 w-8 hover:bg-red-50 text-red-600" 
-                                onClick={() => handleDeleteArticle(a.id)}
+                                onClick={() => setDeleteConfirm({ id: a.id, type: 'article' })}
                               >
                                 <Trash2 size={14}/>
                               </Button>
@@ -575,7 +525,7 @@ const AdminDashboard = () => {
                                 variant="ghost" 
                                 size="icon" 
                                 className="h-8 w-8 hover:bg-red-50 text-red-600" 
-                                onClick={() => handleDeletePackage(pkg.id)}
+                                onClick={() => setDeleteConfirm({ id: pkg.id, type: 'package' })}
                               >
                                 <Trash2 size={14}/>
                               </Button>
@@ -591,6 +541,32 @@ const AdminDashboard = () => {
           </div>
         )}
       </main>
+
+      <AlertDialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
+        <AlertDialogContent className="rounded-none border-4 border-black">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-sm font-black uppercase">Konfirmasi Hapus</AlertDialogTitle>
+            <AlertDialogDescription className="text-xs font-bold uppercase text-muted-foreground">
+              Apakah Anda yakin ingin menghapus {deleteConfirm?.type === 'article' ? 'artikel' : 'paket'} ini? Tindakan ini tidak dapat dibatalkan.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-2">
+            <AlertDialogCancel className="rounded-none font-black uppercase text-[10px] border-2">Batal</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => {
+                if (deleteConfirm) {
+                  if (deleteConfirm.type === 'article') handleDeleteArticle(deleteConfirm.id);
+                  else handleDeletePackage(deleteConfirm.id);
+                  setDeleteConfirm(null);
+                }
+              }}
+              className="rounded-none bg-red-600 hover:bg-red-700 text-white font-black uppercase text-[10px]"
+            >
+              Hapus Sekarang
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
