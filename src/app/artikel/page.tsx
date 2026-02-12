@@ -14,11 +14,11 @@ import { articles as staticArticles } from '@/data/articles';
 const ArtikelPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [mounted, setMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const db = useFirestore();
 
   useEffect(() => {
-    setMounted(true);
+    setIsMounted(true);
   }, []);
 
   const articlesQ = useMemoFirebase(() => {
@@ -50,7 +50,7 @@ const ArtikelPage = () => {
 
   const heroImage = PlaceHolderImages.find(img => img.id === 'mountain-prau')?.imageUrl || 'https://picsum.photos/seed/index/1200/400';
 
-  if (!mounted) {
+  if (!isMounted) {
     return (
       <div className="bg-white min-h-screen flex items-center justify-center">
         <Loader2 className="animate-spin text-primary h-10 w-10" />
@@ -72,8 +72,8 @@ const ArtikelPage = () => {
         </div>
       </section>
 
-      {/* Filters - Thinner padding and adjusted sticky top to match navbar height */}
-      <section className="py-6 border-b sticky top-[64px] md:top-[72px] bg-white/95 backdrop-blur-md z-30 shadow-sm">
+      {/* Filters - Slim padding and sticky alignment to navbar */}
+      <section className="py-4 border-b sticky top-[52px] md:top-[52px] bg-white/95 backdrop-blur-md z-30 shadow-sm">
         <div className="container mx-auto px-6 md:px-32">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
             <div className="relative">
