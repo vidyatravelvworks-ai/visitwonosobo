@@ -199,8 +199,8 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-secondary/20 flex">
       <aside className="w-64 bg-black text-white flex flex-col p-8 fixed h-full z-20 overflow-y-auto no-scrollbar">
         <div className="mb-12 flex items-center gap-2">
-          <img src={logoUrl} alt="Logo" className="h-6 w-auto brightness-0 invert" />
-          <span className="text-lg font-black uppercase text-primary tracking-tighter">visitwonosobo</span>
+          <img src={logoUrl} alt="Logo" className="h-5 w-auto brightness-0 invert" />
+          <span className="text-xl font-black uppercase text-primary tracking-tighter leading-none">visitwonosobo</span>
         </div>
         
         <nav className="flex-grow space-y-8">

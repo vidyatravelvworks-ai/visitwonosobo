@@ -29,14 +29,14 @@ const Footer = () => {
   if (!mounted) return null;
 
   return (
-    <footer className="bg-white border-t py-8 px-6">
+    <footer className="bg-white border-t py-12 px-6">
       <div className="container mx-auto px-0 md:px-8 lg:px-32">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-16 mb-12">
           {/* Kolom 1: 40% lebar (span 2 dari 5) */}
           <div className="col-span-1 md:col-span-2 space-y-6">
-            <div className="flex items-center gap-2.5">
-              <img src={logoUrl} alt="Logo Visit Wonosobo" className="h-8 w-auto" />
-              <span className="text-xl font-black font-headline tracking-tighter uppercase text-primary">
+            <div className="flex items-center gap-2">
+              <img src={logoUrl} alt="Logo Visit Wonosobo" className="h-5 w-auto" />
+              <span className="text-xl font-black font-headline tracking-tighter uppercase text-primary leading-none">
                 visitwonosobo
               </span>
             </div>

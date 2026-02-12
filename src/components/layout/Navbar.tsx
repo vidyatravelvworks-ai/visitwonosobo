@@ -49,17 +49,17 @@ const Navbar = () => {
         scrolled ? "bg-white py-3 shadow-sm border-border" : "bg-transparent py-5 border-transparent text-white"
       )}>
         <div className="container mx-auto px-6 md:px-8 lg:px-32 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 group">
+          <Link href="/" className="flex items-center gap-2 group">
             <img 
               src={logoUrl} 
               alt="Logo Visit Wonosobo" 
               className={cn(
-                "h-8 w-auto transition-all duration-300",
+                "h-5 w-auto transition-all duration-300",
                 !scrolled && "brightness-0 invert"
               )} 
             />
             <span className={cn(
-              "text-xl font-black font-headline tracking-tighter uppercase",
+              "text-xl font-black font-headline tracking-tighter uppercase leading-none",
               scrolled ? "text-primary" : "text-white"
             )}>
               visitwonosobo
