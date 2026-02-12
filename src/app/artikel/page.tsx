@@ -1,7 +1,6 @@
+"use client";
 
-'use client';
-
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
@@ -15,7 +14,12 @@ import { articles as staticArticles } from '@/data/articles';
 const ArtikelPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [mounted, setMounted] = useState(false);
   const db = useFirestore();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const articlesQ = useMemoFirebase(() => {
     if (!db) return null;
@@ -45,6 +49,14 @@ const ArtikelPage = () => {
   }, [combinedArticles]);
 
   const heroImage = PlaceHolderImages.find(img => img.id === 'mountain-prau')?.imageUrl || 'https://picsum.photos/seed/index/1200/400';
+
+  if (!mounted) {
+    return (
+      <div className="bg-white min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin text-primary h-10 w-10" />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white min-h-screen pb-20">

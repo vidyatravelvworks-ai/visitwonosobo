@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -15,6 +14,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
   const db = useFirestore();
@@ -24,6 +24,7 @@ const Navbar = () => {
   const whatsappLink = config?.contact?.whatsapp || "https://wa.me/6281230939128";
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
@@ -32,7 +33,9 @@ const Navbar = () => {
   }, []);
 
   const isExcludedPage = pathname === '/login' || pathname.startsWith('/admin');
+  
   if (isExcludedPage) return null;
+  if (!mounted) return null;
 
   const navLinks = [
     { name: 'See & Do', href: '/see-and-do' },
