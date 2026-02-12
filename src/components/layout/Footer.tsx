@@ -34,9 +34,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-16 mb-12">
           {/* Kolom 1: 40% lebar (span 2 dari 5) */}
           <div className="col-span-1 md:col-span-2 space-y-6">
-            <div className="flex items-center gap-3">
-              <img src={logoUrl} alt="Logo Visit Wonosobo" className="h-10 w-auto" />
-              <span className="text-2xl font-black font-headline tracking-tighter uppercase text-primary">
+            <div className="flex items-center gap-2.5">
+              <img src={logoUrl} alt="Logo Visit Wonosobo" className="h-8 w-auto" />
+              <span className="text-xl font-black font-headline tracking-tighter uppercase text-primary">
                 visitwonosobo
               </span>
             </div>
