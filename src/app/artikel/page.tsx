@@ -3,8 +3,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { useFirestore, useCollection, useDoc, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { Loader2, Search, Filter, Calendar, Tag, ChevronRight, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -26,7 +26,13 @@ const ArtikelPage = () => {
     return query(collection(db, 'articles'), orderBy('updatedAt', 'desc'));
   }, [db]);
 
+  const configRef = useMemoFirebase(() => {
+    if (!db) return null;
+    return doc(db, 'config', 'website');
+  }, [db]);
+
   const { data: dbArticles, isLoading } = useCollection(articlesQ);
+  const { data: config } = useDoc(configRef);
 
   const combinedArticles = useMemo(() => {
     const firestoreArticles = dbArticles || [];
@@ -48,7 +54,10 @@ const ArtikelPage = () => {
     return Array.from(cats);
   }, [combinedArticles]);
 
-  const heroImage = PlaceHolderImages.find(img => img.id === 'mountain-prau')?.imageUrl || 'https://picsum.photos/seed/index/1200/400';
+  // Sync with Home Hero Image
+  const configHomeHero = config?.heroImages?.home;
+  const placeholderHomeHero = PlaceHolderImages.find(img => img.id === 'hero-sikunir')?.imageUrl || 'https://picsum.photos/seed/index/1200/400';
+  const heroImage = (configHomeHero && configHomeHero.trim() !== "") ? configHomeHero : placeholderHomeHero;
 
   if (!isMounted) {
     return (
