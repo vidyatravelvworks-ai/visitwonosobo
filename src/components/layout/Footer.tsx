@@ -67,6 +67,7 @@ const Footer = () => {
               <li><Link href="/see-and-do#culture" className="hover:text-primary transition-colors">Heritage &amp; Culture</Link></li>
               <li><Link href="/see-and-do#eat" className="hover:text-primary transition-colors">Food &amp; Drink</Link></li>
               <li><Link href="/stories" className="hover:text-primary transition-colors">Stories (blog)</Link></li>
+              <li><Link href="/artikel" className="hover:text-primary transition-colors">Index Artikel</Link></li>
             </ul>
           </div>
 
