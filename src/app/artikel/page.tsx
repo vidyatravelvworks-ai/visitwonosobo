@@ -72,22 +72,22 @@ const ArtikelPage = () => {
         </div>
       </section>
 
-      {/* Filters */}
-      <section className="py-12 border-b sticky top-16 bg-white/95 backdrop-blur-md z-30">
+      {/* Filters - Thinner padding and adjusted sticky top to match navbar height */}
+      <section className="py-6 border-b sticky top-[64px] md:top-[72px] bg-white/95 backdrop-blur-md z-30 shadow-sm">
         <div className="container mx-auto px-6 md:px-32">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
                 placeholder="Cari judul artikel..." 
-                className="pl-10 h-12 rounded-none border-2 border-black/5 focus-visible:ring-primary"
+                className="pl-10 h-10 rounded-none border-2 border-black/5 focus-visible:ring-primary text-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <div className="relative">
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="h-12 rounded-none border-2 border-black/5 focus:ring-primary">
+                <SelectTrigger className="h-10 rounded-none border-2 border-black/5 focus:ring-primary text-sm">
                   <div className="flex items-center gap-2">
                     <Filter className="h-4 w-4 text-muted-foreground" />
                     <SelectValue placeholder="Semua Kategori" />
