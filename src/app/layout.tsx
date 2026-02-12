@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   title: 'visitwonosobo - Eksplorasi Wonosobo dengan Lokal Guide Terbaik',
   description: 'Temukan keindahan alam Wonosobo, dari sunrise Sikunir hingga kuliner Mie Ongklok dengan pemandu lokal profesional.',
   metadataBase: new URL('https://visitwonosobo.tour-travel.id'),
+  icons: {
+    icon: 'https://res.cloudinary.com/dnq7mpilu/image/upload/f_auto,q_auto/v1770830661/logo_-_visitwonosobo_hnciuo.png',
+    shortcut: 'https://res.cloudinary.com/dnq7mpilu/image/upload/f_auto,q_auto/v1770830661/logo_-_visitwonosobo_hnciuo.png',
+    apple: 'https://res.cloudinary.com/dnq7mpilu/image/upload/f_auto,q_auto/v1770830661/logo_-_visitwonosobo_hnciuo.png',
+  },
   verification: {
     google: 'googledef7515f3dd1b585',
   },
@@ -58,7 +63,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased flex flex-col min-h-screen selection:bg-primary selection:text-white">
+      <body className="font-body antialiased flex flex-col min-h-screen selection:bg-primary selection:text-white" suppressHydrationWarning>
         <FirebaseClientProvider>
           <Navbar />
           <main className="flex-grow">
