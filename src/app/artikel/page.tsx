@@ -115,21 +115,21 @@ const ArtikelPage = () => {
       </section>
 
       {/* Article List */}
-      <section className="py-12">
+      <section className="py-8">
         <div className="container mx-auto px-6 md:px-32">
           {isLoading ? (
             <div className="flex justify-center p-20"><Loader2 className="animate-spin text-primary h-10 w-10" /></div>
           ) : filteredArticles.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground font-bold uppercase text-xs tracking-widest">Tidak ada artikel yang ditemukan.</div>
           ) : (
-            <div className="max-w-4xl mx-auto space-y-1">
+            <div className="max-w-4xl mx-auto">
               {filteredArticles.map((article: any) => (
                 <Link 
                   key={article.slug || article.id} 
                   href={`/artikel/${article.slug || article.id}`}
-                  className="group flex items-center gap-6 p-4 hover:bg-secondary/30 transition-colors border-b border-black/5"
+                  className="group flex items-center gap-4 p-2 hover:bg-secondary/30 transition-colors border-b border-black/5"
                 >
-                  <div className="relative h-20 w-20 md:h-24 md:w-24 overflow-hidden bg-gray-100 shrink-0 border border-black/5">
+                  <div className="relative h-14 w-24 md:h-16 md:w-32 overflow-hidden bg-gray-100 shrink-0 border border-black/5">
                     <Image 
                       src={article.image || 'https://picsum.photos/seed/article/200/200'} 
                       alt={article.title}
@@ -137,18 +137,18 @@ const ArtikelPage = () => {
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
-                  <div className="flex-grow min-w-0 space-y-1">
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                  <div className="flex-grow min-w-0 space-y-0.5">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[8px] font-black uppercase tracking-widest text-muted-foreground">
                       <span className="text-primary">{article.category}</span>
-                      <span className="flex items-center gap-1"><Calendar size={10} /> {article.date}</span>
-                      {article.author && <span className="flex items-center gap-1"><User size={10} /> {article.author}</span>}
+                      <span className="flex items-center gap-1"><Calendar size={8} /> {article.date}</span>
+                      {article.author && <span className="flex items-center gap-1"><User size={8} /> {article.author}</span>}
                     </div>
-                    <h3 className="text-base md:text-xl font-black uppercase tracking-tight truncate group-hover:text-primary transition-colors">
+                    <h3 className="text-sm md:text-base font-black uppercase tracking-tight truncate group-hover:text-primary transition-colors">
                       {article.title}
                     </h3>
                   </div>
                   <div className="shrink-0 text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
-                    <ChevronRight size={20} />
+                    <ChevronRight size={16} />
                   </div>
                 </Link>
               ))}
