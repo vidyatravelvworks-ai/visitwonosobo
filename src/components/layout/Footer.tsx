@@ -17,6 +17,7 @@ const Footer = () => {
   const { data: config } = useDoc(configRef);
 
   const contactPhone = config?.contact?.phone || "0812-3093-9128";
+  const logoUrl = "https://res.cloudinary.com/dnq7mpilu/image/upload/f_auto,q_auto/v1770830661/logo_-_visitwonosobo_hnciuo.png";
 
   useEffect(() => {
     setMounted(true);
@@ -33,9 +34,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-16 mb-12">
           {/* Kolom 1: 40% lebar (span 2 dari 5) */}
           <div className="col-span-1 md:col-span-2 space-y-6">
-            <span className="text-2xl font-black font-headline tracking-tighter uppercase text-primary">
-              visitwonosobo
-            </span>
+            <div className="flex items-center gap-3">
+              <img src={logoUrl} alt="Logo Visit Wonosobo" className="h-10 w-auto" />
+              <span className="text-2xl font-black font-headline tracking-tighter uppercase text-primary">
+                visitwonosobo
+              </span>
+            </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Kami adalah kolektif penjelajah lokal yang berdedikasi untuk menunjukkan keindahan dan budaya otentik Wonosobo kepada dunia.
             </p>
